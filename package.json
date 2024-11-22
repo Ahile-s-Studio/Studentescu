@@ -4,14 +4,16 @@
   "description": "Social media platform, dedicated to students",
   "main": "index.js",
   "scripts": {
-    "dev": "concurrently \"docker-compose up\" \"npx tsc --watch\"",
-    "build": "tsc --watch"
+    "dev": "concurrently \"docker-compose up\" \"tsc --watch\" \"npm run build:css\"",
+    "build": "tsc --watch",
+    "build:css": "npx tailwindcss -i ./wwwroot/css/tailwind-source.css -o ./wwwroot/css/tailwind-output.css --watch"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "concurrently": "^9.1.0",
+    "tailwindcss": "^3.4.15",
     "typescript": "^5.6.3"
   }
 }
