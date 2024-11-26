@@ -2,7 +2,7 @@
 // for details on configuring this project to bundle and minify static web assets.
 console.log("TEST");
 
-// const h = document.querySelector<HTMLElement>("h1");
-// if (h) h.innerHTML = "TEST";
+const h = document.querySelector<HTMLElement>("h1");
+if (h) h.innerHTML = "TEST";
 
 // Write your JavaScript code.
