@@ -12,7 +12,11 @@
         "watch:css": "npx tailwindcss -i ./wwwroot/css/tailwind-source.css -o ./wwwroot/css/tailwind-output.css --watch",
         "watch:ts": "tsc --watch",
         "format": "prettier --write \"**/*.{js,css,html}\"",
-        "check-format": "prettier --check \"**/*.{js,css,html}\""
+        "check-format": "prettier --check \"**/*.{js,css,html}\"",
+        "prepare": "husky"
+    },
+    "lint-staged": {
+        "**/*": "prettier --write --ignore-unknown"
     },
     "keywords": [],
     "author": "",
@@ -24,6 +28,8 @@
     },
     "devDependencies": {
         "eslint": "^9.15.0",
+        "husky": "^9.1.7",
+        "lint-staged": "^15.2.10",
         "prettier": "^3.4.0"
     }
 }
