@@ -1,38 +1,40 @@
 ﻿services:
-  studentescu:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "5000:8080"
-    environment:
-      - ConnectionStrings__DefaultConnection=Server=mysql;Database=MyMvcDb;User=root;Password=rootpassword;
-    volumes:
-      - .:/app # Mount project files for development
-      - /app/bin 
-      - /app/obj
-    depends_on:
-      - mysql
-    networks:
-      - appnetwork
+    studentescu:
+        stdin_open: true
+        tty: true
+        build:
+            context: .
+            dockerfile: Dockerfile
+        ports:
+            - "5000:8080"
+        environment:
+            - ConnectionStrings__DefaultConnection=Server=mysql;Database=MyMvcDb;User=root;Password=rootpassword;
+        volumes:
+            - .:/app # Mount project files for development
+            - /app/bin
+            - /app/obj
+        depends_on:
+            - mysql
+        networks:
+            - appnetwork
 
-  mysql:
-    image: mysql:8.0
-    container_name: mysql
-    environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: StudentescuDB
-      MYSQL_PASSWORD: rootpassword
-    ports:
-      - "3306:3306"
-    volumes:
-      - mysql-data:/var/lib/mysql
-    networks:
-      - appnetwork
+    mysql:
+        image: mysql:8.0
+        container_name: mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: rootpassword
+            MYSQL_DATABASE: StudentescuDB
+            MYSQL_PASSWORD: rootpassword
+        ports:
+            - "3306:3306"
+        volumes:
+            - mysql-data:/var/lib/mysql
+        networks:
+            - appnetwork
 networks:
-  appnetwork:
-    driver: bridge
+    appnetwork:
+        driver: bridge
 
 volumes:
-  mysql-data:
-    driver: local
+    mysql-data:
+        driver: local
