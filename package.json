@@ -1,0 +1,35 @@
+{
+    "name": "studentescu",
+    "version": "1.0.0",
+    "description": "Social media platform, dedicated to students",
+    "main": "index.js",
+    "scripts": {
+        "dev": "concurrently \"npm run watch:docker\" \"npm run watch:dev\"",
+        "watch:docker": "docker-compose up",
+        "watch:docker:detach": "docker-compose up -d",
+        "watch:dev": "concurrently \"npm run watch:ts\" \"npm run watch:css\"",
+        "build:ts": "tsc",
+        "watch:css": "npx tailwindcss -i ./wwwroot/css/tailwind-source.css -o ./wwwroot/css/tailwind-output.css --watch",
+        "watch:ts": "tsc --watch",
+        "format": "prettier --write \"**/*.{js,css,html}\"",
+        "check-format": "prettier --check \"**/*.{js,css,html}\"",
+        "prepare": "husky"
+    },
+    "lint-staged": {
+        "**/*": "prettier --write --ignore-unknown"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "concurrently": "^9.1.0",
+        "tailwindcss": "^3.4.15",
+        "typescript": "^5.6.3"
+    },
+    "devDependencies": {
+        "eslint": "^9.15.0",
+        "husky": "^9.1.7",
+        "lint-staged": "^15.2.10",
+        "prettier": "^3.4.0"
+    }
+}
