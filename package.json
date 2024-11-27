@@ -16,10 +16,7 @@
         "prepare": "husky"
     },
     "lint-staged": {
-        "**/*": "prettier --write --ignore-unknown",
-        "*.{cs,cshtml}": [
-            "dotnet format Studentescu.sln --include"
-        ]
+        "**/*": "prettier --write --ignore-unknown"
     },
     "keywords": [],
     "author": "",
