@@ -53,5 +53,11 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
             .WithMany(u => u.Comments)
             .HasForeignKey(c => c.UserId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Entity<Comment>()
+            .HasOne(c => c.Parent)
+            .WithMany(c => c.Replies)
+            .HasForeignKey(c => c.ParentId)
+            .OnDelete(DeleteBehavior.SetNull);
     }
 }
