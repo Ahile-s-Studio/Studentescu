@@ -1,0 +1,18 @@
+@model TModel
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+<div>
+    <h2>Friend List:</h2>
+    @foreach (var friend in @Model.User.Friends)
+    {
+        <div>
+            <img src="@friend.Image" alt="Profile picture"/>
+            <p>@friend.Username</p>
+            <button>Unfollow</button>
+        </div>
+    }
+</div>

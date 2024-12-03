@@ -1,0 +1,52 @@
+@model TModel
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+<div class="container">
+    <h2>Notifications</h2>
+    <div class="notification-list">
+        <div class="today-notifications">
+            <h3>Today</h3>
+            <br/>
+            @foreach (var notification in Model)
+            {
+                <div>
+                    <img alt="Profile Picture" src="@notification.User.Image"/>
+                    <p>@notification.User.Username</p>
+                    <p>@notification.Content</p>
+                    <p>@notification.Timestamp</p>
+                </div>
+            }
+        </div>
+        <div class="week-notifications">
+            <h3>This week</h3>
+            <br/>
+            @foreach (var notification in Model)
+            {
+            <div>
+                <img alt="Profile Picture" src="@notification.User.Image"/>
+                <p>@notification.User.Username</p>
+                <p>@notification.Content</p>
+                <p>@notification.Timestamp</p>
+            </div>
+            }
+        </div>
+        <div class="remained-notifications">
+            <h3>Older</h3>
+            <br/>
+            @foreach (var notification in Model)
+            {
+            <div>
+                <img alt="Profile Picture" src="@notification.User.Image"/>
+                <p>@notification.User.Username</p>
+                <p>@notification.Content</p>
+                <p>@notification.Timestamp</p>
+            </div>
+            }
+            </div>
+    </div>
+    
+</div>

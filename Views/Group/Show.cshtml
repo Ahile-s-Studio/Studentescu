@@ -1,0 +1,53 @@
+@model TModel
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+<div>
+    <div>
+        <img src="@Model.Group.Image" alt="Group profile picture"/>
+        <h3>@Model.Group.Name</h3>
+    </div>
+    <h3>@Model.Group.MemberCount members</h3>
+    @if (@Model.Group.Members.contains(@Model.User))
+    {
+        <button>Leave</button>
+    }
+    else
+    {
+        <button>Join</button>
+    }
+    @if (@Model.Group.Members.contains(@Model.User))
+    {
+        <button>Create New Post</button>
+    }
+    
+    @foreach (var post in @Model.Group.Posts)
+    {
+        <div>
+            <div class="post-header">
+                <img alt="Profile Picture" src="@post.User.Image"/>
+                <p>@post.User.Username</p>
+            </div>
+            <div class="post-content">
+                @if (post.ContentType == "image")
+                {
+                <img alt="Post Content" src="@post.Content" />
+                }else if (post.ContentType == "video")
+                {
+                <video controls >
+                    <source src="@post.Content" type="video/mp4"/>
+                    Your browser do not support video format
+                </video>
+                }
+            </div>
+            <div class="post-footer">
+                <button>Love</button>
+                <button>Comment</button>
+            </div>
+        </div>
+    }
+    
+</div>

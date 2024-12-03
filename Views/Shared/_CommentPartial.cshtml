@@ -1,0 +1,25 @@
+@model TModel
+
+<div>
+    <div>
+        
+    @foreach (var comment in @Model.Comment)
+    {
+        <div>
+            <div>
+                <div>
+                    <img src="@Model.Comment.User.Image" alt="Profile Picture"/>
+                    <h3>@Model.Comment.User.Username</h3>
+                </div>
+                <h3>@Model.Comment.Timestamp</h3>
+            </div>
+            <p>@Model.Comment.Content</p>
+        </div>
+    }
+    </div>
+    <form method="post">
+        <input type="text"/>
+        <button type="submit">Submit</button>
+    </form>
+
+</div>

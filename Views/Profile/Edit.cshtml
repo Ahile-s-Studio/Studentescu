@@ -1,0 +1,24 @@
+@model TModel
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+<div class="container">
+    <h2>Edit Profile</h2>
+    <form class="form-content" asp-action="" method="post">
+        <img src="@Model.User.Image" alt="Profile picture" />
+        
+        <input id="username" name="username" type="text"/>
+        <label for="username">Username</label>
+        
+        <textarea id="bio" name="bio">@Model.User.Bio</textarea>
+        <label for="bio">Bio</label>
+        
+        <input id="visibility" name="visibility" type="checkbox"/>
+        <label for="visibility">Public / Private Profile</label>
+        
+        <button type="submit">Submit Changes</button>
+    </form>
+</div>

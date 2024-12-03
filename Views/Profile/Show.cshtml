@@ -1,0 +1,26 @@
+@model TModel
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+<div class="container profile-page">
+    <div class="profile-header">
+        <img src="@Model.User.Avatar" alt="User Avatar">
+        <h1>@Model.User.Username</h1>
+        <p>@Model.User.Bio</p>
+        <a href="/edit-profile">Edit Profile</a>
+    </div>
+    <div class="user-posts">
+        <h2>Your Posts</h2>
+        @foreach (var post in Model.UserPosts)
+        {
+        <div class="post-card">
+            <h3>@post.Title</h3>
+            <p>@post.Content</p>
+            <span>@post.Timestamp</span>
+        </div>
+        }
+    </div>
+</div>
