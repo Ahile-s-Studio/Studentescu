@@ -7,7 +7,7 @@ public abstract class Message
 {
     [Key] public int Id { get; set; }
 
-    [Required] [ForeignKey("Sender")] public required string SenderId { get; set; }
+    [Required][ForeignKey("Sender")] public required string SenderId { get; set; }
 
     public required ApplicationUser Sender { get; set; }
 

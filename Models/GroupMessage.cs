@@ -5,6 +5,6 @@ namespace Studentescu.Models;
 
 public class GroupMessage : Message
 {
-    [Required] [ForeignKey("Group")] public required int UserGroupId { get; set; }
+    [Required][ForeignKey("Group")] public required int UserGroupId { get; set; }
     public required UserGroup UserGroup { get; set; }
 }
