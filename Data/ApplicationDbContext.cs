@@ -59,5 +59,18 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
             .WithMany(c => c.Replies)
             .HasForeignKey(c => c.ParentId)
             .OnDelete(DeleteBehavior.SetNull);
+
+
+        builder.Entity<FollowRequest>()
+            .HasOne(f => f.Requester)
+            .WithMany(u => u.RequestsSent)
+            .HasForeignKey(f => f.RequesterId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        builder.Entity<FollowRequest>()
+            .HasOne(f => f.Target)
+            .WithMany(u => u.RequestsReceived)
+            .HasForeignKey(f => f.TargetId)
+            .OnDelete(DeleteBehavior.NoAction);
     }
 }

@@ -12,4 +12,6 @@ public class ApplicationUser : IdentityUser
     public ICollection<Follow> Followers { get; set; } = new List<Follow>();
     public ICollection<Like> Likes { get; set; } = new List<Like>();
     public ICollection<Comment> Comments { get; set; } = new List<Comment>();
+    public ICollection<FollowRequest> RequestsSent { get; set; } = new List<FollowRequest>();
+    public ICollection<FollowRequest> RequestsReceived { get; set; } = new List<FollowRequest>();
 }
