@@ -10,17 +10,17 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
         : base(options)
     {
     }
-    
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
-        
+
         // Follow Relationship
         builder.Entity<Follow>()
             .HasOne(f => f.Follower)
             .WithMany(u => u.Following)
             .HasForeignKey(f => f.FollowerId)
-            .OnDelete(DeleteBehavior.NoAction); 
+            .OnDelete(DeleteBehavior.NoAction);
 
         builder.Entity<Follow>()
             .HasOne(f => f.Followee)
@@ -28,5 +28,5 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
             .HasForeignKey(f => f.FolloweeId)
             .OnDelete(DeleteBehavior.NoAction);
     }
-        
+
 }
