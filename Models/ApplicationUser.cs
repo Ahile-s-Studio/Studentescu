@@ -14,4 +14,7 @@ public class ApplicationUser : IdentityUser
     public ICollection<Comment> Comments { get; set; } = new List<Comment>();
     public ICollection<FollowRequest> RequestsSent { get; set; } = new List<FollowRequest>();
     public ICollection<FollowRequest> RequestsReceived { get; set; } = new List<FollowRequest>();
+    public ICollection<MemberInGroup> GroupMemberships { get; set; } = new List<MemberInGroup>();
+    public ICollection<Message> MessagesSent { get; set; } = new List<Message>();
+    public ICollection<PrivateMessage> PrivateMessagesReceived { get; set; } = new List<PrivateMessage>();
 }
