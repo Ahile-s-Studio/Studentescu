@@ -1,18 +1,18 @@
 using System.Diagnostics;
-
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-
+using Studentescu.Data;
 using Studentescu.Models;
 
 namespace Studentescu.Controllers;
 
-public class HomeController : Controller
+public class HomeController : BaseController
 {
-    private readonly ILogger<HomeController> _logger;
-
-    public HomeController(ILogger<HomeController> logger)
+    public HomeController(ILogger<HomeController> logger,
+        ApplicationDbContext context, UserManager<ApplicationUser> userManager,
+        RoleManager<IdentityRole> roleManager) : base(logger, context,
+        userManager, roleManager)
     {
-        _logger = logger;
     }
 
     public IActionResult Index()
@@ -25,9 +25,13 @@ public class HomeController : Controller
         return View();
     }
 
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None,
+        NoStore = true)]
     public IActionResult Error()
     {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        return View(new ErrorViewModel
+        {
+            RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
+        });
     }
 }
