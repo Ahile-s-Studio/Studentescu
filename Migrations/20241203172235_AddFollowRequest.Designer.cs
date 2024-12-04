@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Studentescu.Data;
 
@@ -11,9 +12,11 @@ using Studentescu.Data;
 namespace Studentescu.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241203172235_AddFollowRequest")]
+    partial class AddFollowRequest
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -356,71 +359,6 @@ namespace Studentescu.Migrations
                     b.ToTable("Like");
                 });
 
-            modelBuilder.Entity("Studentescu.Models.MemberInGroup", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<int>("Role")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserGroupId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("varchar(255)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserGroupId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("MemberInGroup");
-                });
-
-            modelBuilder.Entity("Studentescu.Models.Message", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasMaxLength(21)
-                        .HasColumnType("varchar(21)");
-
-                    b.Property<string>("SenderId")
-                        .IsRequired()
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<DateTime>("SentAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SenderId");
-
-                    b.ToTable("Message");
-
-                    b.HasDiscriminator().HasValue("Message");
-
-                    b.UseTphMappingStrategy();
-                });
-
             modelBuilder.Entity("Studentescu.Models.Post", b =>
                 {
                     b.Property<int>("Id")
@@ -450,51 +388,6 @@ namespace Studentescu.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Post");
-                });
-
-            modelBuilder.Entity("Studentescu.Models.UserGroup", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("UserGroup");
-                });
-
-            modelBuilder.Entity("Studentescu.Models.GroupMessage", b =>
-                {
-                    b.HasBaseType("Studentescu.Models.Message");
-
-                    b.Property<int>("UserGroupId")
-                        .HasColumnType("int");
-
-                    b.HasIndex("UserGroupId");
-
-                    b.HasDiscriminator().HasValue("GroupMessage");
-                });
-
-            modelBuilder.Entity("Studentescu.Models.PrivateMessage", b =>
-                {
-                    b.HasBaseType("Studentescu.Models.Message");
-
-                    b.Property<string>("ReceiverId")
-                        .IsRequired()
-                        .HasColumnType("varchar(255)");
-
-                    b.HasIndex("ReceiverId");
-
-                    b.HasDiscriminator().HasValue("PrivateMessage");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -631,36 +524,6 @@ namespace Studentescu.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Studentescu.Models.MemberInGroup", b =>
-                {
-                    b.HasOne("Studentescu.Models.UserGroup", "UserGroup")
-                        .WithMany("Members")
-                        .HasForeignKey("UserGroupId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("Studentescu.Models.ApplicationUser", "User")
-                        .WithMany("GroupMemberships")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("User");
-
-                    b.Navigation("UserGroup");
-                });
-
-            modelBuilder.Entity("Studentescu.Models.Message", b =>
-                {
-                    b.HasOne("Studentescu.Models.ApplicationUser", "Sender")
-                        .WithMany("MessagesSent")
-                        .HasForeignKey("SenderId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("Sender");
-                });
-
             modelBuilder.Entity("Studentescu.Models.Post", b =>
                 {
                     b.HasOne("Studentescu.Models.ApplicationUser", "User")
@@ -672,28 +535,6 @@ namespace Studentescu.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Studentescu.Models.GroupMessage", b =>
-                {
-                    b.HasOne("Studentescu.Models.UserGroup", "UserGroup")
-                        .WithMany("GroupMessages")
-                        .HasForeignKey("UserGroupId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("UserGroup");
-                });
-
-            modelBuilder.Entity("Studentescu.Models.PrivateMessage", b =>
-                {
-                    b.HasOne("Studentescu.Models.ApplicationUser", "Receiver")
-                        .WithMany("PrivateMessagesReceived")
-                        .HasForeignKey("ReceiverId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("Receiver");
-                });
-
             modelBuilder.Entity("Studentescu.Models.ApplicationUser", b =>
                 {
                     b.Navigation("Comments");
@@ -702,13 +543,7 @@ namespace Studentescu.Migrations
 
                     b.Navigation("Following");
 
-                    b.Navigation("GroupMemberships");
-
                     b.Navigation("Likes");
-
-                    b.Navigation("MessagesSent");
-
-                    b.Navigation("PrivateMessagesReceived");
 
                     b.Navigation("RequestsReceived");
 
@@ -725,13 +560,6 @@ namespace Studentescu.Migrations
                     b.Navigation("Comments");
 
                     b.Navigation("Likes");
-                });
-
-            modelBuilder.Entity("Studentescu.Models.UserGroup", b =>
-                {
-                    b.Navigation("GroupMessages");
-
-                    b.Navigation("Members");
                 });
 #pragma warning restore 612, 618
         }
