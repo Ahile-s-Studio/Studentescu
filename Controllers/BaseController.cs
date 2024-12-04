@@ -7,21 +7,21 @@ namespace Studentescu.Controllers;
 
 public class BaseController : Controller
 {
-    private readonly ApplicationDbContext _dbContext;
-    private readonly ILogger<HomeController> _logger;
-    private readonly RoleManager<IdentityRole> _roleManager;
-    private readonly UserManager<ApplicationUser> _userManager;
+    protected readonly ApplicationDbContext dbContext;
+    private readonly ILogger<HomeController> logger;
+    private readonly RoleManager<IdentityRole> roleManager;
+    private readonly UserManager<ApplicationUser> userManager;
 
     public BaseController(
         ILogger<HomeController> logger,
-        ApplicationDbContext context,
+        ApplicationDbContext dbContext,
         UserManager<ApplicationUser> userManager,
         RoleManager<IdentityRole> roleManager
     )
     {
-        _logger = logger;
-        _dbContext = context;
-        _userManager = userManager;
-        _roleManager = roleManager;
+        this.logger = logger;
+        this.dbContext = dbContext;
+        this.userManager = userManager;
+        this.roleManager = roleManager;
     }
 }

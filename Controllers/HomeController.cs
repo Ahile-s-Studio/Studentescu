@@ -6,24 +6,13 @@ using Studentescu.Models;
 
 namespace Studentescu.Controllers;
 
-public class HomeController : Controller
+public class HomeController : BaseController
 {
-    private readonly ApplicationDbContext _dbContext;
-    private readonly ILogger<HomeController> _logger;
-    private readonly RoleManager<IdentityRole> _roleManager;
-    private readonly UserManager<ApplicationUser> _userManager;
-
-    public HomeController(
-        ILogger<HomeController> logger,
-        ApplicationDbContext context,
-        UserManager<ApplicationUser> userManager,
-        RoleManager<IdentityRole> roleManager
-    )
+    public HomeController(ILogger<HomeController> logger,
+        ApplicationDbContext context, UserManager<ApplicationUser> userManager,
+        RoleManager<IdentityRole> roleManager) : base(logger, context,
+        userManager, roleManager)
     {
-        _logger = logger;
-        _dbContext = context;
-        _userManager = userManager;
-        _roleManager = roleManager;
     }
 
     public IActionResult Index()
