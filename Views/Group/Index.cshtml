@@ -1,5 +1,4 @@
-@model TModel
-
+@model List<Studentescu.ViewModels.GroupIndexViewModel>
 @{
     ViewBag.Title = "title";
     Layout = "_Layout";
@@ -22,11 +21,11 @@
         <option>Joined</option>
         <option>Not Joined</option>
     </select>
-    @foreach (var group in @Model.Group)
+    @foreach (var group in @Model)
     {
-        <img src="@group.Image" alt="Group Profile Picture"/>
-        <p>@group.Name</p>
-        @if (@Model.Group.Members.contains(@Model.User))
+        <img src="@group.Group.GroupImageUrl" alt="Group Profile Picture"/>
+        <p>@group.Group.Name</p>
+        @if (group.IsJoined)
         {
             <button>Join</button>
         }

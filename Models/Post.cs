@@ -10,6 +10,8 @@ public class Post
     [Required][MaxLength(100)] public required string Title { get; set; }
 
     [Required] public required string Content { get; set; }
+    
+    [Required] public required string ContentType { get; set; }
 
     [ForeignKey("User")] public required string UserId { get; set; }
 
