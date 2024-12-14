@@ -59,13 +59,13 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     "Profile",
-    "{Profile}/{Show}/{username?}",
+    "Profile/Show/{username?}",
     new { controller = "Profile", action = "Show" });
 
-app.MapControllerRoute(
-    "Profile",
-    "{Profile}/{Edit}/",
-    new { controller = "Account", action = "Manage" });
+// app.MapControllerRoute(
+//     "ProfileEdit",
+//     "{Profile}/{Edit}/",
+//     new { controller = "Account", action = "Manage" });
 
 app.MapControllerRoute(
     "default",

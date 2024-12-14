@@ -4,5 +4,5 @@ namespace Studentescu.ViewModels;
 
 public class UsersViewModel
 {
-    public List<ApplicationUser> Users { get; set; }
+    public List<ApplicationUser> Users;
 }

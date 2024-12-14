@@ -24,23 +24,32 @@ public class ProfileController : BaseController
             return NotFound();
         }
 
-        var user = _dbContext.Users
-            .Include("Posts")
-            .First(u => u.UserName == username);
-
-        if (user == null)
+        try
         {
+            var user = _dbContext.Users
+                .Include("Posts")
+                .First(u => u.UserName == username);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var posts = user.Posts.ToList();
+            ProfileViewModel viewModel = new()
+            {
+                User = user,
+                UserPosts = posts,
+                RecommandedUsers = []
+            };
+
+            return View(viewModel);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+
             return NotFound();
         }
-
-        var posts = user.Posts.ToList();
-        ProfileViewModel viewModel = new()
-        {
-            User = user,
-            UserPosts = posts,
-            RecommandedUsers = []
-        };
-
-        return View(viewModel);
     }
 }
