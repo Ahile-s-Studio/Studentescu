@@ -88,7 +88,10 @@ public class RegisterModel : PageModel
                     null,
                     new
                     {
-                        area = "Identity", userId, code, returnUrl
+                        area = "Identity",
+                        userId,
+                        code,
+                        returnUrl
                     },
                     Request.Scheme);
 

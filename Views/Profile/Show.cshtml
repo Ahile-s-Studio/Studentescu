@@ -8,11 +8,12 @@
 <div class="container profile-page">
     <div class="profile-header">
         <img
-            src="@(Model.User.ProfilePictureUrl ?? "/images/default-avatar.png")"
-            alt="User Avatar">
+            src="@(Model.User.ProfilePictureUrl ?? "/images/default-avatar.jpg")"
+            alt="User Avatar"
+            style="width: 30%;">
         <h1>@($"{Model.User.FirstName} {Model.User.LastName}")</h1>
         <p>@(Model.User.Biography ?? "No biography provided.")</p>
-        <a href="/edit-profile">Edit Profile</a>
+        <a href="/Identity/Account/Manage">Edit Profile</a>
     </div>
 
     <div class="user-posts">

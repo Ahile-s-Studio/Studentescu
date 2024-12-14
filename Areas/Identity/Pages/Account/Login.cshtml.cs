@@ -87,7 +87,8 @@ public class LoginModel : PageModel
                     return RedirectToPage("./LoginWith2fa",
                         new
                         {
-                            ReturnUrl = returnUrl, Input.RememberMe
+                            ReturnUrl = returnUrl,
+                            Input.RememberMe
                         });
                 }
 
@@ -109,7 +110,7 @@ public class LoginModel : PageModel
 
     public class InputModel
     {
-        [Required] [EmailAddress] public string Email { get; set; }
+        [Required][EmailAddress] public string Email { get; set; }
 
         [Required]
         [DataType(DataType.Password)]
