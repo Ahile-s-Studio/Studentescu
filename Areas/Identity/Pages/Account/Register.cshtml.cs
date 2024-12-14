@@ -21,6 +21,7 @@ public class RegisterModel : PageModel
     private readonly IEmailSender _emailSender;
     private readonly IUserEmailStore<ApplicationUser> _emailStore;
     private readonly ILogger<RegisterModel> _logger;
+    private readonly RoleManager<ApplicationUser> _roleManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IUserStore<ApplicationUser> _userStore;
@@ -30,7 +31,8 @@ public class RegisterModel : PageModel
         IUserStore<ApplicationUser> userStore,
         SignInManager<ApplicationUser> signInManager,
         ILogger<RegisterModel> logger,
-        IEmailSender emailSender)
+        IEmailSender emailSender,
+        RoleManager<IdentityRole> roleManager)
     {
         _userManager = userManager;
         _userStore = userStore;
@@ -75,6 +77,7 @@ public class RegisterModel : PageModel
 
             if (result.Succeeded)
             {
+                await _userManager.AddToRoleAsync(user, "User");
                 _logger.LogInformation(
                     "User created a new account with password.");
 

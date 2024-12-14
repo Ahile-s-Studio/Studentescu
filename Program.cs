@@ -63,6 +63,11 @@ app.MapControllerRoute(
     new { controller = "Profile", action = "Show" });
 
 app.MapControllerRoute(
+    "Profile",
+    "{Profile}/{Edit}/",
+    new { controller = "Account", action = "Manage" });
+
+app.MapControllerRoute(
     "default",
     "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
