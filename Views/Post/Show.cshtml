@@ -1,0 +1,11 @@
+@model Post
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+<h2>Showing a post</h2>
+<h3>@Model.Title</h3>
+<h4>@Model.Content</h4>
+<p>@Model.Likes</p>

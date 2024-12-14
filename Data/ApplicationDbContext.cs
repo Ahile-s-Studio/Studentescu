@@ -87,11 +87,11 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
             .HasForeignKey(m => m.ReceiverId)
             .OnDelete(DeleteBehavior.NoAction);
 
-        builder.Entity<GroupMessage>()
+        /*builder.Entity<GroupMessage>()
             .HasOne(m => m.UserGroup)
             .WithMany(u => u.GroupMessages)
             .HasForeignKey(m => m.UserGroupId)
-            .OnDelete(DeleteBehavior.NoAction);
+            .OnDelete(DeleteBehavior.NoAction);*/
 
         // UserGroup Relationship 
         builder.Entity<MemberInGroup>()

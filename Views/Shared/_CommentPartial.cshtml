@@ -1,0 +1,24 @@
+@model Studentescu.Models.Comment
+<div>
+    <div>
+        
+    @foreach (var comment in @Model.Replies)
+    {
+        <div>
+            <div>
+                <div>
+                    <img src="@comment.User.ProfilePictureUrl" alt="Profile Picture"/>
+                    <h3>@comment.User.UserName</h3>
+                </div>
+                <h3>@comment.CommentedAt</h3>
+            </div>
+            <p>@comment.Content</p>
+        </div>
+    }
+    </div>
+    <form method="post">
+        <input type="text"/>
+        <button type="submit">Submit</button>
+    </form>
+
+</div>

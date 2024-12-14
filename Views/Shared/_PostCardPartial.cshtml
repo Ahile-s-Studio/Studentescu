@@ -1,0 +1,39 @@
+@model Studentescu.ViewModels.PostViewModel
+
+<div>
+    <div class="post-header">
+        <img alt="Profile Picture" src="@Model.Post.User.ProfilePictureUrl"/>
+        <p>@Model.Post.User.UserName</p>
+    </div>
+    <div class="post-content">
+        @if (@Model.Post.ContentType == "image")
+        {
+            <img alt="Post Content" src="@Model.Post.Content" />
+        }else if (@Model.Post.ContentType == "video")
+        {
+            <video controls >
+                <source src="@Model.Post.Content" type="video/mp4"/>
+                Your browser do not support video format
+            </video>
+        }
+    </div>
+    <div class="post-footer">
+        @if (@Model.IsLiked)
+        {
+            <button>Dislike</button>
+        }
+        else
+        {
+            <button>Like</button>
+        }
+        <button>Comment</button>
+        @if (@Model.IsSaved)
+        {
+            <button>Unsave</button>
+        }
+        else
+        {
+            <button>Save</button>
+        }
+    </div>
+</div>

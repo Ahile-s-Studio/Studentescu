@@ -1,0 +1,36 @@
+@model dynamic
+
+@{
+    ViewBag.Title = "Profile Debug";
+    Layout = "_Layout";
+}
+
+<div class="container profile-page">
+    <div class="profile-header">
+        <img src="@(Model.ProfilePictureUrl ?? "/images/default-avatar.png")" alt="User Avatar">
+        <h1>@($"{Model.FirstName} {Model.LastName}")</h1>
+        <p>@(Model.Biography ?? "No biography provided.")</p>
+        <a href="/edit-profile">Edit Profile</a>
+    </div>
+
+    <div class="user-posts">
+        <h2>Your Posts</h2>
+        @if (Model.Posts.Any())
+        {
+            foreach (var post in Model.Posts)
+            {
+                <div class="post-card">
+                    <h3>@post.Title</h3>
+                    <p>@post.Content</p>
+                    <span>@post.CreatedAt</span>
+                </div>
+            }
+        }
+        else
+        {
+            <p>No posts available.</p>
+        }
+    </div>
+</div>
+
+

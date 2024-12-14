@@ -1,0 +1,22 @@
+@model Studentescu.Models.ApplicationUser
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+<div class="container">
+    <h2>Edit Profile</h2>
+    <form class="form-content" asp-action="" method="post">
+        <img src="@Model.ProfilePictureUrl" alt="Profile picture" />
+        
+        <input id="username" name="username" type="text"/>
+        <label for="username">Username</label>
+        
+        <textarea id="biography" name="biography">@Model.Biography</textarea>
+        <label for="biography">Bio</label>
+        
+        <input id="visibility" name="visibility" type="checkbox"/>
+        <label for="visibility">Public / Private Profile</label>
+    </form>
+</div>

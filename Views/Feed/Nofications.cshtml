@@ -1,0 +1,23 @@
+@model Studentescu.ViewModels.NotificationsViewModel
+
+@{
+    Layout = "_Layout";
+}
+
+<div class="container">
+    <h2>Notifications</h2>
+    <div class="notification-list">
+        <div class="today-notifications">
+            @foreach (var notification in Model.Notifications)
+            {
+                <div class="flex flex-row justify-between">
+                    <img alt="Profile Picture" src="@notification.SenderUser.ProfilePictureUrl"/>
+                    <p>@notification.SenderUser.UserName</p>
+                    <p>@notification.Content</p>
+                    <p>@notification.CreatedAt</p>
+                </div>
+            }
+        </div>
+    </div>
+    
+</div>

@@ -1,0 +1,16 @@
+@model List<Studentescu.ViewModels.PostViewModel>
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+<div>
+    <h1>For You</h1>
+    <div class="post-list">
+        @foreach (var post in Model){
+            @Html.Partial("_PostCardPartial",post)
+            
+        }
+        
+    </div>
+</div>

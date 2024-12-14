@@ -1,0 +1,32 @@
+@model UserGroup
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+<form>
+
+    <label for="image">Group Image</label>
+    <input type="text" id="image" name="image"/>
+
+
+    <label for="name">Group name:</label>
+    <input type="text" id="name" name="name"/>
+
+    <label for="description">Group description:</label>
+    <input type="text" id="description" name="description"/>
+
+    <label for="category">Category:</label>
+    <select id="category">
+        <option>None</option>
+        <option>Travel</option>
+        <option>Fashion</option>
+        <option>Gastronomy</option>
+        <option>Health Care</option>
+        <option>Games</option>
+        <option>Study</option>
+    </select>
+
+    <button type="submit">Create</button>
+</form>
