@@ -1,4 +1,4 @@
-@model dynamic
+@model Studentescu.ViewModels.ProfileViewModel
 
 @{
     ViewBag.Title = "Profile Debug";
@@ -7,17 +7,19 @@
 
 <div class="container profile-page">
     <div class="profile-header">
-        <img src="@(Model.ProfilePictureUrl ?? "/images/default-avatar.png")" alt="User Avatar">
-        <h1>@($"{Model.FirstName} {Model.LastName}")</h1>
-        <p>@(Model.Biography ?? "No biography provided.")</p>
+        <img
+            src="@(Model.User.ProfilePictureUrl ?? "/images/default-avatar.png")"
+            alt="User Avatar">
+        <h1>@($"{Model.User.FirstName} {Model.User.LastName}")</h1>
+        <p>@(Model.User.Biography ?? "No biography provided.")</p>
         <a href="/edit-profile">Edit Profile</a>
     </div>
 
     <div class="user-posts">
         <h2>Your Posts</h2>
-        @if (Model.Posts.Any())
+        @if (Model.UserPosts.Any())
         {
-            foreach (var post in Model.Posts)
+            foreach (var post in Model.UserPosts)
             {
                 <div class="post-card">
                     <h3>@post.Title</h3>
