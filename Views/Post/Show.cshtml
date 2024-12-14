@@ -5,7 +5,41 @@
     Layout = "_Layout";
 }
 
-<h2>Showing a post</h2>
-<h3>@Model.Title</h3>
-<h4>@Model.Content</h4>
-<p>@Model.Likes</p>
+<h2>Showing a post:</h2>
+<div>
+    <h3>Posted by: @Model.User.UserName</h3>
+    <img src="@Model.User.ProfilePictureUrl" alt="@Model.User.UserName's Profile Picture" width="50" height="50" />
+</div>
+
+<div>
+    <h4>Content:</h4>
+    @if (Model.ContentType == "text")
+    {
+        <p>@Model.Content</p>
+    }
+    else if (Model.ContentType == "image")
+    {
+        <img src="@Model.Content" alt="Image content" width="500" />
+    }
+    else if (Model.ContentType == "video")
+    {
+        <video width="500" controls>
+            <source src="@Model.Content" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    }
+</div>
+
+<div>
+    <p><strong>Likes:</strong> @Model.Likes.Count</p>
+</div>
+
+<div>
+    <h4>Comments:</h4>
+    @foreach (var comment in Model.Comments)
+    {
+        <div>
+            <p><strong>@comment.User.UserName:</strong> @comment.Content</p>
+        </div>
+    }
+</div>

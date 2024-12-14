@@ -50,10 +50,19 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+app.MapControllerRoute(
+    name: "deletePost",
+    pattern: "Post/Delete/{id}",
+    defaults: new { controller = "Post", action = "Delete" });
+
+app.MapControllerRoute(
+    name: "showPost",
+    pattern: "Post/Show/{id}",
+    defaults: new { controller = "Post", action = "Show" });
 
 app.MapControllerRoute(
     "default",
-    "{controller=Home}/{action=Index}/{id?}");
+    "{controller=Feed}/{action=Index}");
 app.MapRazorPages();
 
 app.Run();
