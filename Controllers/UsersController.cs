@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -55,6 +56,7 @@ public class UsersController : BaseController
     }
 
 
+    [HttpGet]
     public async Task<IActionResult> Edit(string? id)
     {
         try
@@ -66,19 +68,17 @@ public class UsersController : BaseController
 
             var roleNames =
                 await _userManager
-                    .GetRolesAsync(user); // Lista de nume de roluri
+                    .GetRolesAsync(user);
 
-            // Cautam ID-ul rolului in baza de date
             var userRole = _roleManager.Roles
                 .Where(r => roleNames.Contains(r.Name))
                 .Select(r => r.Id)
-                .First(); // Selectam 1 singur rol
+                .First();
 
             UsersEditViewModel viewModel = new()
             {
                 UserRole = userRole,
                 User = user,
-
                 AllRoles = allRoles,
                 RoleNames = roleNames
             };
@@ -86,30 +86,37 @@ public class UsersController : BaseController
         }
         catch (Exception e)
         {
-            Console.WriteLine();
+            _logger.LogError("User not found");
             return NotFound();
         }
     }
 
     [HttpPost]
     public async Task<ActionResult> Edit(string id,
-        ApplicationUser newData, [FromForm] string newRole)
+        UsersEditViewModel newData, [FromForm] string newRole)
     {
         var user = _dbContext.Users.Find(id);
 
         // user.AllRoles = GetAllRoles();
-
+        ModelState.Remove("AllRoles");
+        ModelState.Remove("UserRole");
+        ModelState.Remove("RoleNames");
 
         if (!ModelState.IsValid || user == null)
         {
             return RedirectToAction("Index");
         }
 
-        user.UserName = newData.UserName;
-        user.Email = newData.Email;
-        user.FirstName = newData.FirstName;
-        user.LastName = newData.LastName;
-        user.PhoneNumber = newData.PhoneNumber;
+        _logger.LogInformation("User {0} edited",
+            JsonSerializer.Serialize(newData,
+                new JsonSerializerOptions
+                    { WriteIndented = true }));
+
+        user.UserName = newData.User.UserName;
+        user.Email = newData.User.Email;
+        user.FirstName = newData.User.FirstName;
+        user.LastName = newData.User.LastName;
+        user.PhoneNumber = newData.User.PhoneNumber;
 
 
         var roles = _dbContext.Roles.ToList();
@@ -190,7 +197,7 @@ public class UsersController : BaseController
         var selectList = new List<SelectListItem>();
 
         var roles = from role in _dbContext.Roles
-                    select role;
+            select role;
 
         foreach (var role in roles)
         {
