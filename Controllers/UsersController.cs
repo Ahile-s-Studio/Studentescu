@@ -146,48 +146,74 @@ public class UsersController : BaseController
 
 
     [HttpPost]
-    public IActionResult Delete(string id)
+    public async Task<IActionResult> Delete(string id)
     {
-        var user = _dbContext.Users
-            .Include("Followers")
-            .Include("Followings")
-            .Include("Posts")
-            .Include("Comments")
-            .Include("RequestsSent")
-            .Include("RequestsReceived")
-            .Include("GroupMemberships")
-            .First(u => u.Id == id);
+        if (string.IsNullOrEmpty(id))
+        {
+            // Return a bad request if the id is invalid
+            return BadRequest("User ID is required.");
+        }
 
-        // // Delete user comments
-        // if (user.Comments.Count > 0)
+        var user = await _dbContext.Users
+            // .Include(u => u.Followers)
+            // .Include(u => u.Following)
+            // .Include(u => u.Posts)
+            // .Include(u => u.Comments)
+            // .Include(u => u.RequestsSent)
+            // .Include(u => u.RequestsReceived)
+            // .Include(u => u.GroupMemberships)
+            .FirstOrDefaultAsync(u => u.Id == id);
+
+        if (user == null)
+        {
+            return NotFound($"User with ID {id} not found.");
+        }
+
+        // if (user.Posts.Any())
         // {
-        //     foreach (var comment in user.Comments)
-        //     {
-        //         db.Comments.Remove(comment);
-        //     }
+        //     _dbContext.Posts.RemoveRange(user.Posts);
         // }
         //
-        // // Delete user bookmarks
-        // if (user.Bookmarks.Count > 0)
+        // // Example: Remove user's comments
+        // if (user.Comments.Any())
         // {
-        //     foreach (var bookmark in user.Bookmarks)
-        //     {
-        //         db.Bookmarks.Remove(bookmark);
-        //     }
-        // }
-        //
-        // // Delete user articles
-        // if (user.Articles.Count > 0)
-        // {
-        //     foreach (var article in user.Articles)
-        //     {
-        //         db.Articles.Remove(article);
-        //     }
+        //     _dbContext.Comments.RemoveRange(user.Comments);
         // }
 
+        // if (user.Followers.Any())
+        // {
+        //     _dbContext.Followers.RemoveRange(user.Followers);
+        // }
+        //
+        // if (user.Followings.Any())
+        // {
+        //     _dbContext.Followings.RemoveRange(user.Followings);
+        // }
+        //
+        // if (user.GroupMemberships.Any())
+        // {
+        //     _dbContext.GroupMemberships.RemoveRange(
+        //         user.GroupMemberships);
+        // }
+
+        // if (user.RequestsSent.Any())
+        // {
+        //     _dbContext.RequestsSent.RemoveRange(user.RequestsSent);
+        // }
+        //
+        // if (user.RequestsReceived.Any())
+        // {
+        //     _dbContext.RequestsReceived.RemoveRange(
+        //         user.RequestsReceived);
+        // }
+
+        // Remove the user
         _dbContext.Users.Remove(user);
 
-        _dbContext.SaveChanges();
+        // Save all changes
+        await _dbContext.SaveChangesAsync();
+
+        // Redirect to Index or show a success message
         return RedirectToAction("Index");
     }
 
