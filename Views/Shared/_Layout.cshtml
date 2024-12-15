@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
@@ -32,7 +35,7 @@
                 <ul class="navbar-nav flex-grow-1">
                     <li class="nav-item">
                         <a class="nav-link text-dark"
-                           href="/identity/account/manage">My
+                           href="@(SignInManager.IsSignedIn(User) ? $"/profile/show/{(await UserManager.GetUserAsync(User))?.UserName}" : "/indentity/account")">My
                             Profile</a>
                     </li>
                     <li class="nav-item">

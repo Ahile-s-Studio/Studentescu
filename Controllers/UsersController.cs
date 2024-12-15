@@ -190,7 +190,7 @@ public class UsersController : BaseController
         var selectList = new List<SelectListItem>();
 
         var roles = from role in _dbContext.Roles
-            select role;
+                    select role;
 
         foreach (var role in roles)
         {

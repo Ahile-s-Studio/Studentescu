@@ -29,8 +29,9 @@ public class ProfileController : BaseController
             var user = _dbContext.Users
                 .Include("Posts")
                 .First(u => u.UserName == username);
+            var currentUser = await _userManager.GetUserAsync(User);
 
-            if (user == null)
+            if (user == null || currentUser == null)
             {
                 return NotFound();
             }
@@ -39,6 +40,7 @@ public class ProfileController : BaseController
             ProfileViewModel viewModel = new()
             {
                 User = user,
+                CurrentUser = currentUser,
                 UserPosts = posts,
                 RecommandedUsers = []
             };
