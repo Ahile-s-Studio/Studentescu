@@ -28,6 +28,12 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    SeedData.Initialize(services);
+}
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -50,6 +56,16 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+
+app.MapControllerRoute(
+    "Profile",
+    "Profile/Show/{username?}",
+    new { controller = "Profile", action = "Show" });
+
+// app.MapControllerRoute(
+//     "ProfileEdit",
+//     "{Profile}/{Edit}/",
+//     new { controller = "Account", action = "Manage" });
 
 app.MapControllerRoute(
     "default",

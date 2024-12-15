@@ -4,7 +4,8 @@ namespace Studentescu.ViewModels;
 
 public class ProfileViewModel
 {
-     ApplicationUser User {get; set;}
-     List<Post> UserPosts {get; set;}
-     List<ApplicationUser> RecommandedUsers {get; set;}
+    public ApplicationUser User { get; set; }
+    public ApplicationUser CurrentUser { get; set; }
+    public List<Post> UserPosts { get; set; }
+    public List<ApplicationUser> RecommandedUsers { get; set; }
 }
