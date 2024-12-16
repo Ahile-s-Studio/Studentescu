@@ -15,8 +15,10 @@ public class Post
 
     [ForeignKey("User")] public required string UserId { get; set; }
 
+    [ForeignKey("UserGroup")] public int? GroupId { get; set; } = null;
     public required ApplicationUser User { get; set; }
-
+    
+    public UserGroup? UserGroup { get; set; } = null;
     public DateTime CreatedAt { get; set; } = DateTime.Now;
 
     public ICollection<Like> Likes { get; set; } = new List<Like>();

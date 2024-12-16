@@ -1,0 +1,54 @@
+@model List<Studentescu.ViewModels.GroupIndexViewModel>
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+<div>
+    
+    <h2>Find a group:</h2>
+    <select>
+        <option>None</option>
+        <option>Travel</option>
+        <option>Fashion</option>
+        <option>Gastronomy</option>
+        <option>Health Care</option>
+        <option>Games</option>
+        <option>Study</option>
+    </select>
+    <select>
+        <option>All</option>
+        <option>Joined</option>
+        <option>Not Joined</option>
+    </select>
+    @foreach (var group in @Model)
+    {
+        <div class="flex flex-row justify-between">
+            <img src="@group.Group.GroupImageUrl" width="50" height="50" alt="Group Profile Picture"/>
+            <h4>@group.Group.Name</h4>
+            <p>@group.Group.Description</p>
+            <p>@group.Group.Category</p>
+            @if(@group.Group.Active)
+            {
+                @if (!group.IsJoined)
+                {
+                    <form asp-action="Join" asp-controller="UserGroup" method="post">
+                        <input type="hidden" name="groupId" value="@group.Group.Id" />
+                        <button type="submit">Join Group</button>
+                    </form>
+                }
+                else
+                {
+                    <form asp-action="Leave" asp-controller="UserGroup" method="post">
+                        <input type="hidden" name="groupId" value="@group.Group.Id" />
+                        <button type="submit">Leave Group</button>
+                    </form>
+                }
+            }
+            
+        </div>
+        
+    }
+    
+    
+</div>

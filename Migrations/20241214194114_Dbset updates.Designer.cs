@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Studentescu.Data;
 
@@ -11,9 +12,11 @@ using Studentescu.Data;
 namespace Studentescu.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241214194114_Dbset updates")]
+    partial class Dbsetupdates
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -389,7 +392,7 @@ namespace Studentescu.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("MemberInGroups");
+                    b.ToTable("MemberInGroup");
                 });
 
             modelBuilder.Entity("Studentescu.Models.Message", b =>
@@ -446,13 +449,13 @@ namespace Studentescu.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int?>("GroupId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
+
+                    b.Property<int?>("UserGroupId")
+                        .HasColumnType("int");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -460,7 +463,7 @@ namespace Studentescu.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("GroupId");
+                    b.HasIndex("UserGroupId");
 
                     b.HasIndex("UserId");
 
@@ -474,9 +477,6 @@ namespace Studentescu.Migrations
                         .HasColumnType("int");
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("Category")
-                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
@@ -677,9 +677,9 @@ namespace Studentescu.Migrations
 
             modelBuilder.Entity("Studentescu.Models.Post", b =>
                 {
-                    b.HasOne("Studentescu.Models.UserGroup", "UserGroup")
+                    b.HasOne("Studentescu.Models.UserGroup", null)
                         .WithMany("GroupPosts")
-                        .HasForeignKey("GroupId");
+                        .HasForeignKey("UserGroupId");
 
                     b.HasOne("Studentescu.Models.ApplicationUser", "User")
                         .WithMany("Posts")
@@ -688,8 +688,6 @@ namespace Studentescu.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
-
-                    b.Navigation("UserGroup");
                 });
 
             modelBuilder.Entity("Studentescu.Models.PrivateMessage", b =>

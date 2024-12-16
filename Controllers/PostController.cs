@@ -29,7 +29,7 @@ public class PostController : BaseController
         return View(post);
     }
     
-    public async Task<IActionResult> Create()
+    public async Task<IActionResult> Create(int postDestination = -1)
     {
         var userId = _userManager.GetUserId(User);
         var user =await _userManager.FindByIdAsync(userId);
@@ -37,7 +37,8 @@ public class PostController : BaseController
         {
             return RedirectToAction("Login", "Account"); 
         }
-        
+
+        ViewBag.PostDestination = postDestination;
         return View();
     }
 
@@ -54,8 +55,8 @@ public class PostController : BaseController
         if (ModelState.IsValid)
         {
             var user =await _userManager.FindByIdAsync(userId);
-            
-            _dbContext.Posts.Add(new Post{UserId = userId, Content = post.Content, Title = post.Title, ContentType = post.ContentType, User = user, CreatedAt = DateTime.Now});
+            var group = _dbContext.UserGroups.FirstOrDefault(g => g.Id == post.PostDestionation);
+            _dbContext.Posts.Add(new Post{UserId = userId, Content = post.Content, Title = post.Title, ContentType = post.ContentType, User = user, GroupId = post.PostDestionation, UserGroup = group, CreatedAt = DateTime.Now});
             await _dbContext.SaveChangesAsync();
 
             return RedirectToAction("Index", "Feed"); 

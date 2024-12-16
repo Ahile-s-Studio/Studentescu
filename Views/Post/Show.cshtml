@@ -23,10 +23,11 @@
     }
     else if (Model.ContentType == "video")
     {
-        <video width="500" controls>
-            <source src="@Model.Content" type="video/mp4">
+        
+        
+        <iframe width="1280" height="720" src="@Model.Content" title="@Model.User.UserName's video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
             Your browser does not support the video tag.
-        </video>
+        </iframe>
     }
 </div>
 

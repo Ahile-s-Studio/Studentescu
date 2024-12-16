@@ -61,6 +61,12 @@ app.MapControllerRoute(
     defaults: new { controller = "Post", action = "Show" });
 
 app.MapControllerRoute(
+    name: "createGroup",
+    pattern: "UserGroup/Create",
+    defaults: new { controller = "UserGroup", action = "Create" });
+
+
+app.MapControllerRoute(
     "default",
     "{controller=Feed}/{action=Index}");
 app.MapRazorPages();
