@@ -5,17 +5,20 @@
     Layout = "_Layout";
 }
 
-<form>
+
+@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+<form asp-action="Create" method="post" >
 
     <label for="image">Group Image</label>
-    <input type="text" id="image" name="image"/>
+    <input asp-for="GroupImageUrl" type="text" id="image" />
 
 
     <label for="name">Group name:</label>
-    <input type="text" id="name" name="name"/>
+    <input asp-for="Name" type="text" id="name" />
 
     <label for="description">Group description:</label>
-    <input type="text" id="description" name="description"/>
+    <input asp-for="Description" type="text" id="description" />
 
     <label for="category">Category:</label>
     <select id="category">
@@ -30,3 +33,9 @@
 
     <button type="submit">Create</button>
 </form>
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -58,6 +58,31 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapControllerRoute(
+    name: "createPost",
+    pattern: "Post/Create/{postDestination}",
+    defaults: new { controller = "Post", action = "Create" });
+
+app.MapControllerRoute(
+    name: "deletePost",
+    pattern: "Post/Delete/{id}",
+    defaults: new { controller = "Post", action = "Delete" });
+
+app.MapControllerRoute(
+    name: "showPost",
+    pattern: "Post/Show/{id}",
+    defaults: new { controller = "Post", action = "Show" });
+
+app.MapControllerRoute(
+    name: "createGroup",
+    pattern: "UserGroup/Create",
+    defaults: new { controller = "UserGroup", action = "Create" });
+
+app.MapControllerRoute(
+    name: "createGroup",
+    pattern: "UserGroup/Show/{groupId}",
+    defaults: new { controller = "UserGroup", action = "Show" });
+
+app.MapControllerRoute(
     "Profile",
     "Profile/Show/{username?}",
     new { controller = "Profile", action = "Show" });
@@ -69,7 +94,7 @@ app.MapControllerRoute(
 
 app.MapControllerRoute(
     "default",
-    "{controller=Home}/{action=Index}/{id?}");
+    "{controller=Feed}/{action=Index}");
 app.MapRazorPages();
 
 app.Run();

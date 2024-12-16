@@ -37,7 +37,9 @@ public class ProfileController : BaseController
                 return NotFound("username not found");
             }
 
-            var posts = user.Posts.ToList();
+            var posts = user.Posts
+                .Where(post => post.GroupId == null && post.UserId == currentUser.Id)
+                .ToList();
             ProfileViewModel viewModel = new()
             {
                 User = user,
