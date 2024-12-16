@@ -112,5 +112,10 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
             .WithMany(u => u.Members)
             .HasForeignKey(mg => mg.UserGroupId)
             .OnDelete(DeleteBehavior.NoAction);
+
+        builder.Entity<ApplicationUser>()
+            .HasMany(u => u.Posts)
+            .WithOne(p => p.User)
+            .HasForeignKey(p => p.UserId);
     }
 }

@@ -1,4 +1,4 @@
-﻿@page
+@page
 @model IndexModel
 @{
     ViewData["Title"] = "Profile";
@@ -54,6 +54,13 @@
                 <span asp-validation-for="Input.PhoneNumber"
                       class="text-danger"></span>
             </div>
+    <div class="form-floating mb-3">
+        <div class="form-check">
+            <input type="checkbox" asp-for="Input.IsProfilePrivate" class="form-check-input" />
+            <label asp-for="Input.IsProfilePrivate" class="form-check-label"></label>
+        </div>
+        <span asp-validation-for="Input.IsProfilePrivate" class="text-danger"></span>
+    </div>
             <button id="update-profile-button" type="submit"
                     class="w-100 btn btn-lg btn-primary">Save
             </button>

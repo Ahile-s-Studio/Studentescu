@@ -12,6 +12,7 @@
             alt="User Avatar"
             style="width: 30%;">
         <h1>@($"{Model.User.FirstName} {Model.User.LastName}")</h1>
+        <h5>@($"{Model.User.UserName}")</h5>
         <p>@(Model.User.Biography ?? "No biography provided.")</p>
         @if (Model.User.Id == Model.CurrentUser.Id)
         {
@@ -19,6 +20,7 @@
         }
     </div>
 
+    @if(Model.User.Public || Model.User.Id == Model.CurrentUser.Id){
     <div class="user-posts">
         <h2>Your Posts</h2>
         @if (Model.UserPosts.Any())
@@ -37,6 +39,10 @@
             <p>No posts available.</p>
         }
     </div>
+    }else{
+            <p>This profile is private</p>
+
+    }
 </div>
 
 
