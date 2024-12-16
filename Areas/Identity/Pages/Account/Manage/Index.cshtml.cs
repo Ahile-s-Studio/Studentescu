@@ -43,7 +43,8 @@ public class IndexModel : PageModel
             PhoneNumber = phoneNumber,
             FirstName = user.FirstName,
             LastName = user.LastName,
-            Biography = user.Biography
+            Biography = user.Biography,
+            IsProfilePrivate = !user.Public
         };
     }
 
@@ -79,6 +80,7 @@ public class IndexModel : PageModel
         user.LastName = Input.LastName;
         user.Biography = Input.Biography;
         user.PhoneNumber = Input.PhoneNumber;
+        user.Public = !Input.IsProfilePrivate;
         var result = await _userManager.UpdateAsync(user);
 
         if (!result.Succeeded)
@@ -107,5 +109,8 @@ public class IndexModel : PageModel
         [Phone]
         [Display(Name = "Phone number")]
         public string PhoneNumber { get; set; }
+
+        [Display(Name = "IsProfilePrivate")]
+        public bool IsProfilePrivate { get; set; }
     }
 }

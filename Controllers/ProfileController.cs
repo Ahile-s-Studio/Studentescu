@@ -21,19 +21,19 @@ public class ProfileController : BaseController
     {
         if (username == null)
         {
-            return NotFound();
+            return NotFound("username not found");
         }
 
         try
         {
             var user = _dbContext.Users
-                .Include("Posts")
+                // .Include(u => u.Posts)
                 .First(u => u.UserName == username);
             var currentUser = await _userManager.GetUserAsync(User);
 
             if (user == null || currentUser == null)
             {
-                return NotFound();
+                return NotFound("username not found");
             }
 
             var posts = user.Posts.ToList();
