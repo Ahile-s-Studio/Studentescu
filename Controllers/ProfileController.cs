@@ -26,8 +26,9 @@ public class ProfileController : BaseController
 
         try
         {
+            var pos = _dbContext.Posts.ToList();
             var user = _dbContext.Users
-                // .Include(u => u.Posts)
+                 .Include(u => u.Posts)
                 .First(u => u.UserName == username);
             var currentUser = await _userManager.GetUserAsync(User);
 

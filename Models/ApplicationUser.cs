@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Studentescu.Models;
 
-// TODO Make username unique 
 public class ApplicationUser : IdentityUser
 {
     public string? FirstName { get; set; }

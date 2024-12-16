@@ -12,6 +12,7 @@
             alt="User Avatar"
             style="width: 30%;">
         <h1>@($"{Model.User.FirstName} {Model.User.LastName}")</h1>
+        <h5>@($"{Model.User.UserName}")</h5>
         <p>@(Model.User.Biography ?? "No biography provided.")</p>
         @if (Model.User.Id == Model.CurrentUser.Id)
         {

@@ -110,7 +110,7 @@ public class UsersController : BaseController
         _logger.LogInformation("User {0} edited",
             JsonSerializer.Serialize(newData,
                 new JsonSerializerOptions
-                    { WriteIndented = true }));
+                { WriteIndented = true }));
 
         user.UserName = newData.User.UserName;
         user.Email = newData.User.Email;
@@ -223,7 +223,7 @@ public class UsersController : BaseController
         var selectList = new List<SelectListItem>();
 
         var roles = from role in _dbContext.Roles
-            select role;
+                    select role;
 
         foreach (var role in roles)
         {
