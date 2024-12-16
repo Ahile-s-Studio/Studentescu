@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Studentescu.Migrations
 {
     /// <inheritdoc />
-    public partial class Dbset : Migration
+    public partial class Initialmigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -79,7 +79,7 @@ namespace Studentescu.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "UserGroup",
+                name: "UserGroups",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -90,11 +90,13 @@ namespace Studentescu.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Description = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
+                    Category = table.Column<int>(type: "int", nullable: false),
+                    Active = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserGroup", x => x.Id);
+                    table.PrimaryKey("PK_UserGroups", x => x.Id);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -226,35 +228,7 @@ namespace Studentescu.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Follow",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    FollowerId = table.Column<string>(type: "varchar(255)", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    FolloweeId = table.Column<string>(type: "varchar(255)", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    FollowedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Follow", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Follow_AspNetUsers_FolloweeId",
-                        column: x => x.FolloweeId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Follow_AspNetUsers_FollowerId",
-                        column: x => x.FollowerId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "FollowRequest",
+                name: "FollowRequests",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -269,15 +243,43 @@ namespace Studentescu.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_FollowRequest", x => x.Id);
+                    table.PrimaryKey("PK_FollowRequests", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_FollowRequest_AspNetUsers_RequesterId",
+                        name: "FK_FollowRequests_AspNetUsers_RequesterId",
                         column: x => x.RequesterId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_FollowRequest_AspNetUsers_TargetId",
+                        name: "FK_FollowRequests_AspNetUsers_TargetId",
                         column: x => x.TargetId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "Follows",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    FollowerId = table.Column<string>(type: "varchar(255)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    FolloweeId = table.Column<string>(type: "varchar(255)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    FollowedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Follows", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Follows_AspNetUsers_FolloweeId",
+                        column: x => x.FolloweeId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Follows_AspNetUsers_FollowerId",
+                        column: x => x.FollowerId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
                 })
@@ -336,9 +338,9 @@ namespace Studentescu.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_MemberInGroup_UserGroup_UserGroupId",
+                        name: "FK_MemberInGroup_UserGroups_UserGroupId",
                         column: x => x.UserGroupId,
-                        principalTable: "UserGroup",
+                        principalTable: "UserGroups",
                         principalColumn: "Id");
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
@@ -357,8 +359,8 @@ namespace Studentescu.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     UserId = table.Column<string>(type: "varchar(255)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    UserGroupId = table.Column<int>(type: "int", nullable: true)
+                    GroupId = table.Column<int>(type: "int", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -370,15 +372,15 @@ namespace Studentescu.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Posts_UserGroup_UserGroupId",
-                        column: x => x.UserGroupId,
-                        principalTable: "UserGroup",
+                        name: "FK_Posts_UserGroups_GroupId",
+                        column: x => x.GroupId,
+                        principalTable: "UserGroups",
                         principalColumn: "Id");
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Comment",
+                name: "Comments",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -393,21 +395,21 @@ namespace Studentescu.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Comment", x => x.Id);
+                    table.PrimaryKey("PK_Comments", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Comment_AspNetUsers_UserId",
+                        name: "FK_Comments_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Comment_Comment_ParentId",
+                        name: "FK_Comments_Comments_ParentId",
                         column: x => x.ParentId,
-                        principalTable: "Comment",
+                        principalTable: "Comments",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
-                        name: "FK_Comment_Posts_PostId",
+                        name: "FK_Comments_Posts_PostId",
                         column: x => x.PostId,
                         principalTable: "Posts",
                         principalColumn: "Id",
@@ -416,7 +418,7 @@ namespace Studentescu.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Like",
+                name: "Likes",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -428,15 +430,15 @@ namespace Studentescu.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Like", x => x.Id);
+                    table.PrimaryKey("PK_Likes", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Like_AspNetUsers_UserId",
+                        name: "FK_Likes_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Like_Posts_PostId",
+                        name: "FK_Likes_Posts_PostId",
                         column: x => x.PostId,
                         principalTable: "Posts",
                         principalColumn: "Id",
@@ -482,48 +484,48 @@ namespace Studentescu.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Comment_ParentId",
-                table: "Comment",
+                name: "IX_Comments_ParentId",
+                table: "Comments",
                 column: "ParentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Comment_PostId",
-                table: "Comment",
+                name: "IX_Comments_PostId",
+                table: "Comments",
                 column: "PostId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Comment_UserId",
-                table: "Comment",
+                name: "IX_Comments_UserId",
+                table: "Comments",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Follow_FolloweeId",
-                table: "Follow",
-                column: "FolloweeId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Follow_FollowerId",
-                table: "Follow",
-                column: "FollowerId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_FollowRequest_RequesterId",
-                table: "FollowRequest",
+                name: "IX_FollowRequests_RequesterId",
+                table: "FollowRequests",
                 column: "RequesterId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_FollowRequest_TargetId",
-                table: "FollowRequest",
+                name: "IX_FollowRequests_TargetId",
+                table: "FollowRequests",
                 column: "TargetId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Like_PostId",
-                table: "Like",
+                name: "IX_Follows_FolloweeId",
+                table: "Follows",
+                column: "FolloweeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Follows_FollowerId",
+                table: "Follows",
+                column: "FollowerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Likes_PostId",
+                table: "Likes",
                 column: "PostId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Like_UserId",
-                table: "Like",
+                name: "IX_Likes_UserId",
+                table: "Likes",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
@@ -547,9 +549,9 @@ namespace Studentescu.Migrations
                 column: "SenderId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Posts_UserGroupId",
+                name: "IX_Posts_GroupId",
                 table: "Posts",
-                column: "UserGroupId");
+                column: "GroupId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Posts_UserId",
@@ -576,16 +578,16 @@ namespace Studentescu.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Comment");
+                name: "Comments");
 
             migrationBuilder.DropTable(
-                name: "Follow");
+                name: "FollowRequests");
 
             migrationBuilder.DropTable(
-                name: "FollowRequest");
+                name: "Follows");
 
             migrationBuilder.DropTable(
-                name: "Like");
+                name: "Likes");
 
             migrationBuilder.DropTable(
                 name: "MemberInGroup");
@@ -603,7 +605,7 @@ namespace Studentescu.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "UserGroup");
+                name: "UserGroups");
         }
     }
 }

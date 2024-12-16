@@ -12,8 +12,8 @@ using Studentescu.Data;
 namespace Studentescu.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241214205840_Updated models")]
-    partial class Updatedmodels
+    [Migration("20241216070551_Initial migration")]
+    partial class Initialmigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -301,7 +301,7 @@ namespace Studentescu.Migrations
 
                     b.HasIndex("FollowerId");
 
-                    b.ToTable("Follow");
+                    b.ToTable("Follows");
                 });
 
             modelBuilder.Entity("Studentescu.Models.FollowRequest", b =>
@@ -335,7 +335,7 @@ namespace Studentescu.Migrations
 
                     b.HasIndex("TargetId");
 
-                    b.ToTable("FollowRequest");
+                    b.ToTable("FollowRequests");
                 });
 
             modelBuilder.Entity("Studentescu.Models.Like", b =>
@@ -392,7 +392,7 @@ namespace Studentescu.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("MemberInGroups");
+                    b.ToTable("MemberInGroup");
                 });
 
             modelBuilder.Entity("Studentescu.Models.Message", b =>
@@ -477,6 +477,9 @@ namespace Studentescu.Migrations
                         .HasColumnType("int");
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<int>("Category")
                         .HasColumnType("int");

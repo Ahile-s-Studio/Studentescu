@@ -6,9 +6,9 @@ public class UserGroup
 {
     [Key] public int Id { get; set; }
     public required string Name { get; set; }
-    
+
     public string GroupImageUrl { get; set; }
-    
+
     public required string Description { get; set; }
 
     public required CategoryType Category { get; set; } = CategoryType.None;
