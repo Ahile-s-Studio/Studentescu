@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Studentescu.Models;
 
-// TODO Make username unique 
 public class ApplicationUser : IdentityUser
 {
     public string? FirstName { get; set; }
@@ -10,7 +9,7 @@ public class ApplicationUser : IdentityUser
     public string? ProfilePictureUrl { get; set; }
     public string? Biography { get; set; }
 
-    public bool? Public { get; set; }
+    public bool Public { get; set; } = false;
 
     public ICollection<Follow> Following { get; set; } =
         new List<Follow>();

@@ -1,4 +1,4 @@
-﻿services:
+services:
     studentescu:
         stdin_open: true
         tty: true
