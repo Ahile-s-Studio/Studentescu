@@ -56,6 +56,12 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+
+app.MapControllerRoute(
+    name: "createPost",
+    pattern: "Post/Create/{postDestination}",
+    defaults: new { controller = "Post", action = "Create" });
+
 app.MapControllerRoute(
     name: "deletePost",
     pattern: "Post/Delete/{id}",
@@ -71,6 +77,10 @@ app.MapControllerRoute(
     pattern: "UserGroup/Create",
     defaults: new { controller = "UserGroup", action = "Create" });
 
+app.MapControllerRoute(
+    name: "createGroup",
+    pattern: "UserGroup/Show/{groupId}",
+    defaults: new { controller = "UserGroup", action = "Show" });
 
 app.MapControllerRoute(
     "Profile",

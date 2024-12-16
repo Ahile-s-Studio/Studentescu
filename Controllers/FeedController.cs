@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Studentescu.Data;
 using Studentescu.Models;
 using Studentescu.ViewModels;
@@ -25,17 +26,22 @@ public class FeedController : BaseController
             .Count();
 
         var totalPages = (int)Math.Ceiling(totalPostsCount / (double)PageSize);
-
+        
+        var userId = _userManager.GetUserId(User);
+        
         var posts = _dbContext.Posts
-            .Where(p => p.User.Public != false) 
+            .Include(p => p.User)
+            .Include(p => p.Comments)
+            .Include(p => p.Likes)
+            .Where(p => p.User.Public != false && p.GroupId == null) 
             .OrderByDescending(p => p.CreatedAt)
             .Skip((pageNumber - 1) * PageSize) 
             .Take(PageSize) 
             .Select(p => new PostViewModel
             {
                 Post = p,
-                IsLiked = true, 
-                IsSaved = true,
+                IsLiked = p.Likes.Any(l => l.UserId == userId), 
+                IsSaved = false,
             })
             .ToList();
         

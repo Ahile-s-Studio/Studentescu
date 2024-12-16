@@ -10,5 +10,5 @@ public class PostForm
     
     [Required] public required string ContentType { get; set; }
 
-    [Required] public required int? PostDestionation { get; set; } = null;
+    [Required] public required int? PostDestination { get; set; } = null;
 }

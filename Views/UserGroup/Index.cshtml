@@ -21,9 +21,10 @@
         <option>Joined</option>
         <option>Not Joined</option>
     </select>
+    <a href="/UserGroup/Create">Create a group</a>
     @foreach (var group in @Model)
     {
-        <div class="flex flex-row justify-between">
+        <div onclick="window.location.href='/UserGroup/Show/@group.Group.Id';" class="border-2 flex flex-row justify-between">
             <img src="@group.Group.GroupImageUrl" width="50" height="50" alt="Group Profile Picture"/>
             <h4>@group.Group.Name</h4>
             <p>@group.Group.Description</p>

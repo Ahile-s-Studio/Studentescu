@@ -20,7 +20,7 @@
     }
     @if (@Model.IsJoined)
     {
-        <button>Create New Post</button>
+        <a href="/Post/Create/@Model.Group.Id">Create New Post</a>
     }
     
     @foreach (var post in @Model.Posts)

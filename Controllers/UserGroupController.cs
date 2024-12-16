@@ -48,9 +48,20 @@ public class UserGroupController : BaseController
         
         bool isJoined = relationToGroup != null;
         bool isModerator = relationToGroup.Role != GroupRole.Moderator;
-        
-        
-        return View(new GroupFeedViewModel{Group = group, IsJoined = isJoined, IsModerator = isModerator, Posts = []});
+
+        var groupPosts = new List<PostViewModel>();
+        if (isJoined)
+        {
+            groupPosts =  _dbContext.Posts
+                .Where(p => p.GroupId == groupId)
+                .Include(p => p.User)
+                .Include(p => p.Likes)
+                .Select(p=> 
+                    new PostViewModel
+                        {Post = p, IsLiked = p.Likes.Any(like => like.UserId == userId), IsSaved = false}
+                ).ToList();
+        }
+        return View(new GroupFeedViewModel{Group = group, IsJoined = isJoined, IsModerator = isModerator, Posts = groupPosts});
     }
     
     public IActionResult Create()
@@ -140,3 +151,4 @@ public class UserGroupController : BaseController
     
     
 }
+

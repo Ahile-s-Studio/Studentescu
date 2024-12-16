@@ -1,8 +1,8 @@
 @model Studentescu.ViewModels.PostViewModel
 
 <div>
-    <div class="post-header">
-        <img alt="Profile Picture" src="@Model.Post.User.ProfilePictureUrl"/>
+    <div class="post-header flex flex-row">
+        <img width="50" height="50" alt="Profile Picture" src="@(Model.Post.User.ProfilePictureUrl ?? "/images/default-avatar.jpg")"/>
         <p>@Model.Post.User.UserName</p>
     </div>
     <div class="post-content">
@@ -15,6 +15,9 @@
                 <source src="@Model.Post.Content" type="video/mp4"/>
                 Your browser do not support video format
             </video>
+        }else if (@Model.Post.ContentType == "text")
+        {
+            <p>@Model.Post.Content</p>
         }
     </div>
     <div class="post-footer">
@@ -24,7 +27,12 @@
         }
         else
         {
-            <button>Like</button>
+            <form asp-action="Like" asp-controller="Post" method="post">
+                <input type="hidden" name="postId" value="@Model.Post.Id" />
+                <button type="submit" class="btn btn-primary">
+                    Like
+                </button>
+            </form>
         }
         <button>Comment</button>
         @if (@Model.IsSaved)
