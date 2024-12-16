@@ -4,3 +4,4 @@ node_modules/
 .vscode/
 .idea
 wwwroot/css/tailwind-output.css 
+Migrations
