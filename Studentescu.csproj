@@ -31,8 +31,8 @@
         <_ContentIncludedByDefault Remove="Views\Home\Privacy.cshtml"/>
     </ItemGroup>
 
-    <ItemGroup>
-        <Folder Include="Migrations\"/>
-    </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Views\Account\" />
+  </ItemGroup>
 
 </Project>
