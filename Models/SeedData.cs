@@ -6,30 +6,36 @@ namespace Studentescu.Models;
 
 public class SeedData
 {
-    public static void Initialize(IServiceProvider serviceProvider)
+    public static void Initialize(
+        IServiceProvider serviceProvider)
     {
         using (var context = new ApplicationDbContext(
                    serviceProvider.GetRequiredService
-                       <DbContextOptions<ApplicationDbContext>>()))
+                   <DbContextOptions<
+                       ApplicationDbContext>>()))
         {
-            if (context.Roles.Any())
+            if (!context.Roles.Any())
             {
-                return;
+                context.Roles.AddRange(
+                    new IdentityRole
+                    {
+                        Id =
+                            "2c5e174e-3b0e-446f-86af-483d56fd7210",
+                        Name = "Admin",
+                        NormalizedName =
+                            "Admin".ToUpper()
+                    },
+                    // new IdentityRole { Id = "2c5e174e-3b0e-446f-86af-483d56fd7211", Name = "Editor", NormalizedName = "Editor".ToUpper() },
+                    new IdentityRole
+                    {
+                        Id =
+                            "2c5e174e-3b0e-446f-86af-483d56fd7212",
+                        Name = "User",
+                        NormalizedName =
+                            "User".ToUpper()
+                    }
+                );
             }
-
-            context.Roles.AddRange(
-                new IdentityRole
-                {
-                    Id = "2c5e174e-3b0e-446f-86af-483d56fd7210",
-                    Name = "Admin", NormalizedName = "Admin".ToUpper()
-                },
-                // new IdentityRole { Id = "2c5e174e-3b0e-446f-86af-483d56fd7211", Name = "Editor", NormalizedName = "Editor".ToUpper() },
-                new IdentityRole
-                {
-                    Id = "2c5e174e-3b0e-446f-86af-483d56fd7212",
-                    Name = "User", NormalizedName = "User".ToUpper()
-                }
-            );
 
 
             // var hasher = new PasswordHasher<ApplicationUser>();
@@ -97,25 +103,59 @@ public class SeedData
         {
             // Creare admin inițial   
             var user = userManager
-                .FindByEmailAsync("admin@example.com").Result;
-            if (user != null)
+                .FindByEmailAsync("admin@example.com")
+                .Result;
+            if (user == null)
             {
-                return;
+                user = new ApplicationUser
+                {
+                    UserName = "admin@example.com",
+                    Email = "admin@example.com",
+                    EmailConfirmed = true
+                };
+
+                var result = userManager
+                    .CreateAsync(user, "Admin123!")
+                    .Result;
+
+                if (result.Succeeded)
+                {
+                    userManager
+                        .AddToRoleAsync(user, "Admin")
+                        .Wait();
+                }
             }
 
-            user = new ApplicationUser
-            {
-                UserName = "admin@example.com",
-                Email = "admin@example.com",
-                EmailConfirmed = true
-            };
 
-            var result = userManager
-                .CreateAsync(user, "Admin123!").Result;
-
-            if (result.Succeeded)
+            // Create 5 Regular Users
+            for (var i = 1; i <= 5; i++)
             {
-                userManager.AddToRoleAsync(user, "Admin").Wait();
+                var username = $"user{i}";
+                var email = $"user{i}@example.com";
+                var normalUser = userManager
+                    .FindByEmailAsync(email).Result;
+
+                if (normalUser != null)
+                {
+                    continue;
+                }
+
+                normalUser = new ApplicationUser
+                {
+                    UserName = username,
+                    Email = email,
+                    EmailConfirmed = true
+                };
+
+                var userResult = userManager
+                    .CreateAsync(normalUser,
+                        $"User{i}123!").Result;
+
+                if (!userResult.Succeeded)
+                {
+                    Console.WriteLine(
+                        $"Failed to create user {email}: {string.Join(", ", userResult.Errors.Select(e => e.Description))}");
+                }
             }
         }
     }
