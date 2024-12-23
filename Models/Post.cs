@@ -17,7 +17,7 @@ public class Post
 
     [ForeignKey("UserGroup")] public int? GroupId { get; set; } = null;
     public required ApplicationUser User { get; set; }
-    
+
     public UserGroup? UserGroup { get; set; } = null;
     public DateTime CreatedAt { get; set; } = DateTime.Now;
 

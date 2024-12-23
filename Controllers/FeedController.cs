@@ -26,26 +26,26 @@ public class FeedController : BaseController
             .Count();
 
         var totalPages = (int)Math.Ceiling(totalPostsCount / (double)PageSize);
-        
+
         var userId = _userManager.GetUserId(User);
-        
+
         var posts = _dbContext.Posts
             .Include(p => p.User)
             .Include(p => p.Comments)
             .Include(p => p.Likes)
-            .Where(p => p.User.Public != false && p.GroupId == null) 
+            .Where(p => p.User.Public != false && p.GroupId == null)
             .OrderByDescending(p => p.CreatedAt)
-            .Skip((pageNumber - 1) * PageSize) 
-            .Take(PageSize) 
+            .Skip((pageNumber - 1) * PageSize)
+            .Take(PageSize)
             .Select(p => new PostViewModel
             {
                 Post = p,
-                IsLiked = p.Likes.Any(l => l.UserId == userId), 
+                IsLiked = p.Likes.Any(l => l.UserId == userId),
                 IsSaved = false,
             })
             .ToList();
-        
-       
+
+
         return View(posts);
     }
 }
