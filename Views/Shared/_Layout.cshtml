@@ -12,9 +12,11 @@
           href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="~/css/site.css"
           asp-append-version="true"/>
-    <link rel="stylesheet" href="~/Studentescu.styles.css"
+    <link rel="stylesheet"
+          href="~/Studentescu.styles.css"
           asp-append-version="true"/>
-    <link href="~/css/tailwind-output.css" rel="stylesheet">
+    <link href="~/css/tailwind-output.css"
+          rel="stylesheet">
 </head>
 <body>
 <header>
@@ -41,9 +43,24 @@
                             Profile</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark">Groups</a>
+                        <a class="nav-link text-dark"
+                           href="/UserGroup">Groups</a>
                     </li>
                 </ul>
+
+                <form class="d-flex" method="get"
+                      asp-controller="Profile"
+                      asp-action="Search">
+                    <input class="form-control me-2"
+                           type="search" name="query"
+                           placeholder="Search..."
+                           aria-label="Search"/>
+                    <button
+                        class="btn btn-outline-success"
+                        type="submit">Search
+                    </button>
+                </form>
+
                 <partial name="_LoginPartial"/>
             </div>
         </div>
@@ -65,7 +82,8 @@
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script
     src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-<script src="~/js/site.js" asp-append-version="true"></script>
+<script src="~/js/site.js"
+        asp-append-version="true"></script>
 @await RenderSectionAsync("Scripts", false)
 </body>
 </html>

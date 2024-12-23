@@ -10,20 +10,20 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
         : base(options)
     {
     }
-    public DbSet<Post> Posts { get; set; } 
-    
+    public DbSet<Post> Posts { get; set; }
+
     public DbSet<Comment> Comments { get; set; }
-    
+
     public DbSet<Like> Likes { get; set; }
-    
+
     public DbSet<UserGroup> UserGroups { get; set; }
-    
+
     public DbSet<MemberInGroup> MemberInGroups { get; set; }
-    
+
     public DbSet<Follow> Follows { get; set; }
-    
+
     public DbSet<MemberInGroup> GroupMemberships { get; set; }
-    
+
     public DbSet<FollowRequest> FollowRequests { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
