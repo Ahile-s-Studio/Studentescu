@@ -152,11 +152,17 @@ public class SeedData
                     .CreateAsync(normalUser,
                         $"User{i}123!").Result;
 
-                if (!userResult.Succeeded)
+
+                if (userResult.Succeeded)
                 {
-                    Console.WriteLine(
-                        $"Failed to create user {email}: {string.Join(", ", userResult.Errors.Select(e => e.Description))}");
+                    userManager
+                        .AddToRoleAsync(normalUser, "User")
+                        .Wait();
+                    continue;
                 }
+
+                Console.WriteLine(
+                    $"Failed to create user {email}: {string.Join(", ", userResult.Errors.Select(e => e.Description))}");
             }
         }
     }
