@@ -1,28 +1,47 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Studentescu.Data;
+using Studentescu.Filters;
 using Studentescu.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 var connectionString =
-    builder.Configuration.GetConnectionString("DefaultConnection") ??
+    builder.Configuration.GetConnectionString(
+        "DefaultConnection") ??
     throw new InvalidOperationException(
         "Connection string 'DefaultConnection' not found.");
 
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseMySql(connectionString,
-        new MySqlServerVersion(new Version(8, 0, 33))));
+builder.Services.AddDbContext<ApplicationDbContext>(
+    options =>
+        options.UseMySql(connectionString,
+            new MySqlServerVersion(
+                new Version(8, 0, 33))));
 
-builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+builder.Services
+    .AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
-        options.SignIn.RequireConfirmedAccount = true)
+builder.Services.AddDefaultIdentity<ApplicationUser>(
+        options =>
+            options.SignIn.RequireConfirmedAccount =
+                true)
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews(options =>
+{
+    options.Filters
+        .Add<ProfileCompletionRequiredAttribute>();
+});
+
+builder.Services.AddRazorPages().AddMvcOptions(
+    options =>
+    {
+        options.Filters
+            .Add<ProfileCompletionRequiredAttribute>();
+    });
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -58,29 +77,32 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapControllerRoute(
-    name: "createPost",
-    pattern: "Post/Create/{postDestination}",
-    defaults: new { controller = "Post", action = "Create" });
+    "createPost",
+    "Post/Create/{postDestination}",
+    new { controller = "Post", action = "Create" });
 
 app.MapControllerRoute(
-    name: "deletePost",
-    pattern: "Post/Delete/{id}",
-    defaults: new { controller = "Post", action = "Delete" });
+    "deletePost",
+    "Post/Delete/{id}",
+    new { controller = "Post", action = "Delete" });
 
 app.MapControllerRoute(
-    name: "showPost",
-    pattern: "Post/Show/{id}",
-    defaults: new { controller = "Post", action = "Show" });
+    "showPost",
+    "Post/Show/{id}",
+    new { controller = "Post", action = "Show" });
 
 app.MapControllerRoute(
-    name: "createGroup",
-    pattern: "UserGroup/Create",
-    defaults: new { controller = "UserGroup", action = "Create" });
+    "createGroup",
+    "UserGroup/Create",
+    new
+    {
+        controller = "UserGroup", action = "Create"
+    });
 
 app.MapControllerRoute(
-    name: "createGroup",
-    pattern: "UserGroup/Show/{groupId}",
-    defaults: new { controller = "UserGroup", action = "Show" });
+    "createGroup",
+    "UserGroup/Show/{groupId}",
+    new { controller = "UserGroup", action = "Show" });
 
 app.MapControllerRoute(
     "Profile",

@@ -1,3 +1,5 @@
+using System.Text.Json;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -113,5 +115,71 @@ public class ProfileController : BaseController
 
             return NotFound();
         }
+    }
+
+    [Authorize(Roles = "Admin,User")]
+    public async Task<IActionResult> CompleteProfile()
+    {
+        var user =
+            await _userManager.GetUserAsync(User);
+
+        if (user == null)
+        {
+            return RedirectToRoute(
+                "/Identity/Account/Login"); // Redirect to login if user is not found
+        }
+
+
+        var viewModel = new CompleteProfileViewModel
+        {
+            Biography = user.Biography,
+            Public = user.Public,
+            FirstName = user.FirstName,
+            LastName = user.LastName
+            // ProfilePictureUrl = user.ProfilePictureUrl
+        };
+
+        return View(viewModel);
+    }
+
+    [HttpPost]
+    [Authorize(Roles = "Admin,User")]
+    public async Task<IActionResult> CompleteProfile(
+        CompleteProfileViewModel model)
+    {
+        Console.WriteLine(JsonSerializer.Serialize(model));
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
+
+        var user =
+            await _userManager.GetUserAsync(User);
+        if (user == null)
+        {
+            return RedirectToRoute("/Identity/Account/Login"); // Redirect to login if user is not found
+        }
+
+        user.FirstName = model.FirstName;
+        user.LastName = model.LastName;
+        user.Biography = model.Biography;
+        user.Public = model.Public;
+        user.IsProfileCompleted = true;
+
+        var result =
+            await _userManager.UpdateAsync(user);
+
+        if (result.Succeeded)
+        {
+            return Redirect("/");
+        }
+
+        foreach (var error in result.Errors)
+        {
+            ModelState.AddModelError(string.Empty,
+                error.Description);
+        }
+
+        return View(model);
     }
 }
