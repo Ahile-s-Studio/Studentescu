@@ -144,7 +144,8 @@ public class SeedData
                 {
                     UserName = username,
                     Email = email,
-                    EmailConfirmed = true
+                    EmailConfirmed = true,
+                    Public = false
                 };
 
                 var userResult = userManager

@@ -16,32 +16,35 @@
         <p>@(Model.User.Biography ?? "No biography provided.")</p>
         @if (Model.User.Id == Model.CurrentUser.Id)
         {
-            <a href="/Identity/Account/Manage">Edit Profile</a>
+            <a href="/Identity/Account/Manage">Edit
+                Profile</a>
         }
     </div>
 
-    @if(Model.User.Public || Model.User.Id == Model.CurrentUser.Id){
-    <div class="user-posts">
-        <h2>Your Posts</h2>
-        @if (Model.UserPosts.Any())
-        {
-            foreach (var post in Model.UserPosts)
+    @if (Model.User.Public || Model.User.Id == Model.CurrentUser.Id)
+    {
+        <div class="user-posts">
+            <h2>Your Posts</h2>
+            @if (Model.UserPosts.Any())
             {
-                <div class="post-card">
-                    <h3>@post.Title</h3>
-                    <p>@post.Content</p>
-                    <span>@post.CreatedAt</span>
-                </div>
+                foreach (var post in Model.UserPosts)
+                {
+                    <div class="post-card">
+                        <h3>@post.Post.Title</h3>
+                        <p>@post.Post.Content</p>
+                        <span>@post.Post.CreatedAt</span>
+                    </div>
+                }
             }
-        }
-        else
-        {
-            <p>No posts available.</p>
-        }
-    </div>
-    }else{
-            <p>This profile is private</p>
-
+            else
+            {
+                <p>No posts available.</p>
+            }
+        </div>
+    }
+    else
+    {
+        <p>This profile is private</p>
     }
 </div>
 

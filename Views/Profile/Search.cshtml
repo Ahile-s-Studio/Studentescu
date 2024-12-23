@@ -1,0 +1,80 @@
+@model Studentescu.ViewModels.PaginatedList<ApplicationUser>
+
+@{
+    ViewBag.Title = "Profile Debug";
+    Layout = "_Layout";
+}
+
+
+<h1>Search Results</h1>
+
+@if (Model.Any())
+{
+    <ul>
+        @foreach (var user in Model)
+        {
+            <li>
+                <a asp-controller="Profile"
+                   asp-action="Show"
+                   asp-route-username="@user.UserName">
+                    @user.UserName
+                </a>
+                - @user .Email
+            </li>
+        }
+    </ul>
+
+    <!-- Pagination Links -->
+    <nav>
+        <ul class="pagination">
+            @if (Model.HasPreviousPage)
+            {
+                <li class="page-item">
+                    <a class="page-link"
+                       asp-controller="Profile"
+                       asp-action="Search"
+                       asp-route-query="@ViewData["Query"]"
+                       asp-route-page="@(Model.PageIndex - 1)">Previous</a>
+                </li>
+            }
+            else
+            {
+                <li class="page-item disabled"><span
+                        class="page-link">Previous</span>
+                </li>
+            }
+
+            @for (var i = 1; i <= Model.TotalPages; i++)
+            {
+                <li class="page-item @(i == Model.PageIndex ? "active" : "")">
+                    <a class="page-link"
+                       asp-controller="Profile"
+                       asp-action="Search"
+                       asp-route-query="@ViewData["Query"]"
+                       asp-route-page="@i">@i</a>
+                </li>
+            }
+
+            @if (Model.HasNextPage)
+            {
+                <li class="page-item">
+                    <a class="page-link"
+                       asp-controller="Profile"
+                       asp-action="Search"
+                       asp-route-query="@ViewData["Query"]"
+                       asp-route-page="@(Model.PageIndex + 1)">Next</a>
+                </li>
+            }
+            else
+            {
+                <li class="page-item disabled"><span
+                        class="page-link">Next</span>
+                </li>
+            }
+        </ul>
+    </nav>
+}
+else
+{
+    <p>No results found.</p>
+}
