@@ -8,12 +8,12 @@ public class FollowRequest
     [Key] public int Id { get; set; }
 
     [Required][ForeignKey("Requester")] public required string RequesterId { get; set; }
-    public required ApplicationUser Requester { get; set; }
+    public ApplicationUser Requester { get; set; }
 
     [Required][ForeignKey("Target")] public required string TargetId { get; set; }
-    public required ApplicationUser Target { get; set; }
+    public ApplicationUser Target { get; set; }
 
-    [Required] public FollowRequestStatus Status { get; set; }
+    [Required] public required FollowRequestStatus Status { get; set; }
 
     public DateTime CreatedAt { get; set; } = DateTime.Now;
     public DateTime? UpdatedAt { get; set; }

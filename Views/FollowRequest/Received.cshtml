@@ -1,0 +1,30 @@
+@model List<FollowRequest>
+<h2>Follow Requests Received</h2>
+<table class="table">
+    <thead>
+    <tr>
+        <th>Requester</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var request in Model)
+    {
+        <tr>
+            <td>@request.Requester.FirstName @request.Requester.LastName @request.Requester.UserName</td>
+            <td>
+                <form style="display: inline;" method="post" asp-action="Accept"
+                      asp-controller="FollowRequest">
+                    <input type="hidden" name="id" value="@request.Id" />
+                    <button type="submit" class="btn btn-success">Accept</button>
+                </form>
+                <form style="display: inline;" method="post" asp-action="Reject"
+                      asp-controller="FollowRequest">
+                    <input type="hidden" name="id" value="@request.Id" />
+                    <button type="submit" class="btn btn-danger">Reject</button>
+                </form>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

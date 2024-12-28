@@ -131,6 +131,8 @@ public class SeedData
             for (var i = 1; i <= 5; i++)
             {
                 var username = $"user{i}";
+                var firstName = $"User{i}FirstName";
+                var lastName = $"User{i}LastName";
                 var email = $"user{i}@example.com";
                 var normalUser = userManager
                     .FindByEmailAsync(email).Result;
@@ -142,6 +144,8 @@ public class SeedData
 
                 normalUser = new ApplicationUser
                 {
+                    FirstName = firstName,
+                    LastName = lastName,
                     UserName = username,
                     Email = email,
                     EmailConfirmed = true,
