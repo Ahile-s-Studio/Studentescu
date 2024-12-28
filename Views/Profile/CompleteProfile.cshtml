@@ -1,17 +1,17 @@
 @model Studentescu.ViewModels.CompleteProfileViewModel
 
-<h2>Complete Your Profile</h2>
+<h2>Complete Your Profile Before Using Studentescu</h2>
 
 <form method="post" asp-controller="Profile" asp-action="CompleteProfile">
     <div class="form-group">
         <label for="@Model.FirstName">First Name</label>
-        <input type="text" asp-for="@Model.FirstName" class="form-control"/>
+        <input type="text" asp-for="@Model.FirstName" class="form-control" />
         <span asp-validation-for="@Model.FirstName" class="text-danger"></span>
     </div>
 
     <div class="form-group">
         <label for="@Model.LastName">Last Name</label>
-        <input type="text" asp-for="@Model.LastName" class="form-control"/>
+        <input type="text" asp-for="@Model.LastName" class="form-control" />
         <span asp-validation-for="@Model.LastName" class="text-danger"></span>
     </div>
 
@@ -34,7 +34,7 @@
                 asp-for="@Model.Public"
                 role="switch"
                 class="form-check-input"
-                aria-label="Toggle profile privacy"/>
+                aria-label="Toggle profile privacy" />
             <label
                 for="isProfilePrivateSwitch"
                 class="form-check-label">
@@ -50,5 +50,5 @@
 </form>
 
 @section Scripts {
-    <partial name="_ValidationScriptsPartial"/>
+    <partial name="_ValidationScriptsPartial" />
 }

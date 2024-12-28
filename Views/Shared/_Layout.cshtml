@@ -4,17 +4,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8"/>
+    <meta charset="utf-8" />
     <meta name="viewport"
-          content="width=device-width, initial-scale=1.0"/>
+          content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Studentescu</title>
     <link rel="stylesheet"
-          href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
+          href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css"
-          asp-append-version="true"/>
+          asp-append-version="true" />
     <link rel="stylesheet"
           href="~/Studentescu.styles.css"
-          asp-append-version="true"/>
+          asp-append-version="true" />
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     @* <link href="~/css/tailwind-output.css" *@
     @*       rel="stylesheet"> *@
 </head>
@@ -46,22 +48,43 @@
                         <a class="nav-link text-dark"
                            href="/UserGroup">Groups</a>
                     </li>
+
+                    <form class="d-flex mx-auto" method="get"
+                          asp-controller="Profile"
+                          asp-action="Search">
+                        <input class="form-control me-2"
+                               type="search" name="query"
+                               placeholder="Search..."
+                               aria-label="Search" />
+                        <button
+                            class="btn btn-outline-success"
+                            type="submit">Search
+                        </button>
+                    </form>
                 </ul>
 
-                <form class="d-flex" method="get"
-                      asp-controller="Profile"
-                      asp-action="Search">
-                    <input class="form-control me-2"
-                           type="search" name="query"
-                           placeholder="Search..."
-                           aria-label="Search"/>
-                    <button
-                        class="btn btn-outline-success"
-                        type="submit">Search
-                    </button>
-                </form>
-
-                <partial name="_LoginPartial"/>
+                @if (SignInManager.IsSignedIn(User))
+                {
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav ms-auto">
+                            <!-- Requests Received -->
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="FollowRequest"
+                                   asp-action="Received">
+                                    <i class="bi bi-person-lines-fill me-2"></i>Requests Received
+                                </a>
+                            </li>
+                            <!-- Requests Sent -->
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="FollowRequest"
+                                   asp-action="Sent">
+                                    <i class="bi bi-person-plus-fill me-2"></i>Requests Sent
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                }
+                <partial name="_LoginPartial" />
             </div>
         </div>
     </nav>

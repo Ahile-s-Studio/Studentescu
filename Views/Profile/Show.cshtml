@@ -3,6 +3,10 @@
 @{
     ViewBag.Title = "Profile Debug";
     Layout = "_Layout";
+    var followUrlAction = Url.Action("FollowersAndFollowing", "Profile", new
+    {
+        username = Model.User.UserName
+    });
 }
 
 <div class="container profile-page">
@@ -12,16 +16,32 @@
             alt="User Avatar"
             style="width: 30%;">
         <h1>@($"{Model.User.FirstName} {Model.User.LastName}")</h1>
+
+        @if (Model.CurrentUser != null && Model.User.Id != Model.CurrentUser.Id)
+        {
+            <partial name="components/_FollowButton" model="@Model.User.Id" />
+        }
+
         <h5>@($"{Model.User.UserName}")</h5>
         <p>@(Model.User.Biography ?? "No biography provided.")</p>
-        @if (Model.User.Id == Model.CurrentUser.Id)
+        @if (Model.User.Id == Model.CurrentUser?.Id)
         {
             <a href="/Identity/Account/Manage">Edit
                 Profile</a>
         }
+
+        <div class="follower-following-info mt-3">
+            <a href="@followUrlAction" class="followers-link">
+                <strong>@Model.FollowerCount</strong> Followers
+            </a> |
+            <a href="@followUrlAction"
+               class="following-link">
+                <strong>@Model.FollowingCount</strong> Following
+            </a>
+        </div>
     </div>
 
-    @if (Model.User.Public || Model.User.Id == Model.CurrentUser.Id)
+    @if (Model.User.Public || Model.User.Id == Model.CurrentUser?.Id)
     {
         <div class="user-posts">
             <h2>Your Posts</h2>
@@ -48,4 +68,4 @@
     }
 </div>
 
-
+<script type="module" src="/js/pages/profile-show.js"></script>
