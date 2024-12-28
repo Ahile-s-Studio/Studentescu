@@ -7,10 +7,10 @@ public class FollowRequest
 {
     [Key] public int Id { get; set; }
 
-    [Required] [ForeignKey("Requester")] public required string RequesterId { get; set; }
+    [Required][ForeignKey("Requester")] public required string RequesterId { get; set; }
     public ApplicationUser Requester { get; set; }
 
-    [Required] [ForeignKey("Target")] public required string TargetId { get; set; }
+    [Required][ForeignKey("Target")] public required string TargetId { get; set; }
     public ApplicationUser Target { get; set; }
 
     [Required] public required FollowRequestStatus Status { get; set; }
