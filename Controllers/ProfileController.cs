@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Studentescu.Data;
 using Studentescu.Models;
+using Studentescu.Services;
 using Studentescu.ViewModels;
 
 namespace Studentescu.Controllers;
@@ -14,14 +15,17 @@ public class ProfileController : BaseController
     private const int
         PageSize = 2; // Number of items per page
 
+    private readonly FollowService _followService;
+
     public ProfileController(
         ILogger<HomeController> logger,
         ApplicationDbContext context,
         UserManager<ApplicationUser> userManager,
-        RoleManager<IdentityRole> roleManager) : base(
+        RoleManager<IdentityRole> roleManager, FollowService followService) : base(
         logger, context,
         userManager, roleManager)
     {
+        _followService = followService;
     }
 
 
@@ -68,15 +72,16 @@ public class ProfileController : BaseController
 
         try
         {
-            var pos = _dbContext.Posts.ToList();
             var user = _dbContext.Users
+                .Include(u => u.Followers)
+                .Include(u => u.Following)
                 .Include(u => u.Posts)
                 .ThenInclude(p => p.Likes)
-                .First(u => u.UserName == username);
+                .FirstOrDefault(u => u.UserName == username);
             var currentUser =
                 await _userManager.GetUserAsync(User);
 
-            if (user == null || currentUser == null)
+            if (user == null)
             {
                 return NotFound("username not found");
             }
@@ -84,7 +89,7 @@ public class ProfileController : BaseController
             var posts = user.Posts
                 .Where(post =>
                     post.GroupId == null &&
-                    post.UserId == currentUser.Id);
+                    post.UserId == user.Id);
 
 
             var viewUserPosts = posts.Select(post =>
@@ -93,7 +98,7 @@ public class ProfileController : BaseController
                         Post = post,
                         IsLiked = post.Likes.Any(l =>
                             l.UserId ==
-                            currentUser.Id),
+                            currentUser?.Id),
                         // TODO implement
                         IsSaved = false
                     })
@@ -104,7 +109,9 @@ public class ProfileController : BaseController
                 User = user,
                 CurrentUser = currentUser,
                 UserPosts = viewUserPosts,
-                RecommandedUsers = []
+                RecommandedUsers = [],
+                FollowerCount = user.Followers.Count,
+                FollowingCount = user.Following.Count
             };
 
             return View(viewModel);
@@ -115,6 +122,40 @@ public class ProfileController : BaseController
 
             return NotFound();
         }
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> FollowersAndFollowing(string username)
+    {
+        var currentUser = await _userManager.GetUserAsync(User);
+        var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.UserName == username);
+        if (user == null)
+        {
+            return NotFound("user not found");
+        }
+
+
+        if (user.Public == false && user.UserName != currentUser?.UserName)
+        {
+            if (currentUser == null)
+            {
+                return Redirect($"/Profile/Show/{username}");
+            }
+
+            if (await _followService.IsFollowing(currentUser.Id, user.Id) == null)
+            {
+                return Redirect($"/Profile/Show/{username}");
+            }
+        }
+
+
+        var viewModel = _dbContext.Users
+            .Include(u => u.Followers).ThenInclude(f => f.Follower)
+            .Include(u => u.Following).ThenInclude(f => f.Followee)
+            .First(u => u.Id == user.Id);
+
+
+        return View(viewModel);
     }
 
     [Authorize(Roles = "Admin,User")]
@@ -157,7 +198,9 @@ public class ProfileController : BaseController
             await _userManager.GetUserAsync(User);
         if (user == null)
         {
-            return RedirectToRoute("/Identity/Account/Login"); // Redirect to login if user is not found
+            return
+                RedirectToRoute(
+                    "/Identity/Account/Login"); // Redirect to login if user is not found
         }
 
         user.FirstName = model.FirstName;

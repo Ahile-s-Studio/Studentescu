@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Studentescu.Data;
 using Studentescu.Filters;
 using Studentescu.Models;
+using Studentescu.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -45,6 +46,8 @@ builder.Services.AddRazorPages().AddMvcOptions(
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddScoped<FollowService>();
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
@@ -74,6 +77,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
@@ -96,7 +100,8 @@ app.MapControllerRoute(
     "UserGroup/Create",
     new
     {
-        controller = "UserGroup", action = "Create"
+        controller = "UserGroup",
+        action = "Create"
     });
 
 app.MapControllerRoute(
@@ -108,6 +113,11 @@ app.MapControllerRoute(
     "Profile",
     "Profile/Show/{username?}",
     new { controller = "Profile", action = "Show" });
+
+app.MapControllerRoute(
+    "Profile",
+    "Profile/FollowersAndFollowing/{username?}",
+    new { controller = "Profile", action = "FollowersAndFollowing" });
 
 // app.MapControllerRoute(
 //     "ProfileEdit",

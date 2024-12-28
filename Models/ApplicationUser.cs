@@ -15,21 +15,24 @@ public class ApplicationUser : IdentityUser
         false;
 
     public ICollection<Follow>
-        Following { get; set; } =
+        Following
+    { get; set; } =
         new List<Follow>();
 
     public ICollection<Post> Posts { get; set; } =
         new List<Post>();
 
     public ICollection<Follow>
-        Followers { get; set; } =
+        Followers
+    { get; set; } =
         new List<Follow>();
 
     public ICollection<Like> Likes { get; set; } =
         new List<Like>();
 
     public ICollection<Comment>
-        Comments { get; set; } =
+        Comments
+    { get; set; } =
         new List<Comment>();
 
     public ICollection<FollowRequest> RequestsSent
@@ -61,6 +64,7 @@ public class ApplicationUser : IdentityUser
         new List<Message>();
 
     public ICollection<PrivateMessage>
-        PrivateMessagesReceived { get; set; } =
+        PrivateMessagesReceived
+    { get; set; } =
         new List<PrivateMessage>();
 }

@@ -1,0 +1,21 @@
+
+@model List<FollowRequest>
+
+<h2>Follow Requests Sent</h2>
+<table class="table">
+    <thead>
+    <tr>
+        <th>Target</th>
+        <th>Status</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var request in Model)
+    {
+        <tr>
+            <td>@request.Target.FirstName @request.Target.LastName @request.Requester.UserName</td>
+            <td>@request.Status</td>
+        </tr>
+    }
+    </tbody>
+</table>

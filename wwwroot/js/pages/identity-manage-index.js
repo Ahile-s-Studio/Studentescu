@@ -4,7 +4,7 @@ var _a;
 _a === void 0
     ? void 0
     : _a.addEventListener("change", function () {
-          var label = document.querySelector(
+          const label = document.querySelector(
               'label[for="isProfilePrivateSwitch"]'
           );
           if (label == null || label.textContent === "") return;
