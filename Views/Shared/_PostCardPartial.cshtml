@@ -1,11 +1,11 @@
 @model Studentescu.ViewModels.PostViewModel
 
-<div>
+<div class="post-card">
     <div class="post-header flex flex-row">
         <img width="50" height="50" alt="Profile Picture" src="@(Model.Post.User.ProfilePictureUrl ?? "/images/default-avatar.jpg")"/>
         <p>@Model.Post.User.UserName</p>
     </div>
-    <div class="post-content">
+    <div class="post-content" >
         @if (@Model.Post.ContentType == "image")
         {
             <img alt="Post Content" src="@Model.Post.Content" />
@@ -21,27 +21,40 @@
         }
     </div>
     <div class="post-footer">
-        @if (@Model.IsLiked)
+        <p><span id="like-counter-@Model.Post.Id">@Model.Post.Likes.Count</span> likes</p>
+        <button
+            id="like-btn-@Model.Post.Id"
+            class="like-btn"
+            data-post-id="@Model.Post.Id"
+            data-is-liked="@Model.IsLiked">
+            @if (@Model.IsLiked)
+            {
+                <span>Unlike</span>
+            }
+            else
+            {
+                <span>Like</span>
+            }
+        </button>
+        <button
+            id="comment-btn-@Model.Post.Id"
+            class="comment-btn"
+            data-post-id="@Model.Post.Id"
+            data-is-open="false">
+            Show Comments
+        </button> 
+        @if (Model.IsMyPost) 
         {
-            <button>Dislike</button>
-        }
-        else
-        {
-            <form asp-action="Like" asp-controller="Post" method="post">
-                <input type="hidden" name="postId" value="@Model.Post.Id" />
-                <button type="submit" class="btn btn-primary">
-                    Like
+            <a href="/Post/Edit?postId=@Model.Post.Id">Edit Post</a>
+            <form method="post" asp-controller="Post" asp-action="Delete" asp-route-id="@Model.Post.Id" onsubmit="return confirm('Are you sure you want to delete this post?');">
+                <button type="submit" class="btn btn-danger">
+                    Delete Post
                 </button>
             </form>
         }
-        <button>Comment</button>
-        @if (@Model.IsSaved)
-        {
-            <button>Unsave</button>
-        }
-        else
-        {
-            <button>Save</button>
-        }
     </div>
+   
 </div>
+<script>
+    
+</script>

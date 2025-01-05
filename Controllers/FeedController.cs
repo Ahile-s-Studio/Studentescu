@@ -16,24 +16,19 @@ public class FeedController : BaseController
         userManager, roleManager)
     {
     }
-    int PageSize { get; set; } = 10;
-    public IActionResult Index(int pageNumber = 1)
+    public async Task<IActionResult> Index()
     {
-        pageNumber = Math.Max(pageNumber, 1);
-
-        var totalPostsCount = _dbContext.Posts
-            .Where(p => p.User.Public != false)
-            .Count();
-
-        var totalPages = (int)Math.Ceiling(totalPostsCount / (double)PageSize);
+        const int PageSize = 5;
+        var pageNumber = 1;
 
         var userId = _userManager.GetUserId(User);
+        var user = await _userManager.FindByIdAsync(userId);
 
-        var posts = _dbContext.Posts
+        var posts = await _dbContext.Posts
             .Include(p => p.User)
             .Include(p => p.Comments)
             .Include(p => p.Likes)
-            .Where(p => p.User.Public != false && p.GroupId == null)
+            .Where(p => p.User.Public && p.GroupId == null)
             .OrderByDescending(p => p.CreatedAt)
             .Skip((pageNumber - 1) * PageSize)
             .Take(PageSize)
@@ -41,11 +36,43 @@ public class FeedController : BaseController
             {
                 Post = p,
                 IsLiked = p.Likes.Any(l => l.UserId == userId),
-                IsSaved = false,
+                IsMyPost = p.UserId == userId || (user != null && user.IsAdmin),
             })
-            .ToList();
-
+            .ToListAsync();
 
         return View(posts);
     }
+
+    [HttpGet]
+    public async Task<IActionResult> LoadMore(int pageNumber = 1, int pageSize = 5)
+    {
+        pageNumber = Math.Max(pageNumber, 1);
+
+        var userId = _userManager.GetUserId(User);
+        var user = await _userManager.FindByIdAsync(userId);
+
+        var posts = await _dbContext.Posts
+            .Include(p => p.User)
+            .Include(p => p.Comments)
+            .Include(p => p.Likes)
+            .Where(p => p.User.Public && p.GroupId == null)
+            .OrderByDescending(p => p.CreatedAt)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .Select(p => new PostViewModel
+            {
+                Post = p,
+                IsLiked = p.Likes.Any(l => l.UserId == userId),
+                IsMyPost = p.UserId == userId || (user != null && user.IsAdmin),
+            })
+            .ToListAsync();
+
+        if (!posts.Any())
+        {
+            return NoContent();
+        }
+
+        return PartialView("_PostListPartial", posts);
+    }
+
 }

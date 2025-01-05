@@ -8,5 +8,7 @@ public class GroupFeedViewModel
     public bool IsJoined { get; set; }
 
     public bool IsModerator { get; set; }
+
+    public bool IsAdmin { get; set; }
     public List<PostViewModel> Posts { get; set; }
 }

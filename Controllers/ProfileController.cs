@@ -99,8 +99,8 @@ public class ProfileController : BaseController
                         IsLiked = post.Likes.Any(l =>
                             l.UserId ==
                             currentUser?.Id),
-                        // TODO implement
-                        IsSaved = false
+
+                        IsMyPost = post.UserId == currentUser.Id,
                     })
                 .ToList();
 

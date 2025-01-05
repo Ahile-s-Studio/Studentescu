@@ -12,9 +12,9 @@ public class MemberInGroup
 
 
     [Required][ForeignKey("UserGroup")] public required int UserGroupId { get; set; }
-    public required UserGroup UserGroup { get; set; } // Navigation property
+    public required UserGroup UserGroup { get; set; }
 
-    public GroupRole Role { get; set; } = GroupRole.Member; // Default to Member
+    public GroupRole Role { get; set; } = GroupRole.Member;
 
     public DateTime CreatedAt { get; set; } = DateTime.Now;
 }

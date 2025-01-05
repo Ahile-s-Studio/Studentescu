@@ -23,7 +23,8 @@ public class SeedData
                             "2c5e174e-3b0e-446f-86af-483d56fd7210",
                         Name = "Admin",
                         NormalizedName =
-                            "Admin".ToUpper()
+                            "Admin".ToUpper(),
+
                     },
                     // new IdentityRole { Id = "2c5e174e-3b0e-446f-86af-483d56fd7211", Name = "Editor", NormalizedName = "Editor".ToUpper() },
                     new IdentityRole
@@ -111,7 +112,8 @@ public class SeedData
                 {
                     UserName = "admin@example.com",
                     Email = "admin@example.com",
-                    EmailConfirmed = true
+                    EmailConfirmed = true,
+                    IsAdmin = true,
                 };
 
                 var result = userManager
@@ -149,7 +151,8 @@ public class SeedData
                     UserName = username,
                     Email = email,
                     EmailConfirmed = true,
-                    Public = false
+                    Public = false,
+                    IsAdmin = false
                 };
 
                 var userResult = userManager

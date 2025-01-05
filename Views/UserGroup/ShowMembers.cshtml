@@ -1,0 +1,46 @@
+@model Studentescu.ViewModels.GroupMemberList
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+@if (@Model.IsAdmin)
+{
+    <h2>Join Requests</h2>
+
+    foreach (var req in @Model.JoinRequests)
+    {
+        <div>
+            <img src="@req.Requester.ProfilePictureUrl" alt="Profile picture"/>
+            <p>@req.Requester.UserName</p>
+
+            <form asp-action="AcceptJoinRequest" asp-controller="UserGroup" method="post">
+                <input type="hidden" name="requestId" value="@req.Id" />
+                <input type="hidden" name="groupId" value="@Model.GroupId" />
+                <button type="submit">Accept</button>
+            </form>
+            <form asp-action="DeclineJoinRequest" asp-controller="UserGroup" method="post">
+                <input type="hidden" name="requestId" value="@req.Id" />
+                <input type="hidden" name="groupId" value="@Model.GroupId" />
+                <button type="submit">Decline</button>
+            </form>
+        </div>
+    }
+}
+<h2>Members</h2>
+@foreach (var mem in @Model.Members)
+{
+    <div>
+        <img src="@mem.user.ProfilePictureUrl" />
+        <p>@mem.user.UserName</p>
+        @if (@Model.IsAdmin)
+        {
+            <form asp-action="KickMember" asp-controller="UserGroup" method="post">
+                <input type="hidden" name="groupId" value="@Model.GroupId" />
+                <input type="hidden" name="userId" value="@mem.user.Id" />
+                <button type="submit">Kick</button>
+            </form>
+        }
+    </div>
+}

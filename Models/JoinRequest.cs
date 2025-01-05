@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Studentescu.Models;
 
-public class FollowRequest
+public class JoinRequest
 {
     [Key] public int Id { get; set; }
 
@@ -13,7 +13,10 @@ public class FollowRequest
     [Required][ForeignKey("Target")] public required string TargetId { get; set; }
     public ApplicationUser Target { get; set; }
 
-    [Required] public required FollowRequestStatus Status { get; set; }
+    [Required][ForeignKey("Group")] public required int GroupId { get; set; }
+    public UserGroup Group { get; set; }
+
+    [Required] public required JoinRequestStatus Status { get; set; }
 
 
     public DateTime CreatedAt { get; set; } = DateTime.Now;
@@ -21,7 +24,7 @@ public class FollowRequest
 }
 
 // Enum for the status of the follow request
-public enum FollowRequestStatus
+public enum JoinRequestStatus
 {
     Pending,
     Accepted,

@@ -6,7 +6,8 @@
 
 <div>
     <h1>For You</h1>
-    <div class="post-list">
+    <a href="/Post/Create">Create Post</a>
+    <div id="post-list">
         @foreach (var post in Model){
             @Html.Partial("_PostCardPartial",post)
             
@@ -14,3 +15,44 @@
         
     </div>
 </div>
+
+
+<script>
+    let pageNumber = 1; 
+    const pageSize = 5;
+    let isLoading = false;
+
+    async function fetchMorePosts() {
+        if (isLoading) return;
+
+        isLoading = true;
+        pageNumber++;
+
+        try {
+            const response = await fetch(`/Feed/LoadMore?pageNumber=${pageNumber}&pageSize=${pageSize}`);
+
+            if (response.ok) {
+                const html = await response.text();
+                if (html.trim() !== "") {
+                    document.getElementById("post-list").insertAdjacentHTML("beforeend", html);
+                } else {
+                    window.removeEventListener("scroll", handleScroll);
+                }
+            } else {
+                console.error("Failed to load more posts.");
+            }
+        } catch (error) {
+            console.error("Error fetching posts:", error);
+        } finally {
+            isLoading = false;
+        }
+    }
+
+    function handleScroll() {
+        if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 100) {
+            fetchMorePosts();
+        }
+    }
+
+    window.addEventListener("scroll", handleScroll);
+</script>
