@@ -84,6 +84,65 @@ public class PostController : BaseController
         return View(post);
     }
 
+    public async Task<IActionResult> Edit(int postId)
+    {
+        var userId = _userManager.GetUserId(User);
+        var post = _dbContext.Posts.FirstOrDefault(p => p.Id == postId);
+        if (userId == null)
+        {
+            return Unauthorized();
+        }
+        if (post == null)
+        {
+            return NotFound();
+        }
+        if (post.UserId != userId)
+        {
+            return Forbid();
+        }
+        
+        var postViewModel = new PostForm{Content = post.Content, Title = post.Title, ContentType = post.ContentType,PostDestination = post.GroupId};
+        ViewBag.PostDestination = post.GroupId;
+        ViewBag.PostId = post.Id;
+        return View(postViewModel);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Edit(PostForm postForm, int postId)
+    {   
+        Console.WriteLine("Trying to edit the post "+postForm.Content+" "+postForm.Title+" "+postForm.ContentType+" "+postId.ToString() + " "+postForm.PostDestination);
+        var userId = _userManager.GetUserId(User);
+        var post = _dbContext.Posts.FirstOrDefault(p => p.Id == postId);
+        if (userId == null)
+        {
+            return Unauthorized();
+        }
+        if (post == null)
+        {
+            return NotFound();
+        }
+        if (post.UserId != userId)
+        {
+            return Forbid();
+        }
+
+        if (post.GroupId != postForm.PostDestination)
+        {
+            return Forbid();
+        }
+        
+        post.Content = postForm.Content;
+        post.ContentType = postForm.ContentType;
+        post.Title = postForm.Title;
+        
+        _dbContext.Posts.Update(post);
+        
+        await _dbContext.SaveChangesAsync();
+        
+        return RedirectToAction("Index", "Feed");
+    }
+    
+    [HttpPost]
     public async Task<IActionResult> Delete(int id)
     {
         var post = await _dbContext.Posts
@@ -95,9 +154,25 @@ public class PostController : BaseController
         }
 
         var userId = _userManager.GetUserId(User);
-        if (post.UserId != userId)
+        var user = await _userManager.FindByIdAsync(userId);
+
+        if (user is null)
         {
             return Forbid();
+        }
+        
+        if  (user.IsAdmin == false &&post.UserId != userId && post.GroupId == null)
+        {
+            return Forbid();
+        }
+
+        if (post.GroupId != null)
+        {
+            var hasRight = await _dbContext.MemberInGroups.FirstOrDefaultAsync(m => m.UserId == userId && m.UserGroupId == post.GroupId && (m.Role == GroupRole.Admin || m.Role == GroupRole.Moderator ));
+            if (hasRight == null)
+            {
+                return Forbid();
+            }
         }
 
         return View(post);
@@ -114,7 +189,11 @@ public class PostController : BaseController
         }
 
         var userId = _userManager.GetUserId(User);
-        if (post.UserId != userId)
+        var user = await _userManager.FindByIdAsync(userId);
+        
+        var isGroupModerator = _dbContext.MemberInGroups.Any(m => m.UserId == userId && m.UserGroupId == post.GroupId && m.Role != GroupRole.Member);
+        
+        if (user != null && post.UserId != userId && !user.IsAdmin && !isGroupModerator )
         {
             return Forbid();
         }
@@ -124,28 +203,38 @@ public class PostController : BaseController
 
         return RedirectToAction("Index", "Feed");
     }
-
+    
+    
+    
+    [HttpPost]
     public async Task<IActionResult> Like(int postId)
     {
         var userId = _userManager.GetUserId(User);
         var user = await _userManager.FindByIdAsync(userId);
-        Console.WriteLine("I have attempted liked this post");
+        Console.WriteLine("I have attempted like this post");
 
         if (user == null)
         {
-            return RedirectToAction("Login", "Account");
+            return Unauthorized();
         }
 
         var post = _dbContext.Posts
             .Include(p => p.User)
             .FirstOrDefault(p => p.Id == postId);
-
+        
         if (post == null)
         {
+            Console.WriteLine("Inexistent post");
             return NotFound();
         }
         else
         {
+            var isLiked = _dbContext.Likes.Any(l => l.PostId == postId && l.UserId == userId);
+            if (isLiked)
+            {
+                Console.WriteLine("Already liked this post");
+                return Forbid();
+            }
             if (post.GroupId == null)
             {
                 Console.WriteLine("this post is a public one");
@@ -193,4 +282,38 @@ public class PostController : BaseController
         return Ok();
     }
 
+    [HttpPost]
+    public async Task<IActionResult> Unlike(int postId)
+    {
+        var userId = _userManager.GetUserId(User);
+        var user = await _userManager.FindByIdAsync(userId);
+        Console.WriteLine("I have attempted unlike this post");
+
+        if (user == null)
+        {
+            return RedirectToAction("Login", "Account");
+        }
+
+        var post = _dbContext.Posts
+            .Include(p => p.User)
+            .FirstOrDefault(p => p.Id == postId);
+
+        var like = _dbContext.Likes.FirstOrDefault(l => l.PostId == postId && l.UserId == userId);
+
+        if (like != null)
+        {
+            _dbContext.Likes.Remove(like);
+        }
+        else
+        {
+            System.Console.WriteLine("ERROR HERE" + postId.ToString());
+            return Forbid();
+        }
+        
+
+        await _dbContext.SaveChangesAsync();
+
+        return Ok();
+    }
+    
 }

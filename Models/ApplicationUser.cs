@@ -13,6 +13,8 @@ public class ApplicationUser : IdentityUser
 
     public bool IsProfileCompleted { get; set; } =
         false;
+    
+    public bool IsAdmin { get; set; } = false;
 
     public ICollection<Follow>
         Following

@@ -1,0 +1,53 @@
+@model IEnumerable<Studentescu.ViewModels.PostViewModel>
+
+@foreach (var post in Model)
+{
+    <div class="post-card">
+        <div class="post-header flex flex-row">
+            <img width="50" height="50" alt="Profile Picture" src="@(post.Post.User.ProfilePictureUrl ?? "/images/default-avatar.jpg")" />
+            <p>@post.Post.User.UserName</p>
+        </div>
+        <div class="post-content">
+            @if (post.Post.ContentType == "image")
+            {
+                <img alt="Post Content" src="@post.Post.Content" />
+            }
+            else if (post.Post.ContentType == "video")
+            {
+                <video controls>
+                    <source src="@post.Post.Content" type="video/mp4" />
+                    Your browser does not support the video format.
+                </video>
+            }
+            else if (post.Post.ContentType == "text")
+            {
+                <p>@post.Post.Content</p>
+            }
+        </div>
+        <div class="post-footer">
+            <p><span id="like-counter-@post.Post.Id">@post.Post.Likes.Count</span> likes</p>
+            <button id="like-btn-@post.Post.Id" class="like-btn" data-post-id="@post.Post.Id" data-is-liked="@post.IsLiked">
+                @if (post.IsLiked)
+                {
+                    <span>Unlike</span>
+                }
+                else
+                {
+                    <span>Like</span>
+                }
+            </button>
+            <button id="comment-btn-@post.Post.Id" class="comment-btn" data-post-id="@post.Post.Id" data-is-open="false">
+                Show Comments
+            </button>
+            @if (post.IsMyPost)
+            {
+                <a href="/Post/Edit?postId=@post.Post.Id">Edit Post</a>
+                <form method="post" asp-controller="Post" asp-action="Delete" asp-route-id="@post.Post.Id" onsubmit="return confirm('Are you sure you want to delete this post?');">
+                    <button type="submit" class="btn btn-danger">
+                        Delete Post
+                    </button>
+                </form>
+            }
+        </div>
+    </div>
+}

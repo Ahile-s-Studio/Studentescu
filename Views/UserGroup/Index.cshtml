@@ -31,12 +31,33 @@
             <p>@group.Group.Category</p>
             @if(@group.Group.Active)
             {
+                @if (group.IsAdmin)
+                {
+                    <form asp-action="Delete" asp-controller="UserGroup" method="post">
+                        <input type="hidden" name="groupId" value="@group.Group.Id" />
+                        <button type="submit">Delete Group</button>
+                    </form> 
+                }
                 @if (!group.IsJoined)
                 {
-                    <form asp-action="Join" asp-controller="UserGroup" method="post">
-                        <input type="hidden" name="groupId" value="@group.Group.Id" />
-                        <button type="submit">Join Group</button>
-                    </form>
+                    if (group.Status == "None")
+                    {
+                        <form asp-action="JoinRequest" asp-controller="UserGroup" method="post">
+                            <input type="hidden" name="groupId" value="@group.Group.Id" />
+                            <button type="submit">Join Group</button>
+                        </form> 
+                    }else if (group.Status == "Rejected")
+                    {
+                        <p>Unaccepted to join</p>
+                    }else if (group.Status == "Pending")
+                    {
+                        <form asp-action="CancelJoinRequest" asp-controller="UserGroup" method="post">
+                            <input type="hidden" name="requestId" value="@group.RequestId" />
+                            <button type="submit">Cancel join</button>
+                        </form> 
+                    }
+                    
+                    
                 }
                 else
                 {
@@ -46,7 +67,6 @@
                     </form>
                 }
             }
-            
         </div>
         
     }

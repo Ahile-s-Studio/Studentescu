@@ -12,7 +12,21 @@
     <h3>@Model.Group.Members.Count() members</h3>
     @if (@Model.IsJoined)
     {
-        <button>Leave</button>
+        if (@Model.IsAdmin)
+        {
+            <form asp-action="Delete" asp-controller="UserGroup" method="post">
+                <input type="hidden" name="groupId" value="@Model.Group.Id" />
+                <button type="submit">Delete Group</button>
+            </form>
+
+        }
+        else
+        {
+            <form asp-action="Leave" asp-controller="UserGroup" method="post">
+                <input type="hidden" name="groupId" value="@Model.Group.Id" />
+                <button type="submit">Leave Group</button>
+            </form>
+        }
     }
     else
     {
@@ -22,7 +36,7 @@
     {
         <a href="/Post/Create/@Model.Group.Id">Create New Post</a>
     }
-    
+    <a href="/UserGroup/ShowMembers?groupId=@Model.Group.Id">Show Members</a>
     @foreach (var post in @Model.Posts)
     {
         @Html.Partial("_PostCardPartial", post)

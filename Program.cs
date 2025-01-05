@@ -96,6 +96,11 @@ app.MapControllerRoute(
     new { controller = "Post", action = "Show" });
 
 app.MapControllerRoute(
+    "showComments",
+    "Comment/Index/{id}",
+    new { controller = "Post", action = "Show" });
+
+app.MapControllerRoute(
     "createGroup",
     "UserGroup/Create",
     new
