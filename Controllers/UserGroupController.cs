@@ -22,11 +22,11 @@ public class UserGroupController : BaseController
     {
         var userId = _userManager.GetUserId(User);
         var user = await _userManager.FindByIdAsync(userId);
-        
-        
+
+
         var groups = _dbContext.UserGroups
             .Include(p => p.Members)
-            .Where(group=> group.Active == true)
+            .Where(group => group.Active == true)
             .OrderBy(group => group.CreatedAt)
             .Take(10)
             .ToList();
@@ -39,7 +39,7 @@ public class UserGroupController : BaseController
                 .Take(10)
                 .ToList();
         }
-        
+
         var groupViews = new List<GroupIndexViewModel>();
 
         if (user == null)
@@ -55,20 +55,20 @@ public class UserGroupController : BaseController
             {
                 var relation = _dbContext.JoinRequests.FirstOrDefault(member => member.RequesterId == userId && member.GroupId == group.Id);
                 string status = "None";
-                var isJoined = _dbContext.MemberInGroups.Any(member=> member.UserId == userId && member.UserGroupId == group.Id);
+                var isJoined = _dbContext.MemberInGroups.Any(member => member.UserId == userId && member.UserGroupId == group.Id);
                 Console.WriteLine(isJoined == true ? "Joined" : "Not Joined");
                 if (relation != null && relation.Status == JoinRequestStatus.Rejected)
                 {
                     status = "Rejected";
                 }
-                else if (relation!=null && relation.Status == JoinRequestStatus.Pending)
+                else if (relation != null && relation.Status == JoinRequestStatus.Pending)
                 {
                     status = "Pending";
                 }
-                groupViews.Add(new GroupIndexViewModel { Group = group, IsJoined = isJoined, IsAdmin = user != null && user.IsAdmin ,Status = status, RequestId = (relation is null)? -1:relation.Id });
+                groupViews.Add(new GroupIndexViewModel { Group = group, IsJoined = isJoined, IsAdmin = user != null && user.IsAdmin, Status = status, RequestId = (relation is null) ? -1 : relation.Id });
             }
         }
-        
+
 
         return View(groupViews);
     }
@@ -81,25 +81,25 @@ public class UserGroupController : BaseController
         {
             return RedirectToAction("Login", "Account");
         }
-        
-        var group = _dbContext.UserGroups.Include(g=>g.Members).FirstOrDefault(group => group.Id == groupId);
+
+        var group = _dbContext.UserGroups.Include(g => g.Members).FirstOrDefault(group => group.Id == groupId);
         if ((group is null || group.Active is false) && !user.IsAdmin)
         {
             return NotFound();
         }
-        
+
         var relationToGroup = _dbContext.MemberInGroups.FirstOrDefault(member => member.UserId == userId && member.UserGroupId == groupId);
 
         if (relationToGroup == null && !user.IsAdmin)
         {
             return Forbid();
         }
-        
+
         bool isJoined = relationToGroup != null || user.IsAdmin;
         bool isModerator = relationToGroup != null && relationToGroup.Role != GroupRole.Member;
         bool isAdmin = relationToGroup != null && relationToGroup.Role == GroupRole.Admin || user.IsAdmin;
         var groupPosts = new List<PostViewModel>();
-        
+
         if (isJoined)
         {
             groupPosts = _dbContext.Posts
@@ -109,9 +109,10 @@ public class UserGroupController : BaseController
                 .Include(p => p.Likes)
                 .Select(p =>
                     new PostViewModel
-                    { Post = p, 
+                    {
+                        Post = p,
                         IsLiked = p.Likes.Any(like => like.UserId == userId),
-                        IsMyPost = (p.UserId == userId || isModerator || isAdmin) 
+                        IsMyPost = (p.UserId == userId || isModerator || isAdmin)
                     }
                 ).ToList();
         }
@@ -166,19 +167,19 @@ public class UserGroupController : BaseController
         {
             return Unauthorized();
         }
-        
+
         if (_dbContext.MemberInGroups.FirstOrDefault(member =>
                 member.UserId == userId && member.UserGroupId == groupId) != null)
         {
             Console.WriteLine("I am Joined a UserGroup2");
             return Forbid();
         }
-        
-        var admin = await _dbContext.MemberInGroups.Include(inGroup => inGroup.User ).FirstOrDefaultAsync(member => member.UserGroupId == groupId && member.Role == GroupRole.Admin);
+
+        var admin = await _dbContext.MemberInGroups.Include(inGroup => inGroup.User).FirstOrDefaultAsync(member => member.UserGroupId == groupId && member.Role == GroupRole.Admin);
 
         if (admin is null || group.Active == false)
         {
-            
+
             return NotFound();
         }
 
@@ -192,20 +193,20 @@ public class UserGroupController : BaseController
             Group = group,
             Requester = user,
             Target = admin.User
-            
+
         });
-        
+
         await _dbContext.SaveChangesAsync();
-        
-        
+
+
         return Ok();
     }
 
     public async Task<IActionResult> CancelJoinRequest(int requestId)
     {
-        
+
         var request = await _dbContext.JoinRequests.FirstOrDefaultAsync(r => r.Id == requestId);
-        
+
         string userId = _userManager.GetUserId(User);
         var user = await _userManager.FindByIdAsync(userId);
 
@@ -218,16 +219,16 @@ public class UserGroupController : BaseController
         {
             return Forbid();
         }
-        
+
         _dbContext.JoinRequests.Remove(request);
-        
+
         await _dbContext.SaveChangesAsync();
-        
+
         return Ok();
     }
     public async Task<IActionResult> AcceptJoinRequest(int requestId, int groupId)
     {
-        var request = _dbContext.JoinRequests.Include(j=>j.Group).Include(j=>j.Requester).FirstOrDefault(f => f.Id == requestId);
+        var request = _dbContext.JoinRequests.Include(j => j.Group).Include(j => j.Requester).FirstOrDefault(f => f.Id == requestId);
         string userId = _userManager.GetUserId(User);
         var user = await _userManager.FindByIdAsync(userId);
 
@@ -240,24 +241,24 @@ public class UserGroupController : BaseController
         {
             return Forbid();
         }
-        
+
         request.Status = JoinRequestStatus.Accepted;
 
         _dbContext.JoinRequests.Update(request);
-        
+
         await _dbContext.SaveChangesAsync();
-        
+
         _dbContext.MemberInGroups.Add(new MemberInGroup
-            { User = request.Requester, UserId = request.RequesterId, UserGroup = request.Group, UserGroupId = request.GroupId, Role = GroupRole.Member });
-        
+        { User = request.Requester, UserId = request.RequesterId, UserGroup = request.Group, UserGroupId = request.GroupId, Role = GroupRole.Member });
+
         await _dbContext.SaveChangesAsync();
-        
-        return Redirect("/UserGroup/ShowMembers?groupId="+groupId.ToString());
+
+        return Redirect("/UserGroup/ShowMembers?groupId=" + groupId.ToString());
     }
 
     public async Task<IActionResult> DeclineJoinRequest(int requestId, int groupId)
     {
-        var request = _dbContext.JoinRequests.Include(j=>j.Group).FirstOrDefault(f => f.Id == requestId);
+        var request = _dbContext.JoinRequests.Include(j => j.Group).FirstOrDefault(f => f.Id == requestId);
         string userId = _userManager.GetUserId(User);
         var user = await _userManager.FindByIdAsync(userId);
 
@@ -270,15 +271,15 @@ public class UserGroupController : BaseController
         {
             return Forbid();
         }
-        
+
         request.Status = JoinRequestStatus.Rejected;
         _dbContext.JoinRequests.Update(request);
-        
+
         await _dbContext.SaveChangesAsync();
-        
-        return Redirect("/UserGroup/ShowMembers?groupId="+groupId.ToString());
+
+        return Redirect("/UserGroup/ShowMembers?groupId=" + groupId.ToString());
     }
-    
+
     public async Task<IActionResult> Join(int groupId)
     {
         var group = _dbContext.UserGroups.FirstOrDefault(group => group.Id == groupId);
@@ -310,138 +311,138 @@ public class UserGroupController : BaseController
         {
             group.Active = false;
         }
-        
+
         _dbContext.MemberInGroups.Remove(relationToGroup);
-        
+
         await _dbContext.SaveChangesAsync();
 
         return RedirectToAction("Index", "UserGroup");
     }
 
-   public async Task<IActionResult> Delete(int groupId)
-{
-    var group = await _dbContext.UserGroups.FirstOrDefaultAsync(g => g.Id == groupId);
-    if (group == null)
+    public async Task<IActionResult> Delete(int groupId)
     {
-        return NotFound();
-    }
-
-    string userId = _userManager.GetUserId(User);
-    var user = await _userManager.FindByIdAsync(userId);
-
-    var relationToGroup = await _dbContext.MemberInGroups.FirstOrDefaultAsync(m => m.UserId == userId && m.UserGroupId == groupId);
-    bool isUserAdmin = relationToGroup?.Role == GroupRole.Admin || (user?.IsAdmin ?? false);
-
-    if (!isUserAdmin)
-    {
-        return Forbid();
-    }
-
-    using (var transaction = await _dbContext.Database.BeginTransactionAsync())
-    {
-        try
+        var group = await _dbContext.UserGroups.FirstOrDefaultAsync(g => g.Id == groupId);
+        if (group == null)
         {
-            if (relationToGroup?.Role == GroupRole.Admin)
-            {
-                // Deactivate the group (soft delete)
-                group.Active = false;
-            }
-            else
-            {
-                // Hard delete: remove members, posts, comments, and join requests
-                var members = _dbContext.MemberInGroups.Where(m => m.UserGroupId == groupId);
-                _dbContext.MemberInGroups.RemoveRange(members);
-
-                var posts = _dbContext.Posts.Where(p => p.GroupId == groupId);
-                var likes = _dbContext.Likes.Where(c=>posts.Select(p=>p.Id).Contains(c.PostId));
-                var comments = _dbContext.Comments.Where(c => posts.Select(p => p.Id).Contains(c.PostId));
-                _dbContext.Comments.RemoveRange(comments);
-                _dbContext.Likes.RemoveRange(likes);
-                _dbContext.Posts.RemoveRange(posts);
-
-                var requests = _dbContext.JoinRequests.Where(r => r.GroupId == groupId);
-                _dbContext.JoinRequests.RemoveRange(requests);
-
-                _dbContext.UserGroups.Remove(group);
-            }
-
-            await _dbContext.SaveChangesAsync();
-            await transaction.CommitAsync();
+            return NotFound();
         }
-        catch (Exception ex)
+
+        string userId = _userManager.GetUserId(User);
+        var user = await _userManager.FindByIdAsync(userId);
+
+        var relationToGroup = await _dbContext.MemberInGroups.FirstOrDefaultAsync(m => m.UserId == userId && m.UserGroupId == groupId);
+        bool isUserAdmin = relationToGroup?.Role == GroupRole.Admin || (user?.IsAdmin ?? false);
+
+        if (!isUserAdmin)
         {
-            await transaction.RollbackAsync();
-            return StatusCode(500, "An error occurred while deleting the group.");
+            return Forbid();
         }
+
+        using (var transaction = await _dbContext.Database.BeginTransactionAsync())
+        {
+            try
+            {
+                if (relationToGroup?.Role == GroupRole.Admin)
+                {
+                    // Deactivate the group (soft delete)
+                    group.Active = false;
+                }
+                else
+                {
+                    // Hard delete: remove members, posts, comments, and join requests
+                    var members = _dbContext.MemberInGroups.Where(m => m.UserGroupId == groupId);
+                    _dbContext.MemberInGroups.RemoveRange(members);
+
+                    var posts = _dbContext.Posts.Where(p => p.GroupId == groupId);
+                    var likes = _dbContext.Likes.Where(c => posts.Select(p => p.Id).Contains(c.PostId));
+                    var comments = _dbContext.Comments.Where(c => posts.Select(p => p.Id).Contains(c.PostId));
+                    _dbContext.Comments.RemoveRange(comments);
+                    _dbContext.Likes.RemoveRange(likes);
+                    _dbContext.Posts.RemoveRange(posts);
+
+                    var requests = _dbContext.JoinRequests.Where(r => r.GroupId == groupId);
+                    _dbContext.JoinRequests.RemoveRange(requests);
+
+                    _dbContext.UserGroups.Remove(group);
+                }
+
+                await _dbContext.SaveChangesAsync();
+                await transaction.CommitAsync();
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                return StatusCode(500, "An error occurred while deleting the group.");
+            }
+        }
+
+        return RedirectToAction("Index", "UserGroup");
     }
 
-    return RedirectToAction("Index", "UserGroup");
-}
-
-public async Task<IActionResult> KickMember(int groupId, string userId)
-{
-    var adminId = _userManager.GetUserId(User);
-    var isAdmin = _dbContext.MemberInGroups.Any(m=>m.UserId == adminId && m.UserGroupId == groupId && m.Role == GroupRole.Admin);
-
-    if (!isAdmin)
+    public async Task<IActionResult> KickMember(int groupId, string userId)
     {
-        return Forbid();
-    }
-    
-    var userMembership = _dbContext.MemberInGroups.FirstOrDefault(m=>m.UserId == userId && m.UserGroupId == groupId && m.UserId != adminId);
+        var adminId = _userManager.GetUserId(User);
+        var isAdmin = _dbContext.MemberInGroups.Any(m => m.UserId == adminId && m.UserGroupId == groupId && m.Role == GroupRole.Admin);
 
-    if (userMembership == null)
-    {
-        return NotFound();
-    }
-    
-    _dbContext.MemberInGroups.Remove(userMembership);
-    
-    var request = _dbContext.JoinRequests.FirstOrDefault(r => r.GroupId == groupId && r.RequesterId == userId && r.TargetId == adminId);
+        if (!isAdmin)
+        {
+            return Forbid();
+        }
 
-    if (request == null)
-    {
-        return NotFound();
-    }
-    
-    request.Status = JoinRequestStatus.Rejected;
-    
-    _dbContext.JoinRequests.Update(request);
-    
-    await _dbContext.SaveChangesAsync();
-    
-    
-    return Redirect("/UserGroup/ShowMembers?groupId="+groupId.ToString());
-}   
-   
-public async Task<IActionResult> ShowMembers(int groupId)
-{
-    var user  = await _userManager.FindByIdAsync(_userManager.GetUserId(User));
+        var userMembership = _dbContext.MemberInGroups.FirstOrDefault(m => m.UserId == userId && m.UserGroupId == groupId && m.UserId != adminId);
 
-    if (user is null)
-    {
-        return Unauthorized();
+        if (userMembership == null)
+        {
+            return NotFound();
+        }
+
+        _dbContext.MemberInGroups.Remove(userMembership);
+
+        var request = _dbContext.JoinRequests.FirstOrDefault(r => r.GroupId == groupId && r.RequesterId == userId && r.TargetId == adminId);
+
+        if (request == null)
+        {
+            return NotFound();
+        }
+
+        request.Status = JoinRequestStatus.Rejected;
+
+        _dbContext.JoinRequests.Update(request);
+
+        await _dbContext.SaveChangesAsync();
+
+
+        return Redirect("/UserGroup/ShowMembers?groupId=" + groupId.ToString());
     }
 
-    if (user.IsAdmin == false &&!_dbContext.MemberInGroups.Any(m => m.UserId == user.Id && m.UserGroupId == groupId))
+    public async Task<IActionResult> ShowMembers(int groupId)
     {
-        return Unauthorized();
-    }
-    
-    var members = _dbContext.MemberInGroups.Include(members=>members.User).Where(m => m.UserGroupId == groupId).Select(member=>new MemberDescription{role = member.Role, user = member.User}).ToList();
-    
-    var requests = _dbContext.JoinRequests.Include(j=>j.Requester).Where(r => r.GroupId == groupId && r.Status == JoinRequestStatus.Pending).ToList();
-    
-    
-    bool isAdmin = _dbContext.MemberInGroups.Any(m => m.UserId == user.Id && m.UserGroupId == groupId && m.Role == GroupRole.Admin);
+        var user = await _userManager.FindByIdAsync(_userManager.GetUserId(User));
 
-    if (!isAdmin)
-    {
-        return View(
-            new GroupMemberList { Members = members, IsAdmin = isAdmin, JoinRequests = { }, GroupId = groupId });
+        if (user is null)
+        {
+            return Unauthorized();
+        }
+
+        if (user.IsAdmin == false && !_dbContext.MemberInGroups.Any(m => m.UserId == user.Id && m.UserGroupId == groupId))
+        {
+            return Unauthorized();
+        }
+
+        var members = _dbContext.MemberInGroups.Include(members => members.User).Where(m => m.UserGroupId == groupId).Select(member => new MemberDescription { role = member.Role, user = member.User }).ToList();
+
+        var requests = _dbContext.JoinRequests.Include(j => j.Requester).Where(r => r.GroupId == groupId && r.Status == JoinRequestStatus.Pending).ToList();
+
+
+        bool isAdmin = _dbContext.MemberInGroups.Any(m => m.UserId == user.Id && m.UserGroupId == groupId && m.Role == GroupRole.Admin);
+
+        if (!isAdmin)
+        {
+            return View(
+                new GroupMemberList { Members = members, IsAdmin = isAdmin, JoinRequests = { }, GroupId = groupId });
+        }
+
+        return View(new GroupMemberList { Members = members, IsAdmin = isAdmin, JoinRequests = requests, GroupId = groupId });
     }
-    
-    return View(new GroupMemberList { Members = members, IsAdmin = isAdmin, JoinRequests = requests, GroupId = groupId });
-} 
 
 }

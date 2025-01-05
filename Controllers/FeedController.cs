@@ -42,7 +42,7 @@ public class FeedController : BaseController
 
         return View(posts);
     }
-    
+
     [HttpGet]
     public async Task<IActionResult> LoadMore(int pageNumber = 1, int pageSize = 5)
     {
@@ -69,7 +69,7 @@ public class FeedController : BaseController
 
         if (!posts.Any())
         {
-            return NoContent(); 
+            return NoContent();
         }
 
         return PartialView("_PostListPartial", posts);

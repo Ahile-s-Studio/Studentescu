@@ -12,12 +12,12 @@ public class JoinRequest
 
     [Required][ForeignKey("Target")] public required string TargetId { get; set; }
     public ApplicationUser Target { get; set; }
-    
+
     [Required][ForeignKey("Group")] public required int GroupId { get; set; }
     public UserGroup Group { get; set; }
 
     [Required] public required JoinRequestStatus Status { get; set; }
-    
+
 
     public DateTime CreatedAt { get; set; } = DateTime.Now;
     public DateTime? UpdatedAt { get; set; }

@@ -99,7 +99,7 @@ public class ProfileController : BaseController
                         IsLiked = post.Likes.Any(l =>
                             l.UserId ==
                             currentUser?.Id),
-                        
+
                         IsMyPost = post.UserId == currentUser.Id,
                     })
                 .ToList();

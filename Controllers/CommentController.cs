@@ -20,13 +20,13 @@ public class CommentController : BaseController
     {
         var userId = _userManager.GetUserId(User);
         var user = await _userManager.FindByIdAsync(userId);
-        Console.WriteLine("I have attempted deleting a comment "+commentId.ToString());
+        Console.WriteLine("I have attempted deleting a comment " + commentId.ToString());
 
         if (user == null)
         {
             return RedirectToAction("Login", "Account");
         }
-        
+
         var comment = _dbContext.Comments.FirstOrDefault(c => c.Id == commentId);
 
         if (comment == null)
@@ -41,16 +41,16 @@ public class CommentController : BaseController
         }
 
         _dbContext.Comments.Remove(comment);
-        
+
         await _dbContext.SaveChangesAsync();
-        
+
         return Ok();
     }
     public async Task<IActionResult> Create(int postId, string content)
     {
         var userId = _userManager.GetUserId(User);
         var user = await _userManager.FindByIdAsync(userId);
-        Console.WriteLine("I have attempted creating a comment "+postId.ToString());
+        Console.WriteLine("I have attempted creating a comment " + postId.ToString());
 
         if (user == null)
         {
@@ -60,26 +60,26 @@ public class CommentController : BaseController
         var post = _dbContext.Posts
             .Include(p => p.User)
             .FirstOrDefault(p => p.Id == postId);
-        
+
         if (post == null)
         {
             Console.WriteLine("Inexistent post");
             return NotFound();
         }
 
-        _dbContext.Comments.Add(new Comment{Content = content, Post = post, User = user, PostId = postId, UserId = userId});
-        
+        _dbContext.Comments.Add(new Comment { Content = content, Post = post, User = user, PostId = postId, UserId = userId });
+
         await _dbContext.SaveChangesAsync();
-        
-        
+
+
         return Ok();
     }
-    
+
     public async Task<IActionResult> Index(int pageNumber, int pageSize, int postId)
     {
         var userId = _userManager.GetUserId(User);
         var user = await _userManager.FindByIdAsync(userId);
-        Console.WriteLine("I have attempted showcase comments "+postId.ToString()+' '+pageNumber.ToString()+' '+pageSize.ToString());
+        Console.WriteLine("I have attempted showcase comments " + postId.ToString() + ' ' + pageNumber.ToString() + ' ' + pageSize.ToString());
 
         var post = _dbContext.Posts
             .Include(p => p.User)
@@ -89,17 +89,17 @@ public class CommentController : BaseController
         {
             return NotFound();
         }
-        
+
         var IsGroupModerator = _dbContext.MemberInGroups.Any(m => m.UserId == userId && m.UserGroupId == post.GroupId && m.Role != GroupRole.Member);
-        
+
         if (post == null)
         {
             Console.WriteLine("Inexistent post");
             return NotFound();
         }
-        
+
         var comments = _dbContext.Comments
-                                        .Include(c=>c.User)
+                                        .Include(c => c.User)
                                         .Where(c => c.PostId == postId).OrderBy(c => c.CommentedAt)
                                         .Select(c => new
                                         {
@@ -116,9 +116,9 @@ public class CommentController : BaseController
                                             isMyComment = c.User.Id == userId || (user != null && user.IsAdmin) || IsGroupModerator,
 
                                         })
-                                        .Skip((pageNumber-1)*pageSize).Take(pageSize)
+                                        .Skip((pageNumber - 1) * pageSize).Take(pageSize)
                                         .ToList();
-        
+
         return Ok(comments);
     }
 
@@ -145,7 +145,7 @@ public class CommentController : BaseController
         return View(comment);
     }
 
-    
+
     [HttpPost]
     public async Task<IActionResult> Edit(int id, string content)
     {

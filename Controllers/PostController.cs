@@ -100,8 +100,8 @@ public class PostController : BaseController
         {
             return Forbid();
         }
-        
-        var postViewModel = new PostForm{Content = post.Content, Title = post.Title, ContentType = post.ContentType,PostDestination = post.GroupId};
+
+        var postViewModel = new PostForm { Content = post.Content, Title = post.Title, ContentType = post.ContentType, PostDestination = post.GroupId };
         ViewBag.PostDestination = post.GroupId;
         ViewBag.PostId = post.Id;
         return View(postViewModel);
@@ -109,8 +109,8 @@ public class PostController : BaseController
 
     [HttpPost]
     public async Task<IActionResult> Edit(PostForm postForm, int postId)
-    {   
-        Console.WriteLine("Trying to edit the post "+postForm.Content+" "+postForm.Title+" "+postForm.ContentType+" "+postId.ToString() + " "+postForm.PostDestination);
+    {
+        Console.WriteLine("Trying to edit the post " + postForm.Content + " " + postForm.Title + " " + postForm.ContentType + " " + postId.ToString() + " " + postForm.PostDestination);
         var userId = _userManager.GetUserId(User);
         var post = _dbContext.Posts.FirstOrDefault(p => p.Id == postId);
         if (userId == null)
@@ -130,18 +130,18 @@ public class PostController : BaseController
         {
             return Forbid();
         }
-        
+
         post.Content = postForm.Content;
         post.ContentType = postForm.ContentType;
         post.Title = postForm.Title;
-        
+
         _dbContext.Posts.Update(post);
-        
+
         await _dbContext.SaveChangesAsync();
-        
+
         return RedirectToAction("Index", "Feed");
     }
-    
+
     [HttpPost]
     public async Task<IActionResult> Delete(int id)
     {
@@ -160,15 +160,15 @@ public class PostController : BaseController
         {
             return Forbid();
         }
-        
-        if  (user.IsAdmin == false &&post.UserId != userId && post.GroupId == null)
+
+        if (user.IsAdmin == false && post.UserId != userId && post.GroupId == null)
         {
             return Forbid();
         }
 
         if (post.GroupId != null)
         {
-            var hasRight = await _dbContext.MemberInGroups.FirstOrDefaultAsync(m => m.UserId == userId && m.UserGroupId == post.GroupId && (m.Role == GroupRole.Admin || m.Role == GroupRole.Moderator ));
+            var hasRight = await _dbContext.MemberInGroups.FirstOrDefaultAsync(m => m.UserId == userId && m.UserGroupId == post.GroupId && (m.Role == GroupRole.Admin || m.Role == GroupRole.Moderator));
             if (hasRight == null)
             {
                 return Forbid();
@@ -190,10 +190,10 @@ public class PostController : BaseController
 
         var userId = _userManager.GetUserId(User);
         var user = await _userManager.FindByIdAsync(userId);
-        
+
         var isGroupModerator = _dbContext.MemberInGroups.Any(m => m.UserId == userId && m.UserGroupId == post.GroupId && m.Role != GroupRole.Member);
-        
-        if (user != null && post.UserId != userId && !user.IsAdmin && !isGroupModerator )
+
+        if (user != null && post.UserId != userId && !user.IsAdmin && !isGroupModerator)
         {
             return Forbid();
         }
@@ -203,9 +203,9 @@ public class PostController : BaseController
 
         return RedirectToAction("Index", "Feed");
     }
-    
-    
-    
+
+
+
     [HttpPost]
     public async Task<IActionResult> Like(int postId)
     {
@@ -221,7 +221,7 @@ public class PostController : BaseController
         var post = _dbContext.Posts
             .Include(p => p.User)
             .FirstOrDefault(p => p.Id == postId);
-        
+
         if (post == null)
         {
             Console.WriteLine("Inexistent post");
@@ -309,11 +309,11 @@ public class PostController : BaseController
             System.Console.WriteLine("ERROR HERE" + postId.ToString());
             return Forbid();
         }
-        
+
 
         await _dbContext.SaveChangesAsync();
 
         return Ok();
     }
-    
+
 }
