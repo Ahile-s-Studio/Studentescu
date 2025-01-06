@@ -1,8 +1,41 @@
 ﻿document.addEventListener("DOMContentLoaded", () => {
+    attachDeletePostListeners();
+    attachLikeButtonListeners();
+    attachCommentButtonListeners();
+
+    const observer = new MutationObserver((mutationsList) => {
+        for (const mutation of mutationsList) {
+            if (
+                mutation.type === "childList" &&
+                mutation.addedNodes.length > 0
+            ) {
+                // Reattach event listeners for dynamically added posts
+                attachDeletePostListeners();
+                attachLikeButtonListeners();
+                attachCommentButtonListeners();
+            }
+        }
+    });
+
+    // Start observing the post list for changes
+    const postList = document.getElementById("post-list");
+    if (postList) {
+        observer.observe(postList, {
+            childList: true, // Detect when children are added or removed
+            subtree: false, // Only observe direct children
+        });
+    }
+});
+
+function attachDeletePostListeners(): void {
     const deletePostButtons =
         document.querySelectorAll<HTMLButtonElement>(".delete-post-btn");
 
     deletePostButtons.forEach((deletePostButton) => {
+        if (deletePostButton.hasAttribute("has-event-listener")) {
+            return;
+        }
+        deletePostButton.setAttribute("has-event-listener", "true");
         deletePostButton.addEventListener("click", function (): void {
             const postId = this.getAttribute("data-post-id");
             const parentDiv = this.closest(".post-card");
@@ -22,11 +55,16 @@
             });
         });
     });
-});
-document.addEventListener("DOMContentLoaded", () => {
+}
+
+function attachLikeButtonListeners(): void {
     const buttons = document.querySelectorAll<HTMLButtonElement>(".like-btn");
 
     buttons.forEach((button) => {
+        if (button.hasAttribute("has-event-listener")) {
+            return;
+        }
+        button.setAttribute("has-event-listener", "true");
         button.addEventListener("click", function (): void {
             const postId = this.getAttribute("data-post-id");
             const isLiked = this.getAttribute("data-is-liked") === "True";
@@ -75,13 +113,17 @@ document.addEventListener("DOMContentLoaded", () => {
                 });
         });
     });
-});
+}
 
-document.addEventListener("DOMContentLoaded", () => {
+function attachCommentButtonListeners(): void {
     const commentButtons =
         document.querySelectorAll<HTMLButtonElement>(".comment-btn");
 
     commentButtons.forEach((button) => {
+        if (button.hasAttribute("has-event-listener")) {
+            return;
+        }
+        button.setAttribute("has-event-listener", "true");
         button.addEventListener("click", function (): void {
             const postId = this.getAttribute("data-post-id");
             const isOpen = this.getAttribute("data-is-open") === "true";
@@ -141,8 +183,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     });
-});
-
+}
 function createCommentForm(postId: string): HTMLFormElement {
     const form = document.createElement("form");
     form.className = "comment-input";
@@ -150,25 +191,33 @@ function createCommentForm(postId: string): HTMLFormElement {
     form.style.marginTop = "10px";
     form.style.display = "flex";
     form.style.gap = "10px";
+    form.style.alignItems = "center";
 
     const textarea = document.createElement("textarea");
     textarea.name = "content";
     textarea.placeholder = "Write your comment...";
     textarea.required = true;
     textarea.style.flex = "1";
-    textarea.style.padding = "5px";
-    textarea.style.border = "1px solid #ccc";
+    textarea.style.padding = "10px";
+    textarea.style.border = "1px solid white";
     textarea.style.borderRadius = "5px";
+    textarea.style.backgroundColor = "transparent";
+    textarea.style.color = "white";
+    textarea.style.fontSize = "14px";
+    textarea.style.outline = "none";
 
     const submitButton = document.createElement("button");
     submitButton.type = "submit";
     submitButton.innerText = "Comment";
-    submitButton.style.padding = "5px 10px";
+    submitButton.style.padding = "8px 16px";
     submitButton.style.border = "none";
-    submitButton.style.backgroundColor = "#007bff";
-    submitButton.style.color = "#fff";
+    submitButton.style.backgroundColor =
+        "rgb(168 85 247 / var(--tw-bg-opacity, 1))"; // Correct purple color
+
+    submitButton.style.color = "white";
     submitButton.style.borderRadius = "5px";
     submitButton.style.cursor = "pointer";
+    submitButton.style.fontSize = "14px";
 
     form.appendChild(textarea);
     form.appendChild(submitButton);
@@ -220,7 +269,6 @@ function submitComment(
             );
         });
 }
-
 function loadComments(
     postId: string,
     pageNumber: number,
@@ -241,13 +289,17 @@ function loadComments(
 
             comments.forEach((comment) => {
                 const commentElement = document.createElement("div");
+                commentElement.className = "comment-item";
                 commentElement.style.borderBottom = "1px solid #ddd";
-                commentElement.style.padding = "5px 0";
+                commentElement.style.padding = "15px 0";
+                commentElement.style.marginBottom = "10px";
+
                 commentElement.innerHTML = `
-                    <p><strong>${comment.user.userName}</strong></p>
-                    <p>${comment.content}</p>
-                    <p>${comment.commentedAt}</p>
+                    <p class="comment-author text-white"><strong>${comment.user.userName}</strong></p>
+                    <p class="comment-content text-white">${comment.content}</p>
+                    <p class="comment-time text-gray-400">${comment.commentedAt}</p>
                 `;
+
                 if (comment.isMyComment) {
                     const editButton = document.createElement("a");
                     editButton.setAttribute(
@@ -255,8 +307,19 @@ function loadComments(
                         "/Comment/Edit?id=" + comment.id
                     );
                     editButton.innerHTML = "Edit";
+                    editButton.style.marginRight = "10px";
+                    editButton.style.color =
+                        "rgb(168 85 247 / var(--tw-bg-opacity, 1))";
+                    editButton.style.textDecoration = "none";
+
                     const deleteButton = document.createElement("button");
                     deleteButton.innerText = "Delete";
+                    deleteButton.style.backgroundColor = "rgb(220 38 38)"; // Red for delete
+                    deleteButton.style.color = "white";
+                    deleteButton.style.padding = "5px 10px";
+                    deleteButton.style.border = "none";
+                    deleteButton.style.borderRadius = "5px";
+                    deleteButton.style.cursor = "pointer";
                     deleteButton.addEventListener("click", () => {
                         fetch(`/Comment/Delete?commentId=${comment.id}`, {
                             method: "POST",
@@ -276,9 +339,11 @@ function loadComments(
                                 );
                             });
                     });
+
                     commentElement.appendChild(editButton);
                     commentElement.appendChild(deleteButton);
                 }
+
                 container.appendChild(commentElement);
             });
 
@@ -287,21 +352,31 @@ function loadComments(
             if (comments.length > 0) {
                 if (!loadMoreButton) {
                     const loadMore = document.createElement("button");
-                    loadMore.className = "load-more-btn";
-                    loadMore.innerText = "Load More";
-                    loadMore.style.marginTop = "10px";
-                    loadMore.addEventListener("click", () =>
-                        loadComments(postId, pageNumber + 1, container)
-                    );
+                    loadMore.innerText = "Load more...";
+                    loadMore.classList.add("load-more-btn");
+                    loadMore.style.backgroundColor =
+                        "rgb(168 85 247 / var(--tw-bg-opacity, 1))"; // Purple button
+                    loadMore.style.color = "white";
+                    loadMore.style.padding = "8px 16px";
+                    loadMore.style.border = "none";
+                    loadMore.style.borderRadius = "5px";
+                    loadMore.style.cursor = "pointer";
+                    loadMore.addEventListener("click", () => {
+                        loadComments(postId, pageNumber + 1, container);
+                    });
                     container.appendChild(loadMore);
                 }
-            } else if (loadMoreButton) {
-                loadMoreButton.remove();
+            } else {
+                if (loadMoreButton) {
+                    loadMoreButton.remove();
+                }
             }
         })
         .catch((error) => {
             console.error("Error loading comments:", error);
-            alert("An error occurred. Please try again.");
+            alert(
+                "An error occurred while loading comments. Please try again."
+            );
         });
 }
 

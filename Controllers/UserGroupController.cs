@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -56,7 +55,7 @@ public class UserGroupController : BaseController
                 var relation = _dbContext.JoinRequests.FirstOrDefault(member => member.RequesterId == userId && member.GroupId == group.Id);
                 string status = "None";
                 var isJoined = _dbContext.MemberInGroups.Any(member => member.UserId == userId && member.UserGroupId == group.Id);
-                Console.WriteLine(isJoined == true ? "Joined" : "Not Joined");
+                Console.WriteLine(isJoined ? "Joined" : "Not Joined");
                 if (relation != null && relation.Status == JoinRequestStatus.Rejected)
                 {
                     status = "Rejected";
@@ -79,7 +78,7 @@ public class UserGroupController : BaseController
 
         if (user == null)
         {
-            return RedirectToAction("Login", "Account");
+            return Redirect("/Identity/Account/Login");
         }
 
         var group = _dbContext.UserGroups.Include(g => g.Members).FirstOrDefault(group => group.Id == groupId);
@@ -120,9 +119,15 @@ public class UserGroupController : BaseController
         return View(new GroupFeedViewModel { Group = group, IsJoined = isJoined, IsModerator = isModerator, IsAdmin = isAdmin, Posts = groupPosts });
     }
 
-    public IActionResult Create()
+    public async Task<IActionResult> Create()
     {
-
+        var userId = _userManager.GetUserId(User);
+        Console.WriteLine("temp test ohaio");
+        var user = await _userManager.FindByIdAsync(userId);
+        if (user is null)
+        {
+            return Redirect("/Identity/Account/Login");
+        }
 
         return View();
     }
@@ -133,10 +138,14 @@ public class UserGroupController : BaseController
         if (ModelState.IsValid)
         {
             Console.WriteLine("I am Creating a UserGroup");
-            _dbContext.UserGroups.Add(userGroup);
 
             var userId = _userManager.GetUserId(User);
             var user = await _userManager.FindByIdAsync(userId);
+            if (user is null)
+            {
+                return RedirectToAction("Account/Login","Identity");
+            }
+            _dbContext.UserGroups.Add(userGroup);
             Console.WriteLine("Current user group id: " + userGroup.Id.ToString());
             _dbContext.MemberInGroups.Add(new MemberInGroup { User = user, UserId = userId, UserGroup = userGroup, UserGroupId = userGroup.Id, Role = GroupRole.Admin });
 
@@ -445,4 +454,61 @@ public class UserGroupController : BaseController
         return View(new GroupMemberList { Members = members, IsAdmin = isAdmin, JoinRequests = requests, GroupId = groupId });
     }
 
+    public async Task<IActionResult> SetModerator(int groupId, string userId)
+    {
+        var adminId = _userManager.GetUserId(User);
+        var isAdmin = _dbContext.MemberInGroups.Any(m => m.UserId == adminId && m.UserGroupId == groupId && m.Role == GroupRole.Admin);
+
+        if (!isAdmin)
+        {
+            return Forbid();
+        }
+
+        var userMembership = _dbContext.MemberInGroups.FirstOrDefault(m => m.UserId == userId && m.UserGroupId == groupId && m.UserId != adminId);
+
+        if (userMembership == null)
+        {
+            return NotFound();
+        }
+
+        if (userMembership.Role != GroupRole.Moderator)
+        {
+            userMembership.Role = GroupRole.Moderator;
+            _dbContext.MemberInGroups.Update(userMembership);
+            
+            await _dbContext.SaveChangesAsync();
+        }
+        
+        return Redirect("/UserGroup/ShowMembers?groupId=" + groupId.ToString());
+    }
+
+    public async Task<IActionResult> RemoveModerator(int groupId, string userId)
+    {
+     
+        var adminId = _userManager.GetUserId(User);
+        var isAdmin = _dbContext.MemberInGroups.Any(m => m.UserId == adminId && m.UserGroupId == groupId && m.Role == GroupRole.Admin);
+
+        if (!isAdmin)
+        {
+            return Forbid();
+        }
+
+        var userMembership = _dbContext.MemberInGroups.FirstOrDefault(m => m.UserId == userId && m.UserGroupId == groupId && m.UserId != adminId);
+
+        if (userMembership == null)
+        {
+            return NotFound();
+        }
+
+        if (userMembership.Role == GroupRole.Moderator)
+        {
+            userMembership.Role = GroupRole.Member;
+            _dbContext.MemberInGroups.Update(userMembership);
+            
+            await _dbContext.SaveChangesAsync();
+        }
+        
+        return Redirect("/UserGroup/ShowMembers?groupId=" + groupId.ToString());
+    }
+    
 }

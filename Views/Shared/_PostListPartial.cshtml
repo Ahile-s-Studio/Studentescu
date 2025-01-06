@@ -2,32 +2,47 @@
 
 @foreach (var post in Model)
 {
-    <div class="post-card">
-        <div class="post-header flex flex-row">
-            <img width="50" height="50" alt="Profile Picture" src="@(post.Post.User.ProfilePictureUrl ?? "/images/default-avatar.jpg")" />
-            <p>@post.Post.User.UserName</p>
-        </div>
-        <div class="post-content">
-            @if (post.Post.ContentType == "image")
-            {
-                <img alt="Post Content" src="@post.Post.Content" />
-            }
-            else if (post.Post.ContentType == "video")
-            {
-                <video controls>
-                    <source src="@post.Post.Content" type="video/mp4" />
-                    Your browser does not support the video format.
-                </video>
-            }
-            else if (post.Post.ContentType == "text")
-            {
-                <p>@post.Post.Content</p>
-            }
-        </div>
-        <div class="post-footer">
-            <p><span id="like-counter-@post.Post.Id">@post.Post.Likes.Count</span> likes</p>
-            <button id="like-btn-@post.Post.Id" class="like-btn" data-post-id="@post.Post.Id" data-is-liked="@post.IsLiked">
-                @if (post.IsLiked)
+    
+<div class="post-card max-w-3xl mx-auto bg-gray-900 text-gray-200 rounded-lg p-6 mb-6 shadow-lg transition-shadow duration-300 ease-in-out hover:shadow-[0_0_15px_rgba(168,85,247,0.7),0_0_25px_rgba(168,85,247,0.6),0_0_50px_rgba(168,85,247,0.5)]">
+    <div class="post-header flex items-center mb-4">
+        <img width="50" height="50" alt="Profile Picture" src="@(post.Post.User.ProfilePictureUrl ?? "/images/default-avatar.jpg")" class="rounded-full"/>
+        <p class="ml-4 font-semibold">@post.Post.User.UserName</p>
+    </div>
+    <div class="post-content mb-4">
+        @if (@post.Post.ContentType == "image")
+        {
+            <img alt="Post Content" src="@post.Post.Content" class="w-full rounded-lg"/>
+        }
+        else if (@post.Post.ContentType == "video")
+        {
+            <video controls class="w-full rounded-lg">
+                <source src="@post.Post.Content" type="video/mp4"/>
+                Your browser does not support the video format.
+            </video>
+        }
+        else if (@post.Post.ContentType == "text")
+        {
+            <p class="text-gray-300">@post.Post.Content</p>
+        }
+    </div>
+
+    <div class="mb-4 text-gray-400">
+        <span class="" id="like-counter-@post.Post.Id">
+            @post.Post.Likes.Count 
+        </span>
+        <span>
+            Likes
+        </span>
+    </div>
+
+    <div class="post-footer flex justify-between items-center gap-4">
+        <div class="flex items-center gap-4">
+            <button
+                id="like-btn-@post.Post.Id"
+                class="like-btn text-white bg-purple-500 hover:bg-purple-600 py-2 px-4 rounded-lg transition-colors "
+                data-post-id="@post.Post.Id"
+                data-is-liked="@post.IsLiked">
+                @if (@post.IsLiked)
                 {
                     <span>Unlike</span>
                 }
@@ -36,18 +51,27 @@
                     <span>Like</span>
                 }
             </button>
-            <button id="comment-btn-@post.Post.Id" class="comment-btn" data-post-id="@post.Post.Id" data-is-open="false">
+            <button
+                id="comment-btn-@post.Post.Id"
+                class="comment-btn text-white bg-purple-500 hover:bg-purple-600 py-2 px-4 rounded-lg transition-colors "
+                data-post-id="@post.Post.Id"
+                data-is-open="false">
                 Show Comments
             </button>
-            @if (post.IsMyPost)
-            {
-                <a href="/Post/Edit?postId=@post.Post.Id">Edit Post</a>
+        </div>
+
+        @if (post.IsMyPost)
+        {
+            <div class="flex items-center gap-4">
+                <a href="/Post/Edit?postId=@post.Post.Id" class="text-white bg-purple-500 hover:bg-purple-600 py-2 px-4 rounded-lg transition-colors ">Edit Post</a>
                 <form method="post" asp-controller="Post" asp-action="Delete" asp-route-id="@post.Post.Id" onsubmit="return confirm('Are you sure you want to delete this post?');">
-                    <button type="submit" class="btn btn-danger">
+                    <button type="submit" class="btn btn-danger text-white bg-red-500 hover:bg-red-600 py-2 px-4 rounded-lg">
                         Delete Post
                     </button>
                 </form>
-            }
-        </div>
+            </div>
+        }
     </div>
+</div>
+
 }

@@ -1,41 +1,51 @@
 @model UserGroup
 
 @{
-    ViewBag.Title = "title";
+    ViewBag.Title = "Create Group";
     Layout = "_Layout";
 }
 
+<div class="container mx-auto p-4">
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <form asp-action="Create" method="post" class="max-w-xl mx-auto bg-transparent p-6 rounded-lg shadow-md space-y-4">
 
-<form asp-action="Create" method="post" >
+        <div class="form-group">
+            <label for="image" class="block text-lg font-semibold text-white">Group Image</label>
+            <input asp-for="GroupImageUrl" type="text" id="image" class="form-input mt-1 block w-full p-2 border border-white rounded-md bg-transparent text-white placeholder-white" />
+            <span class="text-danger">@Html.ValidationMessageFor(m => m.GroupImageUrl)</span>
+        </div>
 
-    <label for="image">Group Image</label>
-    <input asp-for="GroupImageUrl" type="text" id="image" />
+        <div class="form-group">
+            <label for="name" class="block text-lg font-semibold text-white">Group Name</label>
+            <input asp-for="Name" type="text" id="name" class="form-input mt-1 block w-full p-2 border border-white rounded-md bg-transparent text-white placeholder-white" />
+            <span class="text-danger">@Html.ValidationMessageFor(m => m.Name)</span>
+        </div>
 
+        <div class="form-group">
+            <label for="description" class="block text-lg font-semibold text-white">Group Description</label>
+            <input asp-for="Description" type="text" id="description" class="form-input mt-1 block w-full p-2 border border-white rounded-md bg-transparent text-white placeholder-white" />
+            <span class="text-danger">@Html.ValidationMessageFor(m => m.Description)</span>
+        </div>
 
-    <label for="name">Group name:</label>
-    <input asp-for="Name" type="text" id="name" />
+        <div class="form-group">
+            <label for="category" class="block text-lg font-semibold text-white">Category</label>
+            <select asp-for="Category" id="category" class="form-select mt-1 block w-full p-2 border border-white rounded-md bg-transparent text-white placeholder-white">
+                <option value="">Select Category</option>
+                <option value="Travel">Travel</option>
+                <option value="Fashion">Fashion</option>
+                <option value="Gastronomy">Gastronomy</option>
+                <option value="Health Care">Health Care</option>
+                <option value="Games">Games</option>
+                <option value="Study">Study</option>
+            </select>
+            <span class="text-danger">@Html.ValidationMessageFor(m => m.Category)</span>
+        </div>
 
-    <label for="description">Group description:</label>
-    <input asp-for="Description" type="text" id="description" />
-
-    <label for="category">Category:</label>
-    <select asp-for="Category" id="category">
-        <option>None</option>
-        <option>Travel</option>
-        <option>Fashion</option>
-        <option>Gastronomy</option>
-        <option>Health Care</option>
-        <option>Games</option>
-        <option>Study</option>
-    </select>
-
-    <button type="submit">Create</button>
-</form>
-
-
+        <button type="submit" class="btn btn-primary w-full mt-4 p-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">Create</button>
+    </form>
+</div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }

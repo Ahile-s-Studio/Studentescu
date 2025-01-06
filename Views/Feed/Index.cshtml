@@ -4,15 +4,16 @@
     Layout = "_Layout";
 }
 
-<div>
-    <h1>For You</h1>
-    <a href="/Post/Create">Create Post</a>
-    <div id="post-list">
-        @foreach (var post in Model){
-            @Html.Partial("_PostCardPartial",post)
-            
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold text-gray-200 mb-6">For You</h1>
+    <a href="/Post/Create" class="text-white bg-purple-500 hover:bg-purple-600 py-2 px-4 rounded-lg transition-colors mb-6 inline-block">
+        Create Post
+    </a>
+    <div id="post-list" class="space-y-6">
+        @foreach (var post in Model)
+        {
+            @Html.Partial("_PostCardPartial", post)
         }
-        
     </div>
 </div>
 

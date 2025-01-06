@@ -24,7 +24,7 @@ public class CommentController : BaseController
 
         if (user == null)
         {
-            return RedirectToAction("Login", "Account");
+            return Redirect("/Identity/Account/Login");
         }
 
         var comment = _dbContext.Comments.FirstOrDefault(c => c.Id == commentId);
@@ -54,7 +54,7 @@ public class CommentController : BaseController
 
         if (user == null)
         {
-            return RedirectToAction("Login", "Account");
+            return Redirect("/Identity/Account/Login");
         }
 
         var post = _dbContext.Posts

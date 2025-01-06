@@ -1,45 +1,73 @@
 @model Studentescu.ViewModels.GroupFeedViewModel
+
 @{
     ViewBag.Title = "title";
     Layout = "_Layout";
 }
 
-<div>
-    <div>
-        <img src="@Model.Group.GroupImageUrl" width="50" height="50" alt="Group profile picture"/>
-        <h3>@Model.Group.Name</h3>
+<div class="max-w-3xl mx-auto p-6 bg-gray-900 rounded-lg shadow-xl border-2 border-purple-600 glow-border mt-10">
+    <div class="flex items-center gap-4 mb-6">
+        <img src="@Model.Group.GroupImageUrl" width="50" height="50" alt="Group profile picture" class="rounded-full shadow-md" />
+        <div>
+            <h3 class="text-2xl text-white font-semibold">@Model.Group.Name</h3>
+            <p class="text-gray-300">@Model.Group.Members.Count() members</p>
+        </div>
     </div>
-    <h3>@Model.Group.Members.Count() members</h3>
+    <h3 class="text-lg mb-3">Description: @Model.Group.Description</h3>
+
     @if (@Model.IsJoined)
     {
-        if (@Model.IsAdmin)
+        @if (@Model.IsAdmin)
         {
-            <form asp-action="Delete" asp-controller="UserGroup" method="post">
+            <form asp-action="Delete" asp-controller="UserGroup" method="post" class="mb-4">
                 <input type="hidden" name="groupId" value="@Model.Group.Id" />
-                <button type="submit">Delete Group</button>
+                <button type="submit" class="w-full py-3 bg-red-600 text-white rounded-lg shadow-md hover:bg-red-700 focus:ring-2 focus:ring-red-500 transition-all glow-button">Delete Group</button>
             </form>
-
         }
         else
         {
-            <form asp-action="Leave" asp-controller="UserGroup" method="post">
+            <form asp-action="Leave" asp-controller="UserGroup" method="post" class="mb-4">
                 <input type="hidden" name="groupId" value="@Model.Group.Id" />
-                <button type="submit">Leave Group</button>
+                <button type="submit" class="w-full py-3 bg-gray-700 text-white rounded-lg shadow-md hover:bg-gray-800 focus:ring-2 focus:ring-gray-500 transition-all glow-button">Leave Group</button>
             </form>
         }
     }
     else
     {
-        <button>Join</button>
+        <button class="w-full py-3 bg-purple-600 text-white rounded-lg shadow-md hover:bg-purple-700 focus:ring-2 focus:ring-purple-500 transition-all glow-button">Join Group</button>
     }
+
     @if (@Model.IsJoined)
     {
-        <a href="/Post/Create/@Model.Group.Id">Create New Post</a>
+        <a href="/Post/Create/@Model.Group.Id" class="w-full py-3 bg-green-600 text-white rounded-lg shadow-md hover:bg-green-700 focus:ring-2 focus:ring-green-500 transition-all glow-button px-2">Create New Post</a>
     }
-    <a href="/UserGroup/ShowMembers?groupId=@Model.Group.Id">Show Members</a>
+
+    <a href="/UserGroup/ShowMembers?groupId=@Model.Group.Id" class="w-full py-3 bg-gray-700 text-white rounded-lg shadow-md hover:bg-gray-800 focus:ring-2 focus:ring-gray-500 transition-all glow-button px-2">Show Members</a>
+</div>
+  
+    <div class="h-10"></div>
     @foreach (var post in @Model.Posts)
     {
         @Html.Partial("_PostCardPartial", post)
     }
-    
-</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+<style>
+    /* Neon glow effect for buttons */
+    .glow-button:hover {
+        box-shadow: 0 0 10px 2px rgba(168, 85, 247, 0.6), 0 0 20px 5px rgba(168, 85, 247, 0.4);
+    }
+
+    /* Neon border effect for the form container */
+    .glow-border {
+        border: 2px solid rgba(168, 85, 247, 0.7);
+        box-shadow: 0 0 10px 2px rgba(168, 85, 247, 0.4), 0 0 20px 5px rgba(168, 85, 247, 0.3);
+    }
+
+    .text-gray-300 {
+        color: #e2e8f0;
+    }
+</style>

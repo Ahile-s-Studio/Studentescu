@@ -1,21 +1,27 @@
-
 @model List<FollowRequest>
 
-<h2>Follow Requests Sent</h2>
-<table class="table">
-    <thead>
-    <tr>
-        <th>Target</th>
-        <th>Status</th>
-    </tr>
-    </thead>
-    <tbody>
-    @foreach (var request in Model)
-    {
-        <tr>
-            <td>@request.Target.FirstName @request.Target.LastName @request.Requester.UserName</td>
-            <td>@request.Status</td>
+<h2 class="text-2xl font-bold mb-4 text-center">Follow Requests Sent</h2>
+
+<div class="overflow-x-auto bg-white shadow-md rounded-lg">
+    <table class="table-auto w-full text-left border-collapse">
+        <thead>
+        <tr class="bg-gray-100 border-b">
+            <th class="px-4 py-2 text-lg font-semibold text-gray-700">Target</th>
+            <th class="px-4 py-2 text-lg font-semibold text-gray-700">Status</th>
         </tr>
-    }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+        @foreach (var request in Model)
+        {
+            <tr class="border-b hover:bg-gray-50">
+                <td class="px-4 py-2 text-sm text-gray-600">
+                    @request.Target.FirstName @request.Target.LastName (@request.Requester.UserName)
+                </td>
+                <td class="px-4 py-2 text-sm text-gray-600">
+                    @request.Status
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
