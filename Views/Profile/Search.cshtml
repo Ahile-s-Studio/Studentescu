@@ -5,32 +5,32 @@
     Layout = "_Layout";
 }
 
-
-<h1>Search Results</h1>
+<h1 class="text-2xl font-bold text-center mt-6 mb-4">Search Results</h1>
 
 @if (Model.Any())
 {
-    <ul>
+    <ul class="list-disc pl-6 mb-6">
         @foreach (var user in Model)
         {
-            <li>
+            <li class="mb-2">
                 <a asp-controller="Profile"
                    asp-action="Show"
-                   asp-route-username="@user.UserName">
+                   asp-route-username="@user.UserName"
+                   class="text-blue-600 hover:underline font-medium">
                     @user.UserName
                 </a>
-                - @user .Email
+                <span class="text-gray-600">- @user.Email</span>
             </li>
         }
     </ul>
 
     <!-- Pagination Links -->
-    <nav>
-        <ul class="pagination">
+    <nav class="flex justify-center">
+        <ul class="inline-flex items-center space-x-1">
             @if (Model.HasPreviousPage)
             {
-                <li class="page-item">
-                    <a class="page-link"
+                <li>
+                    <a class="px-3 py-2 bg-gray-200 text-gray-700 hover:bg-gray-300 rounded"
                        asp-controller="Profile"
                        asp-action="Search"
                        asp-route-query="@ViewData["Query"]"
@@ -39,15 +39,15 @@
             }
             else
             {
-                <li class="page-item disabled"><span
-                        class="page-link">Previous</span>
+                <li>
+                    <span class="px-3 py-2 bg-gray-100 text-gray-400 rounded cursor-not-allowed">Previous</span>
                 </li>
             }
 
             @for (var i = 1; i <= Model.TotalPages; i++)
             {
-                <li class="page-item @(i == Model.PageIndex ? "active" : "")">
-                    <a class="page-link"
+                <li>
+                    <a class="px-3 py-2 rounded @(i == Model.PageIndex ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-700 hover:bg-gray-300")"
                        asp-controller="Profile"
                        asp-action="Search"
                        asp-route-query="@ViewData["Query"]"
@@ -57,8 +57,8 @@
 
             @if (Model.HasNextPage)
             {
-                <li class="page-item">
-                    <a class="page-link"
+                <li>
+                    <a class="px-3 py-2 bg-gray-200 text-gray-700 hover:bg-gray-300 rounded"
                        asp-controller="Profile"
                        asp-action="Search"
                        asp-route-query="@ViewData["Query"]"
@@ -67,8 +67,8 @@
             }
             else
             {
-                <li class="page-item disabled"><span
-                        class="page-link">Next</span>
+                <li>
+                    <span class="px-3 py-2 bg-gray-100 text-gray-400 rounded cursor-not-allowed">Next</span>
                 </li>
             }
         </ul>
@@ -76,5 +76,5 @@
 }
 else
 {
-    <p>No results found.</p>
+    <p class="text-center text-gray-500">No results found.</p>
 }

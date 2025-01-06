@@ -36,7 +36,7 @@ public class PostController : BaseController
         var user = await _userManager.FindByIdAsync(userId);
         if (userId == null)
         {
-            return RedirectToAction("Login", "Account");
+            return Redirect("/Identity/Account/Login");
         }
 
         ViewBag.PostDestination = postDestination;
@@ -52,7 +52,7 @@ public class PostController : BaseController
         var userId = _userManager.GetUserId(User);
         if (userId == null)
         {
-            return RedirectToAction("Login", "Account");
+            return Redirect("/Identity/Account/Login");
         }
 
         Console.WriteLine("In the action\n");
@@ -291,7 +291,7 @@ public class PostController : BaseController
 
         if (user == null)
         {
-            return RedirectToAction("Login", "Account");
+            return Redirect("/Identity/Account/Login");
         }
 
         var post = _dbContext.Posts

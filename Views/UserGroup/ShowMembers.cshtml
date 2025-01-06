@@ -1,46 +1,79 @@
 @model Studentescu.ViewModels.GroupMemberList
 
 @{
-    ViewBag.Title = "title";
+    ViewBag.Title = "Group Management";
     Layout = "_Layout";
 }
 
 @if (@Model.IsAdmin)
 {
-    <h2>Join Requests</h2>
+    <h2 class="text-2xl font-semibold mb-6 text-white w-3/4 mx-auto">Join Requests</h2>
 
-    foreach (var req in @Model.JoinRequests)
+    @foreach (var req in @Model.JoinRequests)
     {
-        <div>
-            <img src="@req.Requester.ProfilePictureUrl" alt="Profile picture"/>
-            <p>@req.Requester.UserName</p>
+        <div class="flex items-center mb-4 p-4 border-2 rounded-lg bg-gray-800 hover:bg-gray-700 transition-all w-3/4 mx-auto">
+            <img src="@(req.Requester.ProfilePictureUrl ?? "/images/default-avatar.png")" alt="Profile picture" class="w-12 h-12 rounded-full shadow-md mr-4" />
+            <p class="text-white flex-grow">@req.Requester.UserName</p>
 
-            <form asp-action="AcceptJoinRequest" asp-controller="UserGroup" method="post">
+            <form asp-action="AcceptJoinRequest" asp-controller="UserGroup" method="post" class="mr-2">
                 <input type="hidden" name="requestId" value="@req.Id" />
                 <input type="hidden" name="groupId" value="@Model.GroupId" />
-                <button type="submit">Accept</button>
+                <button type="submit" class="py-2 px-4 bg-green-600 text-white rounded-lg hover:bg-green-700 focus:ring-2 focus:ring-green-500 transition-all">Accept</button>
             </form>
             <form asp-action="DeclineJoinRequest" asp-controller="UserGroup" method="post">
                 <input type="hidden" name="requestId" value="@req.Id" />
                 <input type="hidden" name="groupId" value="@Model.GroupId" />
-                <button type="submit">Decline</button>
+                <button type="submit" class="py-2 px-4 bg-red-600 text-white rounded-lg hover:bg-red-700 focus:ring-2 focus:ring-red-500 transition-all">Decline</button>
             </form>
         </div>
     }
 }
-<h2>Members</h2>
+
+<h2 class="text-2xl font-semibold mb-6 text-white w-3/4 mx-auto">Members</h2>
+
 @foreach (var mem in @Model.Members)
 {
-    <div>
-        <img src="@mem.user.ProfilePictureUrl" />
-        <p>@mem.user.UserName</p>
+    <div class="flex items-center mb-4 p-4 border-2 rounded-lg bg-gray-800 hover:bg-gray-700 transition-all w-3/4 mx-auto">
+        <img src="@(mem.user.ProfilePictureUrl ?? "/images/default-avatar.jpg")" alt="Profile picture" class="w-12 h-12 rounded-full shadow-md mr-4" />
+        <p class="text-white flex-grow">@mem.user.UserName</p>
+
         @if (@Model.IsAdmin)
         {
-            <form asp-action="KickMember" asp-controller="UserGroup" method="post">
+            <form asp-action="KickMember" asp-controller="UserGroup" method="post" class="mr-2">
                 <input type="hidden" name="groupId" value="@Model.GroupId" />
                 <input type="hidden" name="userId" value="@mem.user.Id" />
-                <button type="submit">Kick</button>
+                <button type="submit" class="py-2 px-4 bg-gray-700 text-white rounded-lg hover:bg-gray-800 focus:ring-2 focus:ring-gray-500 transition-all">Kick</button>
             </form>
+
+            @if(mem.role == GroupRole.Moderator)
+            {
+                <form asp-action="SetModerator" asp-controller="UserGroup" method="post" class="mr-2">
+                    <input type="hidden" name="groupId" value="@Model.GroupId" />
+                    <input type="hidden" name="userId" value="@mem.user.Id" />
+                    <button type="submit" class="py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 transition-all">Set Moderator</button>
+                </form>
+            }
+            else
+            {
+                <form asp-action="RemoveModerator" asp-controller="UserGroup" method="post">
+                    <input type="hidden" name="groupId" value="@Model.GroupId" />
+                    <input type="hidden" name="userId" value="@mem.user.Id" />
+                    <button type="submit" class="py-2 px-4 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 focus:ring-2 focus:ring-yellow-500 transition-all">Remove Moderator</button>
+                </form>
+            }
         }
     </div>
 }
+        
+
+            <style>
+                .hover\:bg-gray-700:hover {
+                    background-color: #4a4a4a !important;
+                }
+                .focus\:ring-2:focus {
+                    ring-width: 2px !important;
+                }
+                .focus\:ring-green-500:focus {
+                    box-shadow: 0 0 0 2px rgba(72, 187, 120, 0.6);
+                }
+            </style>

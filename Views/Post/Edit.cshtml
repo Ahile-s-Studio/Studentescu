@@ -5,40 +5,59 @@
     Layout = "_Layout";
 }
 
-<h2>@ViewBag.Title</h2>
+<h2 class="text-2xl font-semibold text-gray-200 mt-5 text-center">@ViewBag.Title</h2>
 
 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-<form asp-action="Edit" method="post">
+<form asp-action="Edit" method="post" class="space-y-6 mt-6 max-w-3xl mx-auto p-6 bg-gray-900 rounded-lg shadow-xl border-2 border-purple-600 glow-border">
     <div class="form-group">
-        <label asp-for="Title" class="control-label"></label>
-        <input asp-for="Title" class="form-control" />
-        <span asp-validation-for="Title" class="text-danger"></span>
+        <label asp-for="Title" class="block text-lg font-medium text-gray-300"></label>
+        <input asp-for="Title" class="form-control w-full p-3 bg-gray-800 text-gray-200 rounded-lg shadow-md border border-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all glow-input" />
+        <span asp-validation-for="Title" class="text-danger text-sm mt-2 block"></span>
     </div>
 
     <div class="form-group">
-        <label asp-for="Content" class="control-label"></label>
-        <textarea asp-for="Content" class="form-control" rows="5"></textarea>
-        <span asp-validation-for="Content" class="text-danger"></span>
+        <label asp-for="Content" class="block text-lg font-medium text-gray-300"></label>
+        <textarea asp-for="Content" class="form-control w-full p-3 bg-gray-800 text-gray-200 rounded-lg shadow-md border border-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all glow-input" rows="5"></textarea>
+        <span asp-validation-for="Content" class="text-danger text-sm mt-2 block"></span>
     </div>
 
     <div class="form-group">
-        <label asp-for="ContentType" class="control-label"></label>
-        <select asp-for="ContentType" class="form-control">
+        <label asp-for="ContentType" class="block text-lg font-medium text-gray-300"></label>
+        <select asp-for="ContentType" class="form-control w-full p-3 bg-gray-800 text-gray-200 rounded-lg shadow-md border border-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all glow-input">
             <option value="text">Text</option>
             <option value="image">Image</option>
             <option value="video">Video</option>
         </select>
-        <span asp-validation-for="ContentType" class="text-danger"></span>
+        <span asp-validation-for="ContentType" class="text-danger text-sm mt-2 block"></span>
     </div>
 
     <input type="hidden" asp-for="PostDestination" value="@(Model?.PostDestination ?? ViewBag.PostDestination)" />
     <input type="hidden" id="postId" name="postId" value="@ViewBag.PostId" />
+
     <div class="form-group">
-        <button type="submit" class="btn btn-primary">Save Changes</button>
+        <button type="submit" class="w-full py-3 bg-purple-500 text-white rounded-lg shadow-md hover:bg-purple-600 focus:ring-2 focus:ring-purple-500 transition-all glow-button">Save Changes</button>
     </div>
 </form>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
+
+<style>
+    /* Neon glow effect for input fields */
+    .glow-input:focus {
+        box-shadow: 0 0 10px 2px rgba(168, 85, 247, 0.6), 0 0 20px 5px rgba(168, 85, 247, 0.4);
+    }
+
+    /* Neon glow effect for the form button */
+    .glow-button:hover {
+        box-shadow: 0 0 10px 2px rgba(168, 85, 247, 0.6), 0 0 20px 5px rgba(168, 85, 247, 0.4);
+    }
+
+    /* Neon border effect for the form container */
+    .glow-border {
+        border: 2px solid rgba(168, 85, 247, 0.7);
+        box-shadow: 0 0 10px 2px rgba(168, 85, 247, 0.4), 0 0 20px 5px rgba(168, 85, 247, 0.3);
+    }
+</style>

@@ -1,60 +1,72 @@
 @model Studentescu.ViewModels.PostViewModel
 
-<div class="post-card">
-    <div class="post-header flex flex-row">
-        <img width="50" height="50" alt="Profile Picture" src="@(Model.Post.User.ProfilePictureUrl ?? "/images/default-avatar.jpg")"/>
-        <p>@Model.Post.User.UserName</p>
+<div class="post-card max-w-3xl mx-auto bg-gray-900 text-gray-200 rounded-lg p-6 mb-6 shadow-lg transition-shadow duration-300 ease-in-out hover:shadow-[0_0_15px_rgba(168,85,247,0.7),0_0_25px_rgba(168,85,247,0.6),0_0_50px_rgba(168,85,247,0.5)]">
+    <div class="post-header flex items-center mb-4">
+        <img width="50" height="50" alt="Profile Picture" src="@(Model.Post.User.ProfilePictureUrl ?? "/images/default-avatar.jpg")" class="rounded-full"/>
+        <p class="ml-4 font-semibold">@Model.Post.User.UserName</p>
     </div>
-    <div class="post-content" >
+    <div class="post-content mb-4">
         @if (@Model.Post.ContentType == "image")
         {
-            <img alt="Post Content" src="@Model.Post.Content" />
-        }else if (@Model.Post.ContentType == "video")
+            <img alt="Post Content" src="@Model.Post.Content" class="w-full rounded-lg"/>
+        }
+        else if (@Model.Post.ContentType == "video")
         {
-            <video controls >
+            <video controls class="w-full rounded-lg">
                 <source src="@Model.Post.Content" type="video/mp4"/>
-                Your browser do not support video format
+                Your browser does not support the video format.
             </video>
-        }else if (@Model.Post.ContentType == "text")
+        }
+        else if (@Model.Post.ContentType == "text")
         {
-            <p>@Model.Post.Content</p>
+            <p class="text-gray-300">@Model.Post.Content</p>
         }
     </div>
-    <div class="post-footer">
-        <p><span id="like-counter-@Model.Post.Id">@Model.Post.Likes.Count</span> likes</p>
-        <button
-            id="like-btn-@Model.Post.Id"
-            class="like-btn"
-            data-post-id="@Model.Post.Id"
-            data-is-liked="@Model.IsLiked">
-            @if (@Model.IsLiked)
-            {
-                <span>Unlike</span>
-            }
-            else
-            {
-                <span>Like</span>
-            }
-        </button>
-        <button
-            id="comment-btn-@Model.Post.Id"
-            class="comment-btn"
-            data-post-id="@Model.Post.Id"
-            data-is-open="false">
-            Show Comments
-        </button> 
-        @if (Model.IsMyPost) 
+
+    <div class="mb-4 text-gray-400">
+        <span class="" id="like-counter-@Model.Post.Id">
+            @Model.Post.Likes.Count 
+        </span>
+        <span>
+            Likes
+        </span>
+    </div>
+
+    <div class="post-footer flex justify-between items-center gap-4">
+        <div class="flex items-center gap-4">
+            <button
+                id="like-btn-@Model.Post.Id"
+                class="like-btn text-white bg-purple-500 hover:bg-purple-600 py-2 px-4 rounded-lg transition-colors "
+                data-post-id="@Model.Post.Id"
+                data-is-liked="@Model.IsLiked">
+                @if (@Model.IsLiked)
+                {
+                    <span>Unlike</span>
+                }
+                else
+                {
+                    <span>Like</span>
+                }
+            </button>
+            <button
+                id="comment-btn-@Model.Post.Id"
+                class="comment-btn text-white bg-purple-500 hover:bg-purple-600 py-2 px-4 rounded-lg transition-colors "
+                data-post-id="@Model.Post.Id"
+                data-is-open="false">
+                Show Comments
+            </button>
+        </div>
+
+        @if (Model.IsMyPost)
         {
-            <a href="/Post/Edit?postId=@Model.Post.Id">Edit Post</a>
-            <form method="post" asp-controller="Post" asp-action="Delete" asp-route-id="@Model.Post.Id" onsubmit="return confirm('Are you sure you want to delete this post?');">
-                <button type="submit" class="btn btn-danger">
-                    Delete Post
-                </button>
-            </form>
+            <div class="flex items-center gap-4">
+                <a href="/Post/Edit?postId=@Model.Post.Id" class="text-white bg-purple-500 hover:bg-purple-600 py-2 px-4 rounded-lg transition-colors ">Edit Post</a>
+                <form method="post" asp-controller="Post" asp-action="Delete" asp-route-id="@Model.Post.Id" onsubmit="return confirm('Are you sure you want to delete this post?');">
+                    <button type="submit" class="btn btn-danger text-white bg-red-500 hover:bg-red-600 py-2 px-4 rounded-lg">
+                        Delete Post
+                    </button>
+                </form>
+            </div>
         }
     </div>
-   
 </div>
-<script>
-    
-</script>

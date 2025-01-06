@@ -3,39 +3,36 @@
 @{
     ViewBag.Title = "Profile Debug";
     Layout = "_Layout";
-    var followUrlAction = Url.Action("FollowersAndFollowing", "Profile", new
-    {
-        username = Model.User.UserName
-    });
+    var followUrlAction = Url.Action("FollowersAndFollowing", "Profile", new { username = Model.User.UserName });
 }
 
-<div class="container profile-page">
-    <div class="profile-header">
+<div class="pt-10 profile-page">
+    <div class="profile-header text-center mb-6">
         <img
             src="@(Model.User.ProfilePictureUrl ?? "/images/default-avatar.jpg")"
             alt="User Avatar"
-            style="width: 30%;">
-        <h1>@($"{Model.User.FirstName} {Model.User.LastName}")</h1>
+            class="profile-avatar w-1/3 md:w-1/4 lg:w-1/6 mx-auto rounded-full mb-4 shadow-lg" />
+
+        <h1 class="text-3xl font-semibold">@($"{Model.User.FirstName} {Model.User.LastName}")</h1>
 
         @if (Model.CurrentUser != null && Model.User.Id != Model.CurrentUser.Id)
         {
             <partial name="components/_FollowButton" model="@Model.User.Id" />
         }
 
-        <h5>@($"{Model.User.UserName}")</h5>
-        <p>@(Model.User.Biography ?? "No biography provided.")</p>
+        <h5 class="text-xl text-white">@($"{Model.User.UserName}")</h5>
+        <p class="text-white">@($"{Model.User.Biography ?? "No biography provided."}")</p>
+
         @if (Model.User.Id == Model.CurrentUser?.Id)
         {
-            <a href="/Identity/Account/Manage">Edit
-                Profile</a>
+            <a href="/Identity/Account/Manage" class="text-blue-500 hover:underline mt-2 inline-block">Edit Profile</a>
         }
 
-        <div class="follower-following-info mt-3">
-            <a href="@followUrlAction" class="followers-link">
+        <div class="follower-following-info mt-4">
+            <a href="@followUrlAction" class="followers-link text-sm text-white hover:text-gray-400">
                 <strong>@Model.FollowerCount</strong> Followers
             </a> |
-            <a href="@followUrlAction"
-               class="following-link">
+            <a href="@followUrlAction" class="following-link text-sm text-white hover:text-gray-400">
                 <strong>@Model.FollowingCount</strong> Following
             </a>
         </div>
@@ -43,28 +40,23 @@
 
     @if (Model.User.Public || Model.User.Id == Model.CurrentUser?.Id)
     {
-        <div class="user-posts">
-            <h2>Your Posts</h2>
+        <div class="user-posts mt-6">
             @if (Model.UserPosts.Any())
             {
                 foreach (var post in Model.UserPosts)
                 {
-                    <div class="post-card">
-                        <h3>@post.Post.Title</h3>
-                        <p>@post.Post.Content</p>
-                        <span>@post.Post.CreatedAt</span>
-                    </div>
+                    @Html.Partial("_PostCardPartial", post)
                 }
             }
             else
             {
-                <p>No posts available.</p>
+                <p class="text-gray-500">No posts available.</p>
             }
         </div>
     }
     else
     {
-        <p>This profile is private</p>
+        <p class="text-gray-500">This profile is private</p>
     }
 </div>
 
