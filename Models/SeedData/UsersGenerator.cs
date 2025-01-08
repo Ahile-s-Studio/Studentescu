@@ -16,14 +16,14 @@ public class UsersGenerator
             // .RuleFor(u => u.ProfilePictureUrl, f => f.Internet.Avatar())
             .RuleFor(u => u.ProfilePictureUrl, f => f.Image.PicsumUrl())
             .RuleFor(u => u.Biography, f => f.Lorem.Sentence())
-            // .RuleFor(u => u.Public, f => f.Random.Bool())
-            .RuleFor(u => u.Public, f => true)
+            .RuleFor(u => u.Public, f => f.Random.Bool())
+            // .RuleFor(u => u.Public, f => true)
             .RuleFor(u => u.IsProfileCompleted, f => true)
             .RuleFor(u => u.EmailConfirmed, f => true)
             .UseSeed(12345);
     }
 
-    public List<ApplicationUser> GenerateUsers(int count = 10)
+    public List<ApplicationUser> GenerateUsers(int count = 50)
     {
         var users = _userFaker.Generate(count);
         if (users == null)

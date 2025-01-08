@@ -26,6 +26,8 @@ public class SeedData
         SeedComments(serviceProvider);
 
         SeedLikes(serviceProvider);
+
+        SeedFollows(serviceProvider);
     }
 
 
@@ -182,7 +184,7 @@ public class SeedData
         context.Database.EnsureCreated();
         var postsGenerator = new PostsGenerator(context,
             serviceProvider.GetRequiredService<IConfiguration>());
-        var posts = postsGenerator.GeneratePosts(25);
+        var posts = postsGenerator.GeneratePosts(65);
         context.Posts.AddRange(posts);
         context.SaveChanges();
     }
@@ -193,8 +195,10 @@ public class SeedData
             serviceProvider.GetRequiredService<DbContextOptions<ApplicationDbContext>>());
         context.Database.EnsureCreated();
         var commentsGenerator = new CommentsGenerator(context);
-        var comments = commentsGenerator.GenerateComments(90);
+        var comments = commentsGenerator.GenerateComments(150);
+        var commentsInGroup = commentsGenerator.GenerateCommentsForGroupPosts(150).Result;
         context.Comments.AddRange(comments);
+        context.Comments.AddRange(commentsInGroup);
         context.SaveChanges();
     }
 
@@ -204,8 +208,10 @@ public class SeedData
             serviceProvider.GetRequiredService<DbContextOptions<ApplicationDbContext>>());
         context.Database.EnsureCreated();
         var likesGenerator = new LikesGenerator(context);
-        var likes = likesGenerator.GenerateLikes(90);
+        var likes = likesGenerator.GenerateLikes(200);
+        var likesForGroupPosts = likesGenerator.GenerateLikesForGroupPosts(200).Result;
         context.Likes.AddRange(likes);
+        context.Likes.AddRange(likesForGroupPosts);
         context.SaveChanges();
     }
 
@@ -217,6 +223,19 @@ public class SeedData
         var groupsGenerator = new UserGroupsGenerator(context);
         var likes = groupsGenerator.GenerateUserGroups();
         context.UserGroups.AddRange(likes);
+        context.SaveChanges();
+    }
+
+    private static void SeedFollows(IServiceProvider serviceProvider)
+    {
+        using var context = new ApplicationDbContext(
+            serviceProvider.GetRequiredService<DbContextOptions<ApplicationDbContext>>());
+        context.Database.EnsureCreated();
+        var followsGenerator = new FollowsGenerator(context);
+        var follows = followsGenerator.GenerateFollows(1500);
+        var followRequests = followsGenerator.GenerateFollowRequests(1500);
+        context.Follows.AddRange(follows);
+        context.FollowRequests.AddRange(followRequests);
         context.SaveChanges();
     }
 }

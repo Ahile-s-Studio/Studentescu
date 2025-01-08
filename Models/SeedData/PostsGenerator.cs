@@ -42,8 +42,8 @@ public class PostsGenerator
             .RuleFor(p => p.Title, f => f.Lorem.Sentence(5)) // Random 5 words sentence
             .RuleFor(p => p.ContentType,
                 f => f.PickRandom("text", "image", "video")) // Random content type
-            // .RuleFor(p => p.ContentType,
-            //     f => f.PickRandom("video")) // Random content type
+                                                             // .RuleFor(p => p.ContentType,
+                                                             //     f => f.PickRandom("video")) // Random content type
             .RuleFor(p => p.Content, (f, p) =>
             {
                 return p.ContentType switch

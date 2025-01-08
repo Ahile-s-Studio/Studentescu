@@ -20,7 +20,7 @@ public class UserGroupsGenerator
             .RuleFor(g => g.Description, f => f.Lorem.Sentence(10)) // Random description
             .RuleFor(g => g.Category, f => f.PickRandom<CategoryType>()) // Random category
             .RuleFor(g => g.GroupImageUrl, f => f.Image.PicsumUrl()) // Random group image URL
-            // .RuleFor(g => g.Active, f => f.Random.Bool()) // Random active status
+                                                                     // .RuleFor(g => g.Active, f => f.Random.Bool()) // Random active status
             .RuleFor(g => g.Active, f => true) // Random active status
             .RuleFor(g => g.CreatedAt,
                 f => f.Date.Recent(90)) // Random created date (within the last 90 days)

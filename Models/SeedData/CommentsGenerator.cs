@@ -1,4 +1,5 @@
 using Bogus;
+using Microsoft.EntityFrameworkCore;
 using Studentescu.Data;
 using Studentescu.Models;
 
@@ -6,11 +7,12 @@ public class CommentsGenerator
 {
     private readonly Faker<Comment> _commentFaker;
     private readonly ApplicationDbContext _dbContext;
+    private Faker<Comment> _commentFakerGroupPosts;
 
     public CommentsGenerator(ApplicationDbContext dbContext)
     {
         _dbContext = dbContext;
-        
+
         var postIds = _dbContext.Posts
             .Select(p => new { p.Id, p.UserId }).ToList();
         var userIds = dbContext.Users.Where(u => !u.IsAdmin && u.IsProfileCompleted)
@@ -26,6 +28,7 @@ public class CommentsGenerator
                     (p => p.Id == c.PostId).Select(p => p.UserId).First()))
             )
             .UseSeed(12345);
+
 
         // .RuleFor(c => c.Replies, f => new List<Comment>()) // No replies initially
         // .RuleFor(c => c.ParentId, f => f.Random.Bool() ? f.Random.Int() : (int?)null); // Random Parent ID
@@ -74,6 +77,38 @@ public class CommentsGenerator
         comments[9].Content =
             "That was hilarious! Okay, here’s one: Why do cows have hooves instead of feet? Because they lactose! 🐄😆";
         comments[9].PostId = 2;
+
+        return comments ?? [];
+    }
+
+    public async Task<List<Comment>> GenerateCommentsForGroupPosts(int count = 5)
+    {
+        List<Comment> comments = [];
+
+        foreach (var groupId in await _dbContext.UserGroups.Select(u => u.Id).ToListAsync())
+        {
+            var userIds = await _dbContext.MemberInGroups.Where(m => m.UserGroupId == groupId)
+                .Select(m => m.UserId).ToListAsync();
+
+            var postIds = await _dbContext.Posts
+                .Where(p => p.GroupId != null && p.GroupId == groupId)
+                .Select(p => p.Id)
+                .ToListAsync();
+
+            if (postIds.Count == 0 || userIds.Count == 0)
+            {
+                continue;
+            }
+
+            _commentFakerGroupPosts = new Faker<Comment>()
+                .RuleFor(c => c.Content,
+                    f => f.PickRandom(f.Lorem.Sentence(10), GenerateRandomComment()))
+                .RuleFor(c => c.CommentedAt, f => f.Date.Recent(30))
+                .RuleFor(c => c.PostId, f => f.PickRandom(postIds))
+                .RuleFor(c => c.UserId, (f, c) => f.PickRandom(userIds))
+                .UseSeed(12345);
+            comments.AddRange(_commentFakerGroupPosts.Generate(count));
+        }
 
         return comments ?? [];
     }
