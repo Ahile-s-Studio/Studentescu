@@ -9,11 +9,11 @@ public class Like
 
     [ForeignKey("User")] public required string UserId { get; set; }
 
-    public required ApplicationUser User { get; set; }
+    public ApplicationUser User { get; set; }
 
-    [ForeignKey("Post")] public int PostId { get; set; }
+    [ForeignKey("Post")] public required int PostId { get; set; }
 
-    public required Post Post { get; set; }
+    public Post Post { get; set; }
 
     public DateTime LikedAt { get; set; } = DateTime.Now;
 }

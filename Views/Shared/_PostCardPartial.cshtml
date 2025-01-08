@@ -1,25 +1,31 @@
 @model Studentescu.ViewModels.PostViewModel
 
-<div class="post-card max-w-3xl mx-auto bg-gray-900 text-gray-200 rounded-lg p-6 mb-6 shadow-lg transition-shadow duration-300 ease-in-out hover:shadow-[0_0_15px_rgba(168,85,247,0.7),0_0_25px_rgba(168,85,247,0.6),0_0_50px_rgba(168,85,247,0.5)]">
+<div
+    class="post-card max-w-3xl mx-auto bg-gray-900 text-gray-200 rounded-lg p-6 mb-6 shadow-lg transition-shadow duration-300 ease-in-out hover:shadow-[0_0_15px_rgba(168,85,247,0.7),0_0_25px_rgba(168,85,247,0.6),0_0_50px_rgba(168,85,247,0.5)]">
     <div class="post-header flex items-center mb-4">
-        <img width="50" height="50" alt="Profile Picture" src="@(Model.Post.User.ProfilePictureUrl ?? "/images/default-avatar.jpg")" class="rounded-full"/>
+        <img width="50" height="50" alt="Profile Picture"
+             src="@(Model.Post.User.ProfilePictureUrl ?? "/images/default-avatar.jpg")"
+             class="rounded-full" />
         <p class="ml-4 font-semibold">@Model.Post.User.UserName</p>
     </div>
     <div class="post-content mb-4">
-        @if (@Model.Post.ContentType == "image")
+        @if (Model.Post.ContentType == "image")
         {
-            <img alt="Post Content" src="@Model.Post.Content" class="w-full rounded-lg"/>
+            <img alt="Post Content" src="@Model.Post.Content" class="w-full rounded-lg" />
         }
-        else if (@Model.Post.ContentType == "video")
+        else if (Model.Post.ContentType == "video")
         {
-            <video controls class="w-full rounded-lg">
-                <source src="@Model.Post.Content" type="video/mp4"/>
-                Your browser does not support the video format.
-            </video>
+            <iframe class="mx-auto" width="560" height="315" src="@Model.Post.Content"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            @* <video controls class="w-full rounded-lg"> *@
+            @*     <source src="@Model.Post.Content" type="video/mp4" /> *@
+            @*     Your browser does not support the video format. *@
+            @* </video> *@
         }
-        else if (@Model.Post.ContentType == "text")
+        else if (Model.Post.ContentType == "text")
         {
-            <p class="text-gray-300">@Model.Post.Content</p>
+            <p class="whitespace-pre-wrap text-gray-300">@Model.Post.Content</p>
         }
     </div>
 
@@ -39,7 +45,7 @@
                 class="like-btn text-white bg-purple-500 hover:bg-purple-600 py-2 px-4 rounded-lg transition-colors "
                 data-post-id="@Model.Post.Id"
                 data-is-liked="@Model.IsLiked">
-                @if (@Model.IsLiked)
+                @if (Model.IsLiked)
                 {
                     <span>Unlike</span>
                 }
@@ -60,9 +66,14 @@
         @if (Model.IsMyPost)
         {
             <div class="flex items-center gap-4">
-                <a href="/Post/Edit?postId=@Model.Post.Id" class="text-white bg-purple-500 hover:bg-purple-600 py-2 px-4 rounded-lg transition-colors ">Edit Post</a>
-                <form method="post" asp-controller="Post" asp-action="Delete" asp-route-id="@Model.Post.Id" onsubmit="return confirm('Are you sure you want to delete this post?');">
-                    <button type="submit" class="btn btn-danger text-white bg-red-500 hover:bg-red-600 py-2 px-4 rounded-lg">
+                <a href="/Post/Edit?postId=@Model.Post.Id"
+                   class="text-white bg-purple-500 hover:bg-purple-600 py-2 px-4 rounded-lg transition-colors ">Edit
+                    Post</a>
+                <form method="post" asp-controller="Post" asp-action="Delete"
+                      asp-route-id="@Model.Post.Id"
+                      onsubmit="return confirm('Are you sure you want to delete this post?');">
+                    <button type="submit"
+                            class="btn btn-danger text-white bg-red-500 hover:bg-red-600 py-2 px-4 rounded-lg">
                         Delete Post
                     </button>
                 </form>
