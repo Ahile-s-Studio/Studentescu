@@ -1,3 +1,4 @@
+@using System.Web
 @model Studentescu.ViewModels.PaginatedList<ApplicationUser>
 
 @{
@@ -15,7 +16,7 @@
             <li class="mb-2">
                 <a asp-controller="Profile"
                    asp-action="Show"
-                   asp-route-username="@user.UserName"
+                   asp-route-username="@HttpUtility.UrlEncode(user.UserName)"
                    class="text-blue-600 hover:underline font-medium">
                     @user.UserName
                 </a>

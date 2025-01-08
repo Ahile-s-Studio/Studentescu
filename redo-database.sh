@@ -18,3 +18,5 @@ echo "Applying migration to the database..."
 dotnet ef database update
 
 echo "Database has been redone with the new migration."
+
+dotnet watch run

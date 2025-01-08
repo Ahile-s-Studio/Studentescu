@@ -19,9 +19,13 @@ public class SeedData
 
         SeedUsers(serviceProvider);
 
+        SeedUserGroups(serviceProvider);
+
         SeedPosts(serviceProvider);
 
         SeedComments(serviceProvider);
+
+        SeedLikes(serviceProvider);
     }
 
 
@@ -176,8 +180,9 @@ public class SeedData
         using var context = new ApplicationDbContext(
             serviceProvider.GetRequiredService<DbContextOptions<ApplicationDbContext>>());
         context.Database.EnsureCreated();
-        var postsGenerator = new PostsGenerator(context);
-        var posts = postsGenerator.GeneratePosts(15);
+        var postsGenerator = new PostsGenerator(context,
+            serviceProvider.GetRequiredService<IConfiguration>());
+        var posts = postsGenerator.GeneratePosts(25);
         context.Posts.AddRange(posts);
         context.SaveChanges();
     }
@@ -190,6 +195,28 @@ public class SeedData
         var commentsGenerator = new CommentsGenerator(context);
         var comments = commentsGenerator.GenerateComments(90);
         context.Comments.AddRange(comments);
+        context.SaveChanges();
+    }
+
+    private static void SeedLikes(IServiceProvider serviceProvider)
+    {
+        using var context = new ApplicationDbContext(
+            serviceProvider.GetRequiredService<DbContextOptions<ApplicationDbContext>>());
+        context.Database.EnsureCreated();
+        var likesGenerator = new LikesGenerator(context);
+        var likes = likesGenerator.GenerateLikes(90);
+        context.Likes.AddRange(likes);
+        context.SaveChanges();
+    }
+
+    private static void SeedUserGroups(IServiceProvider serviceProvider)
+    {
+        using var context = new ApplicationDbContext(
+            serviceProvider.GetRequiredService<DbContextOptions<ApplicationDbContext>>());
+        context.Database.EnsureCreated();
+        var groupsGenerator = new UserGroupsGenerator(context);
+        var likes = groupsGenerator.GenerateUserGroups();
+        context.UserGroups.AddRange(likes);
         context.SaveChanges();
     }
 }

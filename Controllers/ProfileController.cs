@@ -77,7 +77,8 @@ public class ProfileController : BaseController
                 .Include(u => u.Following)
                 .Include(u => u.Posts)
                 .ThenInclude(p => p.Likes)
-                .FirstOrDefault(u => u.UserName == username);
+                .FirstOrDefault(u =>
+                    u.NormalizedUserName != null && u.NormalizedUserName == username.ToUpper());
             var currentUser =
                 await _userManager.GetUserAsync(User);
 
@@ -97,10 +98,10 @@ public class ProfileController : BaseController
                     {
                         Post = post,
                         IsLiked = post.Likes.Any(l =>
-                            l.UserId ==
-                            currentUser?.Id),
+                            currentUser != null && currentUser.Id == l.UserId
+                        ),
 
-                        IsMyPost = post.UserId == currentUser.Id,
+                        IsMyPost = currentUser != null && post.UserId == currentUser.Id
                     })
                 .ToList();
 
