@@ -1,52 +1,55 @@
 @model Studentescu.ViewModels.CompleteProfileViewModel
 
-<h2>Complete Your Profile Before Using Studentescu</h2>
+<h2 class="text-2xl font-semibold text-center text-gray-300 my-6">Complete Your Profile Before Using
+    Studentescu</h2>
 
-<form method="post" asp-controller="Profile" asp-action="CompleteProfile">
-    <div class="form-group">
-        <label for="@Model.FirstName">First Name</label>
-        <input type="text" asp-for="@Model.FirstName" class="form-control" />
-        <span asp-validation-for="@Model.FirstName" class="text-danger"></span>
+<form method="post" asp-controller="Profile" asp-action="CompleteProfile"
+      class="space-y-6 mt-6 max-w-3xl mx-auto p-6 bg-gray-900 rounded-lg shadow-xl border-2 
+      border-purple-600 glow-border backdrop-blur-lg">
+
+    <div class="mb-4">
+        <label for="@Model.FirstName" class="block text-lg text-gray-300">First Name</label>
+        <input type="text" asp-for="@Model.FirstName"
+               class="w-full px-4 py-2 mt-2 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" />
+        <span asp-validation-for="@Model.FirstName" class="text-sm text-red-500"></span>
     </div>
 
-    <div class="form-group">
-        <label for="@Model.LastName">Last Name</label>
-        <input type="text" asp-for="@Model.LastName" class="form-control" />
-        <span asp-validation-for="@Model.LastName" class="text-danger"></span>
+    <div class="mb-4">
+        <label for="@Model.LastName" class="block text-lg text-gray-300">Last Name</label>
+        <input type="text" asp-for="@Model.LastName"
+               class="w-full px-4 py-2 mt-2 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" />
+        <span asp-validation-for="@Model.LastName" class="text-sm text-red-500"></span>
     </div>
 
-    <div class="form-floating mb-3">
-                <textarea asp-for="@Model.Biography"
-                          class="form-control"
-                          placeholder="Please enter your phone number."
-                          rows="6"></textarea>
-        <label asp-for="@Model.Biography"
-               class=""></label>
-        <span
-            asp-validation-for="@Model.Biography"
-            class="text-danger"></span>
+    <div class="mb-6">
+        <label for="@Model.Biography" class="block text-lg text-gray-300">Biography</label>
+        <textarea asp-for="@Model.Biography"
+                  class="w-full px-4 py-2 mt-2 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  placeholder="Please enter your biography" rows="6"></textarea>
+        <span asp-validation-for="@Model.Biography" class="text-sm text-red-500"></span>
     </div>
-    <div class="form-floating mb-3">
-        <div class="form-check form-switch">
+
+    <div class="mb-6">
+        <div class="flex items-center space-x-3">
             <input
                 type="checkbox"
-                id="isProfilePrivateSwitch"
                 asp-for="@Model.Public"
-                role="switch"
-                class="form-check-input"
+                class="form-checkbox h-5 w-5 text-purple-500 focus:ring-2 focus:ring-purple-500"
+                id="isProfilePrivateSwitch"
                 aria-label="Toggle profile privacy" />
-            <label
-                for="isProfilePrivateSwitch"
-                class="form-check-label">
-                Public
+            <label for="isProfilePrivateSwitch" class="text-lg text-gray-300 font-semibold">
+                Make Profile Public?
             </label>
         </div>
-        <span
-            asp-validation-for="@Model.Public"
-            class="text-danger"></span>
+        <span asp-validation-for="@Model.Public" class="text-sm text-red-500"></span>
     </div>
 
-    <button type="submit" class="btn btn-primary">Complete Profile</button>
+    <div class="mt-6">
+        <button type="submit"
+                class="w-full py-2 px-4 bg-purple-600 text-white rounded-lg shadow-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500">
+            Complete Profile
+        </button>
+    </div>
 </form>
 
 @section Scripts {
