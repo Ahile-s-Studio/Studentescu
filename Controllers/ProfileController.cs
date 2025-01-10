@@ -13,7 +13,7 @@ namespace Studentescu.Controllers;
 public class ProfileController : BaseController
 {
     private const int
-        PageSize = 2; // Number of items per page
+        PageSize = 10; // Number of items per page
 
     private readonly FollowService _followService;
 

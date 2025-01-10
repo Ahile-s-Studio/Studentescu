@@ -16,6 +16,7 @@ public class FeedController : BaseController
         userManager, roleManager)
     {
     }
+
     public async Task<IActionResult> Index()
     {
         const int PageSize = 5;
@@ -36,9 +37,10 @@ public class FeedController : BaseController
             {
                 Post = p,
                 IsLiked = p.Likes.Any(l => l.UserId == userId),
-                IsMyPost = p.UserId == userId || (user != null && user.IsAdmin),
+                IsMyPost = p.UserId == userId || (user != null && user.IsAdmin)
             })
             .ToListAsync();
+
 
         return View(posts);
     }
@@ -63,7 +65,7 @@ public class FeedController : BaseController
             {
                 Post = p,
                 IsLiked = p.Likes.Any(l => l.UserId == userId),
-                IsMyPost = p.UserId == userId || (user != null && user.IsAdmin),
+                IsMyPost = p.UserId == userId || (user != null && user.IsAdmin)
             })
             .ToListAsync();
 
@@ -74,5 +76,4 @@ public class FeedController : BaseController
 
         return PartialView("_PostListPartial", posts);
     }
-
 }
