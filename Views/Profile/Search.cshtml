@@ -6,32 +6,52 @@
     Layout = "_Layout";
 }
 
-<h1 class="text-2xl font-bold text-center mt-6 mb-4">Search Results</h1>
+<h1 class="text-3xl font-extrabold text-center mt-10 mb-6 text-white">Search Results</h1>
 
 @if (Model.Any())
 {
-    <ul class="list-disc pl-6 mb-6">
+    <ul class="space-y-4 w-full flex flex-col justify-center items-center">
         @foreach (var user in Model)
         {
-            <li class="mb-2">
-                <a asp-controller="Profile"
-                   asp-action="Show"
-                   asp-route-username="@HttpUtility.UrlEncode(user.UserName)"
-                   class="text-blue-600 hover:underline font-medium">
-                    @user.UserName
-                </a>
-                <span class="text-gray-600">- @user.Email</span>
+            <li class="w-3/4 bg-gray-800 text-white rounded-lg shadow-lg p-4 hover:shadow-xl 
+            transition-shadow duration-300 flex justify-between items-center">
+                <div class="flex items-center space-x-4">
+                    <!-- Profile Picture -->
+                    <img src="@(user.ProfilePictureUrl ?? "/images/default-avatar.png")"
+                         alt="Profile Picture" class="w-12 h-12 rounded-full object-cover">
+
+                    <div>
+                        <a asp-controller="Profile"
+                           asp-action="Show"
+                           asp-route-username="@HttpUtility.UrlEncode(user.UserName)"
+                           class="text-lg font-semibold text-blue-400 hover:underline">
+                            @user.UserName
+                        </a>
+                        <p class="text-sm text-gray-400 mt-1">@user.Email</p>
+                    </div>
+                </div>
+
+                <!-- Edit Profile Button for Admins Only -->
+                @if (User.IsInRole("Admin"))
+                {
+                    <div class="mt-4">
+                        <a href="@Url.Action("Edit", "Users", new { username = user.UserName })"
+                           class="inline-block px-4 py-2 bg-blue-600 text-white rounded-full text-sm hover:bg-blue-700 transition-colors">
+                            Edit Profile
+                        </a>
+                    </div>
+                }
             </li>
         }
     </ul>
 
     <!-- Pagination Links -->
-    <nav class="flex justify-center">
-        <ul class="inline-flex items-center space-x-1">
+    <nav class="flex justify-center my-8">
+        <ul class="inline-flex items-center space-x-2">
             @if (Model.HasPreviousPage)
             {
                 <li>
-                    <a class="px-3 py-2 bg-gray-200 text-gray-700 hover:bg-gray-300 rounded"
+                    <a class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-600 rounded-l-lg hover:bg-gray-700 transition-all"
                        asp-controller="Profile"
                        asp-action="Search"
                        asp-route-query="@ViewData["Query"]"
@@ -41,14 +61,15 @@
             else
             {
                 <li>
-                    <span class="px-3 py-2 bg-gray-100 text-gray-400 rounded cursor-not-allowed">Previous</span>
+                    <span
+                        class="px-4 py-2 text-sm font-medium text-gray-400 bg-gray-500 rounded-l-lg cursor-not-allowed">Previous</span>
                 </li>
             }
 
             @for (var i = 1; i <= Model.TotalPages; i++)
             {
                 <li>
-                    <a class="px-3 py-2 rounded @(i == Model.PageIndex ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-700 hover:bg-gray-300")"
+                    <a class="px-4 py-2 text-sm font-medium rounded @(i == Model.PageIndex ? "bg-blue-600 text-white" : "bg-gray-700 text-gray-300 hover:bg-gray-600")"
                        asp-controller="Profile"
                        asp-action="Search"
                        asp-route-query="@ViewData["Query"]"
@@ -59,7 +80,7 @@
             @if (Model.HasNextPage)
             {
                 <li>
-                    <a class="px-3 py-2 bg-gray-200 text-gray-700 hover:bg-gray-300 rounded"
+                    <a class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-600 rounded-r-lg hover:bg-gray-700 transition-all"
                        asp-controller="Profile"
                        asp-action="Search"
                        asp-route-query="@ViewData["Query"]"
@@ -69,7 +90,8 @@
             else
             {
                 <li>
-                    <span class="px-3 py-2 bg-gray-100 text-gray-400 rounded cursor-not-allowed">Next</span>
+                    <span
+                        class="px-4 py-2 text-sm font-medium text-gray-400 bg-gray-500 rounded-r-lg cursor-not-allowed">Next</span>
                 </li>
             }
         </ul>
@@ -77,5 +99,5 @@
 }
 else
 {
-    <p class="text-center text-gray-500">No results found.</p>
+    <p class="text-center text-gray-400">No results found.</p>
 }

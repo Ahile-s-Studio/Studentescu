@@ -6,31 +6,37 @@
 }
 
 <div class="container mx-auto p-4">
-    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.ValidationSummary(true, "", new { @class = "text-red-500" })
 
-    <form asp-action="Create" method="post" class="max-w-xl mx-auto bg-transparent p-6 rounded-lg shadow-md space-y-4">
+    <form asp-action="Create" method="post"
+          class="space-y-6 mt-6 max-w-xl mx-auto p-6 bg-gray-900 rounded-lg shadow-xl border-2 border-purple-600 glow-border">
 
         <div class="form-group">
-            <label for="image" class="block text-lg font-semibold text-white">Group Image</label>
-            <input asp-for="GroupImageUrl" type="text" id="image" class="form-input mt-1 block w-full p-2 border border-white rounded-md bg-transparent text-white placeholder-white" />
-            <span class="text-danger">@Html.ValidationMessageFor(m => m.GroupImageUrl)</span>
+            <label for="image" class="block text-lg font-medium text-gray-300">Group Image</label>
+            <input asp-for="GroupImageUrl" type="text" id="image"
+                   class="w-full p-3 bg-gray-800 text-gray-200 rounded-lg shadow-md border border-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all glow-input" />
+            <span class="text-red-500">@Html.ValidationMessageFor(m => m.GroupImageUrl)</span>
         </div>
 
         <div class="form-group">
-            <label for="name" class="block text-lg font-semibold text-white">Group Name</label>
-            <input asp-for="Name" type="text" id="name" class="form-input mt-1 block w-full p-2 border border-white rounded-md bg-transparent text-white placeholder-white" />
-            <span class="text-danger">@Html.ValidationMessageFor(m => m.Name)</span>
+            <label for="name" class="block text-lg font-medium text-gray-300">Group Name</label>
+            <input asp-for="Name" type="text" id="name"
+                   class="w-full p-3 bg-gray-800 text-gray-200 rounded-lg shadow-md border border-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all glow-input" />
+            <span class="text-red-500">@Html.ValidationMessageFor(m => m.Name)</span>
         </div>
 
         <div class="form-group">
-            <label for="description" class="block text-lg font-semibold text-white">Group Description</label>
-            <input asp-for="Description" type="text" id="description" class="form-input mt-1 block w-full p-2 border border-white rounded-md bg-transparent text-white placeholder-white" />
-            <span class="text-danger">@Html.ValidationMessageFor(m => m.Description)</span>
+            <label for="description" class="block text-lg font-medium text-gray-300">Group
+                Description</label>
+            <input asp-for="Description" type="text" id="description"
+                   class="w-full p-3 bg-gray-800 text-gray-200 rounded-lg shadow-md border border-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all glow-input" />
+            <span class="text-red-500">@Html.ValidationMessageFor(m => m.Description)</span>
         </div>
 
         <div class="form-group">
-            <label for="category" class="block text-lg font-semibold text-white">Category</label>
-            <select asp-for="Category" id="category" class="form-select mt-1 block w-full p-2 border border-white rounded-md bg-transparent text-white placeholder-white">
+            <label for="category" class="block text-lg font-medium text-gray-300">Category</label>
+            <select asp-for="Category" id="category"
+                    class="w-full p-3 bg-gray-800 text-gray-200 rounded-lg shadow-md border border-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all glow-input">
                 <option value="">Select Category</option>
                 <option value="Travel">Travel</option>
                 <option value="Fashion">Fashion</option>
@@ -39,13 +45,31 @@
                 <option value="Games">Games</option>
                 <option value="Study">Study</option>
             </select>
-            <span class="text-danger">@Html.ValidationMessageFor(m => m.Category)</span>
+            <span class="text-red-500">@Html.ValidationMessageFor(m => m.Category)</span>
         </div>
 
-        <button type="submit" class="btn btn-primary w-full mt-4 p-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">Create</button>
+        <button type="submit"
+                class="w-full py-3 bg-purple-500 text-white rounded-lg shadow-md hover:bg-purple-600 focus:ring-2 focus:ring-purple-500 transition-all glow-button">
+            Create Group
+        </button>
     </form>
 </div>
 
 @section Scripts {
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }
+
+<style>
+    .glow-input:focus {
+        box-shadow: 0 0 10px 2px rgba(168, 85, 247, 0.6), 0 0 20px 5px rgba(168, 85, 247, 0.4);
+    }
+
+    .glow-button:hover {
+        box-shadow: 0 0 10px 2px rgba(168, 85, 247, 0.6), 0 0 20px 5px rgba(168, 85, 247, 0.4);
+    }
+
+    .glow-border {
+        border: 2px solid rgba(168, 85, 247, 0.7);
+        box-shadow: 0 0 10px 2px rgba(168, 85, 247, 0.4), 0 0 20px 5px rgba(168, 85, 247, 0.3);
+    }
+</style>

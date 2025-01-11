@@ -1,64 +1,92 @@
 @model Studentescu.ViewModels.UsersEditViewModel
 
+<form asp-controller="Users" asp-action="Edit" method="post" asp-route-id="@Model.User.Id"
+      class="space-y-6 max-w-xl mx-auto p-6 bg-gray-900 rounded-lg shadow-xl border-2 border-purple-600 glow-border">
 
+    <div class="form-group">
+        <label for="UserName" class="block text-lg font-medium text-gray-300">
+            <i class="bi bi-person"></i> Nume utilizator
+        </label>
+        <input asp-for="User.UserName" id="UserName"
+               class="w-full p-3 bg-gray-800 text-gray-200 rounded-lg shadow-md border border-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all glow-input" />
+        <span class="text-red-500">@Html.ValidationMessageFor(m => m.User.UserName)</span>
+    </div>
 
-<form asp-controller="Users" asp-action="Edit" method="post"
-      asp-route-id="@Model.User.Id">
+    <div class="form-group">
+        <label for="Email" class="block text-lg font-medium text-gray-300">
+            <i class="bi bi-envelope"></i> Email utilizator
+        </label>
+        <input asp-for="User.Email" id="Email"
+               class="w-full p-3 bg-gray-800 text-gray-200 rounded-lg shadow-md border border-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all glow-input" />
+        <span class="text-red-500">@Html.ValidationMessageFor(m => m.User.Email)</span>
+    </div>
 
-    <i class="bi bi-person"></i>
-    <label asp-for="User.UserName">Nume utilizator</label>
-    <br/>
-    <input asp-for="User.UserName" class="form-control"/>
-    <br/>
+    <div class="form-group">
+        <label for="PhoneNumber" class="block text-lg font-medium text-gray-300">
+            <i class="bi bi-phone"></i> Numar telefon
+        </label>
+        <input asp-for="User.PhoneNumber" id="PhoneNumber"
+               class="w-full p-3 bg-gray-800 text-gray-200 rounded-lg shadow-md border border-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all glow-input" />
+        <span class="text-red-500">@Html.ValidationMessageFor(m => m.User.PhoneNumber)</span>
+    </div>
 
-    <i class="bi bi-envelope"></i>
-    <label asp-for="User.Email">Email utilizator</label>
-    <br/>
-    <input asp-for="User.Email" class="form-control"/>
-    <br/>
+    <div class="form-group">
+        <label for="FirstName" class="block text-lg font-medium text-gray-300">
+            <i class="bi bi-person"></i> Nume
+        </label>
+        <input asp-for="User.FirstName" id="FirstName"
+               class="w-full p-3 bg-gray-800 text-gray-200 rounded-lg shadow-md border border-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all glow-input" />
+        <span class="text-red-500">@Html.ValidationMessageFor(m => m.User.FirstName)</span>
+    </div>
 
-    <i class="bi bi-phone"></i>
-    <label asp-for="User.PhoneNumber">Numar telefon</label>
-    <br/>
-    <input asp-for="User.PhoneNumber" class="form-control"/>
-    <br/>
+    <div class="form-group">
+        <label for="LastName" class="block text-lg font-medium text-gray-300">
+            <i class="bi bi-person"></i> Prenume utilizator
+        </label>
+        <input asp-for="User.LastName" id="LastName"
+               class="w-full p-3 bg-gray-800 text-gray-200 rounded-lg shadow-md border border-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all glow-input" />
+        <span class="text-red-500">@Html.ValidationMessageFor(m => m.User.LastName)</span>
+    </div>
 
-    <i class="bi bi-person"></i>
-    <label asp-for="User.FirstName">Nume</label>
-    <br/>
-    <input asp-for="User.FirstName" class="form-control"/>
-    <br/>
-
-    <i class="bi bi-person"></i>
-    <label asp-for="User.LastName">Prenume utilizator</label>
-    <br/>
-    <input asp-for="User.LastName" class="form-control"/>
-    <br/>
-
-    <i class="bi bi-card-list"></i>
-    <label>Selectati rolul</label>
-    <br/>
-
-
-    <select name="newRole" class="form-control">
-        <option selected>Selectati rolul</option>
-
-        @foreach (var role in Model.AllRoles)
-        {
-            @if (Model.UserRole == role.Value)
+    <div class="form-group">
+        <label for="newRole" class="block text-lg font-medium text-gray-300">
+            <i class="bi bi-card-list"></i> Selectati rolul
+        </label>
+        <select name="newRole" id="newRole"
+                class="w-full p-3 bg-gray-800 text-gray-200 rounded-lg shadow-md border border-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all glow-input">
+            <option selected>Selectati rolul</option>
+            @foreach (var role in Model.AllRoles)
             {
-                <option selected="selected"
-                        value="@role.Value">@role.Text</option>
+                @if (Model.UserRole == role.Value)
+                {
+                    <option selected="selected" value="@role.Value">@role.Text</option>
+                }
+                else
+                {
+                    <option value="@role.Value">@role.Text</option>
+                }
             }
-            else
-            {
-                <option value="@role.Value">@role.Text</option>
-            }
-        }
-    </select>
+        </select>
+        <span class="text-red-500">@Html.ValidationMessageFor(m => m.UserRole)</span>
+    </div>
 
-    <button type="submit" class="btn btn-sm btn-success">Editare
-        user
+    <button type="submit"
+            class="w-full py-3 bg-purple-500 text-white rounded-lg shadow-md hover:bg-purple-600 focus:ring-2 focus:ring-purple-500 transition-all glow-button">
+        Editare user
     </button>
-
 </form>
+
+<style>
+    .glow-input:focus {
+        box-shadow: 0 0 10px 2px rgba(168, 85, 247, 0.6), 0 0 20px 5px rgba(168, 85, 247, 0.4);
+    }
+
+    .glow-button:hover {
+        box-shadow: 0 0 10px 2px rgba(168, 85, 247, 0.6), 0 0 20px 5px rgba(168, 85, 247, 0.4);
+    }
+
+    .glow-border {
+        border: 2px solid rgba(168, 85, 247, 0.7);
+        box-shadow: 0 0 10px 2px rgba(168, 85, 247, 0.4), 0 0 20px 5px rgba(168, 85, 247, 0.3);
+    }
+</style>

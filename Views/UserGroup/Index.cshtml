@@ -4,11 +4,13 @@
     Layout = "_Layout";
 }
 
-<div class="max-w-4xl mx-auto p-6 bg-gray-900 rounded-lg shadow-xl border-2 border-purple-600 glow-border">
+<div class="max-w-4xl mx-auto p-6 bg-gray-900 rounded-lg shadow-xl border-2 border-purple-600 
+glow-border my-6">
     <h2 class="text-3xl text-white font-semibold mb-6">Find a group:</h2>
-    
+
     <div class="flex gap-4 mb-6">
-        <select class="py-2 px-4 bg-gray-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+        <select
+            class="py-2 px-4 bg-gray-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
             <option>None</option>
             <option>Travel</option>
             <option>Fashion</option>
@@ -17,22 +19,28 @@
             <option>Games</option>
             <option>Study</option>
         </select>
-        <select class="py-2 px-4 bg-gray-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+        <select
+            class="py-2 px-4 bg-gray-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
             <option>All</option>
             <option>Joined</option>
             <option>Not Joined</option>
         </select>
     </div>
-    
+
     <div class="mb-6">
-        <a href="/UserGroup/Create" class="w-full py-3 bg-green-600 text-white rounded-lg shadow-md hover:bg-green-700 focus:ring-2 focus:ring-green-500 transition-all glow-button p-2">Create a Group</a>
+        <a href="/UserGroup/Create"
+           class="w-full py-3 bg-green-600 text-white rounded-lg shadow-md hover:bg-green-700 focus:ring-2 focus:ring-green-500 transition-all glow-button p-2">Create
+            a Group</a>
     </div>
-    
-    @foreach (var group in @Model)
+
+    @foreach (var group in Model)
     {
-        <div class="flex justify-between items-center p-4 mb-4 border-2 rounded-lg bg-gray-800 hover:bg-gray-700 cursor-pointer" onclick="window.location.href='/UserGroup/Show/@group.Group.Id';">
+        <div
+            class="flex justify-between items-center p-4 mb-4 border-2 rounded-lg bg-gray-800 hover:bg-gray-700 cursor-pointer"
+            onclick="window.location.href='/UserGroup/Show/@group.Group.Id';">
             <div class="flex items-center gap-4">
-                <img src="@group.Group.GroupImageUrl" width="50" height="50" alt="Group Profile Picture" class="rounded-full shadow-md" />
+                <img src="@group.Group.GroupImageUrl" width="50" height="50"
+                     alt="Group Profile Picture" class="rounded-full shadow-md" />
                 <div>
                     <h4 class="text-xl text-white font-semibold">@group.Group.Name</h4>
                     <p class="text-gray-300">@group.Group.Description</p>
@@ -40,23 +48,32 @@
                 </div>
             </div>
             <div class="flex flex-col items-center">
-                @if(@group.Group.Active)
+                @if (group.Group.Active)
                 {
                     @if (group.IsAdmin)
                     {
-                        <form asp-action="Delete" asp-controller="UserGroup" method="post" class="w-full mb-2">
+                        <form asp-action="Delete" asp-controller="UserGroup" method="post"
+                              class="w-full mb-2">
                             <input type="hidden" name="groupId" value="@group.Group.Id" />
-                            <button type="submit" class="w-full py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 focus:ring-2 focus:ring-red-500 transition-all glow-button">Delete Group</button>
-                        </form> 
+                            <button type="submit"
+                                    class="w-full py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 focus:ring-2 focus:ring-red-500 transition-all glow-button">
+                                Delete Group
+                            </button>
+                        </form>
                     }
+
                     @if (!group.IsJoined)
                     {
                         @if (group.Status == "None")
                         {
-                            <form asp-action="JoinRequest" asp-controller="UserGroup" method="post" class="w-full mb-2">
+                            <form asp-action="JoinRequest" asp-controller="UserGroup" method="post"
+                                  class="w-full mb-2">
                                 <input type="hidden" name="groupId" value="@group.Group.Id" />
-                                <button type="submit" class="w-full py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 focus:ring-2 focus:ring-purple-500 transition-all glow-button p-2">Join Group</button>
-                            </form> 
+                                <button type="submit"
+                                        class="w-full py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 focus:ring-2 focus:ring-purple-500 transition-all glow-button p-2">
+                                    Join Group
+                                </button>
+                            </form>
                         }
                         else if (group.Status == "Rejected")
                         {
@@ -64,17 +81,25 @@
                         }
                         else if (group.Status == "Pending")
                         {
-                            <form asp-action="CancelJoinRequest" asp-controller="UserGroup" method="post" class="w-full mb-2">
+                            <form asp-action="CancelJoinRequest" asp-controller="UserGroup"
+                                  method="post" class="w-full mb-2">
                                 <input type="hidden" name="requestId" value="@group.RequestId" />
-                                <button type="submit" class="w-full py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 focus:ring-2 focus:ring-yellow-500 transition-all glow-button">Cancel Join</button>
-                            </form> 
+                                <button type="submit"
+                                        class="w-full py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 focus:ring-2 focus:ring-yellow-500 transition-all glow-button">
+                                    Cancel Join
+                                </button>
+                            </form>
                         }
                     }
                     else
                     {
-                        <form asp-action="Leave" asp-controller="UserGroup" method="post" class="w-full mb-2">
+                        <form asp-action="Leave" asp-controller="UserGroup" method="post"
+                              class="w-full mb-2">
                             <input type="hidden" name="groupId" value="@group.Group.Id" />
-                            <button type="submit" class="w-full py-2 bg-red-600 text-white rounded-lg hover:bg-gray-800 focus:ring-2 focus:ring-gray-500 transition-all glow-button p-2">Leave Group</button>
+                            <button type="submit"
+                                    class="w-full py-2 bg-red-600 text-white rounded-lg hover:bg-gray-800 focus:ring-2 focus:ring-gray-500 transition-all glow-button p-2">
+                                Leave Group
+                            </button>
                         </form>
                     }
                 }
@@ -84,7 +109,7 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }
 
 <style>

@@ -84,16 +84,20 @@ public class ProfileController : BaseController
 
             if (user == null)
             {
-                return NotFound("username not found");
+                // return NotFound("username not found");
+                return NotFound();
             }
 
-            var posts = user.Posts
+            // var posts = user.Posts
+            //     .Where(post =>
+            //         post.GroupId == null &&
+            //         post.UserId == user.Id);
+
+
+            var viewUserPosts = _dbContext.Posts
                 .Where(post =>
                     post.GroupId == null &&
-                    post.UserId == user.Id);
-
-
-            var viewUserPosts = posts.Select(post =>
+                    post.UserId == user.Id).Select(post =>
                     new PostViewModel
                     {
                         Post = post,
@@ -111,8 +115,10 @@ public class ProfileController : BaseController
                 CurrentUser = currentUser,
                 UserPosts = viewUserPosts,
                 RecommandedUsers = [],
-                FollowerCount = user.Followers.Count,
-                FollowingCount = user.Following.Count
+                FollowerCount = await _dbContext.Follows.CountAsync(f => f.FolloweeId == user.Id),
+                FollowingCount = await _dbContext.Follows.CountAsync(f => f.FollowerId == user.Id)
+                // FollowerCount = user.Followers.Count,
+                // FollowingCount = user.Following.Count
             };
 
             return View(viewModel);

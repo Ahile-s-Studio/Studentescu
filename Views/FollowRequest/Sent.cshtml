@@ -1,24 +1,44 @@
+@using System.Web
+@using Microsoft.AspNetCore.Mvc.TagHelpers
 @model List<FollowRequest>
 
-<h2 class="text-2xl font-bold mb-4 text-center">Follow Requests Sent</h2>
+<h2 class="text-2xl font-bold my-6 text-center text-white">Follow Requests Sent</h2>
 
-<div class="overflow-x-auto bg-white shadow-md rounded-lg">
+<div class="overflow-x-auto bg-gray-800 shadow-lg rounded-lg">
     <table class="table-auto w-full text-left border-collapse">
         <thead>
-        <tr class="bg-gray-100 border-b">
-            <th class="px-4 py-2 text-lg font-semibold text-gray-700">Target</th>
-            <th class="px-4 py-2 text-lg font-semibold text-gray-700">Status</th>
+        <tr class="bg-gray-800 border-b border-gray-700">
+            <th class="px-6 py-3 text-lg font-semibold text-center">Target</th>
+            <th class="px-6 py-3 text-lg font-semibold text-center">Status</th>
         </tr>
         </thead>
         <tbody>
         @foreach (var request in Model)
         {
-            <tr class="border-b hover:bg-gray-50">
-                <td class="px-4 py-2 text-sm text-gray-600">
-                    @request.Target.FirstName @request.Target.LastName (@request.Requester.UserName)
+            <tr class="border-b border-gray-600 hover:bg-gray-700 transition-colors">
+                <td class="flex items-center space-x-4 ml-6 p-2">
+                    <!-- Profile Picture -->
+                    <img
+                        src="@(request.Target.ProfilePictureUrl ?? "/images/default-avatar.png")"
+                        alt="Profile Picture" class="w-12 h-12 rounded-full object-cover">
+
+                    <div>
+                        <a asp-controller="Profile"
+                           asp-action="Show"
+                           asp-route-username="@HttpUtility.UrlEncode(request.Target.UserName)"
+                           class="text-lg font-semibold text-blue-400 hover:underline">
+                            @request.Target.UserName
+                        </a>
+                        <p class="text-sm text-gray-400 mt-1">@request.Target.Email</p>
+                    </div>
                 </td>
-                <td class="px-4 py-2 text-sm text-gray-600">
-                    @request.Status
+                <td class="px-6 py-4 text-sm font-medium text-white text-center">
+                    <span
+                        class="text-center @(request.Status == FollowRequestStatus.Pending ? "text-yellow-400" :
+                                           request.Status == FollowRequestStatus
+                                               .Accepted ? "text-green-400" : "text-red-400")">
+                        @request.Status (Updated at @request.UpdatedAt)
+                    </span>
                 </td>
             </tr>
         }

@@ -26,7 +26,7 @@
                 <ul class="flex gap-6">
                     <li class="nav-item">
                         <a class="text-gray-200 hover:text-purple-500"
-                           href="@(SignInManager.IsSignedIn(User) ? $"/profile/show/{(await UserManager.GetUserAsync(User))?.UserName}" : "/identity/account/manage")">My
+                           href="@(SignInManager.IsSignedIn(User) ? $"/profile/show/{(await UserManager.GetUserAsync(User))?.UserName}" : "/identity/account/manage")">
                             Profile</a>
                     </li>
                     <li class="nav-item">
