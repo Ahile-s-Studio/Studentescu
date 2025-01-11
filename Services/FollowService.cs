@@ -77,4 +77,19 @@ public class FollowService
             .ToListAsync();
         return pendingRequestsSent;
     }
+
+    public async Task<int> GetReceivedRequestCountAsync(string userId)
+    {
+        return await _dbContext.FollowRequests
+            .Where(fr => fr.TargetId == userId && fr.Status != FollowRequestStatus.Accepted)
+            .CountAsync();
+        ;
+    }
+
+    public async Task<int> GetSentRequestCountAsync(string userId)
+    {
+        return await _dbContext.FollowRequests
+            .Where(fr => fr.RequesterId == userId && fr.Status != FollowRequestStatus.Accepted)
+            .CountAsync();
+    }
 }

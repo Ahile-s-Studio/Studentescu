@@ -1,39 +1,66 @@
+@using System.Web
+@using Microsoft.AspNetCore.Mvc.TagHelpers
 @model List<FollowRequest>
 
-<h2 class="text-2xl font-bold mb-4 text-center">Follow Requests Received</h2>
+<h2 class="text-2xl font-bold my-6 text-center text-white">Follow Requests Received</h2>
 
-<div class="overflow-x-auto bg-white shadow-md rounded-lg">
+<div class="overflow-x-auto bg-gray-900 shadow-md rounded-lg">
     <table class="table-auto w-full text-left border-collapse">
         <thead>
-            <tr class="bg-gray-100 border-b">
-                <th class="px-4 py-2 text-lg font-semibold text-gray-700">Requester</th>
-                <th class="px-4 py-2 text-lg font-semibold text-gray-700">Action</th>
-            </tr>
+        <tr class="bg-gray-800 border-b border-gray-700">
+            <th class="px-4 py-3 text-lg font-semibold text-white text-center">Requester</th>
+            <th class="px-4 py-3 text-lg font-semibold text-white text-center">Action</th>
+        </tr>
         </thead>
-        <tbody>
-            @foreach (var request in Model)
-            {
-                <tr class="border-b hover:bg-gray-50">
-                    <td class="px-4 py-2 text-sm text-gray-600">
-                        @request.Requester.FirstName @request.Requester.LastName 
-                        (@request.Requester.UserName)
-                    </td>
-                    <td class="px-4 py-2">
-                        <form style="display: inline;" method="post" asp-action="Accept" asp-controller="FollowRequest">
+        <tbody class="">
+        @foreach (var request in Model)
+        {
+            @*             <tr class="bg-gray-800 text-white rounded-lg shadow-lg p-4 hover:shadow-xl  *@
+            @*             transition-shadow duration-300 "> *@
+
+            <tr class="bg-gray-800 border-b border-gray-600 hover:bg-gray-700 transition-colors">
+                <td class="flex items-center space-x-4 ml-6 p-2">
+                    <!-- Profile Picture -->
+                    <img
+                        src="@(request.Requester.ProfilePictureUrl ?? "/images/default-avatar.png")"
+                        alt="Profile Picture" class="w-12 h-12 rounded-full object-cover">
+
+                    <div>
+                        <a asp-controller="Profile"
+                           asp-action="Show"
+                           asp-route-username="@HttpUtility.UrlEncode(request.Requester.UserName)"
+                           class="text-lg font-semibold text-blue-400 hover:underline">
+                            @request.Requester.UserName
+                        </a>
+                        <p class="text-sm text-gray-400 mt-1">@request.Requester.Email</p>
+                    </div>
+                </td>
+
+                <td class="px-4 py-3">
+                    <div class="container flex justify-center gap-5">
+                        <!-- Accept Button -->
+                        <form style="display: inline;" method="post" asp-action="Accept"
+                              asp-controller="FollowRequest">
                             <input type="hidden" name="id" value="@request.Id" />
-                            <button type="submit" class="btn btn-success bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50">
+                            <button type="submit"
+                                    class="bg-green-600 hover:bg-green-500 text-white font-semibold py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50">
                                 Accept
                             </button>
                         </form>
-                        <form style="display: inline;" method="post" asp-action="Reject" asp-controller="FollowRequest">
+
+                        <!-- Reject Button -->
+                        <form style="display: inline;" method="post" asp-action="Reject"
+                              asp-controller="FollowRequest">
                             <input type="hidden" name="id" value="@request.Id" />
-                            <button type="submit" class="btn btn-danger bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50">
+                            <button type="submit"
+                                    class="bg-red-600 hover:bg-red-500 text-white font-semibold py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50">
                                 Reject
                             </button>
                         </form>
-                    </td>
-                </tr>
-            }
+                    </div>
+                </td>
+            </tr>
+        }
         </tbody>
     </table>
 </div>

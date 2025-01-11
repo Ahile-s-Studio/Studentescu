@@ -91,7 +91,8 @@ public class SeedData
             UserName = adminEmail,
             Email = adminEmail,
             EmailConfirmed = true,
-            IsAdmin = true
+            IsAdmin = true,
+            IsProfileCompleted = true
         };
 
         var result = userManager.CreateAsync(admin, adminPassword).Result;
@@ -223,6 +224,9 @@ public class SeedData
         var groupsGenerator = new UserGroupsGenerator(context);
         var likes = groupsGenerator.GenerateUserGroups();
         context.UserGroups.AddRange(likes);
+        context.SaveChanges();
+        var joinRequests = groupsGenerator.GenerateJoinRequests();
+        context.JoinRequests.AddRange(joinRequests);
         context.SaveChanges();
     }
 

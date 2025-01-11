@@ -1,0 +1,51 @@
+@using Microsoft.AspNetCore.Identity
+@using Studentescu.Services
+@inject FollowService FollowService
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+    var currentUser = await UserManager.GetUserAsync(User);
+    var receivedCount = 0;
+    var sentCount = 0;
+
+    if (currentUser != null)
+    {
+        receivedCount = await FollowService.GetReceivedRequestCountAsync(currentUser.Id);
+        sentCount = await FollowService.GetSentRequestCountAsync(currentUser.Id);
+    }
+}
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <div class="flex gap-6">
+        <a href="/FollowRequest/Received"
+           class="text-gray-200 hover:text-purple-500 flex items-center">
+            <i class="bi bi-person-lines-fill mr-2"></i>
+            @* Requests Received *@
+            @* @if (receivedCount > 0) *@
+            @* { *@
+            <span
+                class="relative right-2 bottom-2 inline-flex items-center justify-center w-5 h-5 bg-red-500 
+                    text-white text-xs font-semibold rounded-full">
+                @receivedCount
+            </span>
+            @* } *@
+        </a>
+        <a href="/FollowRequest/Sent" class="text-gray-200 hover:text-purple-500 flex items-center">
+            <i class="bi bi-person-plus-fill mr-2"></i>
+            @* Requests Sent *@
+            @* @if (sentCount > 0) *@
+            @* { *@
+            <span
+                class="relative right-2 bottom-2
+                    h-5 w-5 flex items-center justify-center
+                    bg-red-500 
+                    text-white text-xs font-semibold rounded-full">
+                    @* absolute top-0 right-0 bg-red-500 text-white text-xs px-2 py-1 rounded-full *@
+                @sentCount
+            </span>
+            @* } *@
+        </a>
+    </div>
+}

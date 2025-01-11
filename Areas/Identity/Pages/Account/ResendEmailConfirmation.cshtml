@@ -4,19 +4,33 @@
     ViewData["Title"] = "Resend email confirmation";
 }
 
-<h1>@ViewData["Title"]</h1>
-<h2>Enter your email.</h2>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form method="post">
-            <div asp-validation-summary="All" class="text-danger" role="alert"></div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.Email" class="form-control" aria-required="true" placeholder="name@example.com" />
-                <label asp-for="Input.Email" class="form-label"></label>
-                <span asp-validation-for="Input.Email" class="text-danger"></span>
+<h1 class="text-center text-4xl font-bold text-purple-600 mt-8">@ViewData["Title"]</h1>
+
+<div class="flex justify-center items-center mt-12">
+    <div class="max-w-md bg-gray-800 rounded-lg p-8 shadow-xl">
+        <h2 class="text-xl font-semibold text-white text-center mb-4">Enter your email to resend the
+            confirmation.</h2>
+        <hr class="border-gray-600 my-4" />
+
+        <!-- Validation Summary -->
+        <div asp-validation-summary="All" class="text-red-500 text-sm" role="alert"></div>
+
+        <form method="post" class="space-y-6">
+            <!-- Email Input -->
+            <div class="space-y-1">
+                <label asp-for="Input.Email" class="block text-sm font-medium">Email</label>
+                <input asp-for="Input.Email"
+                       class="w-full p-3 rounded-md bg-gray-700 text-white placeholder-gray-400 focus:ring-2 focus:ring-purple-500 focus:outline-none"
+                       autocomplete="username" aria-required="true"
+                       placeholder="name@example.com" required />
+                <span asp-validation-for="Input.Email" class="text-red-400 text-xs"></span>
             </div>
-            <button type="submit" class="w-100 btn btn-lg btn-primary">Resend</button>
+
+            <!-- Resend Button -->
+            <button type="submit"
+                    class="w-full py-3 bg-purple-600 text-white font-semibold rounded-md hover:bg-purple-700 transition">
+                Resend
+            </button>
         </form>
     </div>
 </div>

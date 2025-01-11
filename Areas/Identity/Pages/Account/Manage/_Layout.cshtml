@@ -1,29 +1,51 @@
-﻿@{
-    if (ViewData.TryGetValue("ParentLayout", out var parentLayout) && parentLayout !=  null)
-    {
-        Layout = parentLayout.ToString();
-    }
-    else
-    {
-        Layout = "/Views/Shared/_Layout.cshtml";
-    }
-}
+﻿<div class="container mx-auto p-6">
+    <div class="flex">
+        <partial name="_ManageNav" />
+        <!-- Main Content -->
+        <div class="w-3/4 ml-8 p-6 bg-gray-900 text-white rounded-lg shadow-lg">
+            @if (ViewData.TryGetValue("ParentLayout", out var parentLayout) && parentLayout != null)
+            {
+                Layout = parentLayout.ToString();
+            }
+            else
+            {
+                Layout = "/Views/Shared/_Layout.cshtml";
+            }
 
-<h1>Manage your account</h1>
+            <h1 class="text-3xl font-semibold text-purple-600 mb-6 text-center">Manage Your
+                Account</h1>
 
-<div>
-    <h2>Change your account settings</h2>
-    <hr />
-    <div class="row">
-        <div class="col-md-3">
-            <partial name="_ManageNav" />
-        </div>
-        <div class="col-md-9">
-            @RenderBody()
+            <div>
+                <h2 class="text-2xl font-semibold text-gray-300 mb-6 text-center">Change Your
+                    Account Settings</h2>
+                <hr class="border-t-2 border-gray-700 mb-6" />
+
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                    <div class="col-span-1 md:col-span-4">
+                        @RenderBody()
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
+@* <h1>Manage your account</h1> *@
+
+@* *@
+@* <div> *@
+@*     <h2>Change your account settings</h2> *@
+@*     <hr /> *@
+@*     <div class="row"> *@
+@*         <div class="col-md-3"> *@
+@*             <partial name="_ManageNav" /> *@
+@*         </div> *@
+@*         <div class="col-md-9"> *@
+@*             @RenderBody() *@
+@*         </div> *@
+@*     </div> *@
+@* </div> *@
+
 @section Scripts {
-    @RenderSection("Scripts", required: false)
+    @RenderSection("Scripts", false)
 }
