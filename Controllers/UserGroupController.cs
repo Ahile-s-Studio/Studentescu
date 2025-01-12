@@ -143,7 +143,7 @@ public class UserGroupController : BaseController
             var user = await _userManager.FindByIdAsync(userId);
             if (user is null)
             {
-                return RedirectToAction("Account/Login","Identity");
+                return RedirectToAction("Account/Login", "Identity");
             }
             _dbContext.UserGroups.Add(userGroup);
             Console.WriteLine("Current user group id: " + userGroup.Id.ToString());
@@ -475,16 +475,16 @@ public class UserGroupController : BaseController
         {
             userMembership.Role = GroupRole.Moderator;
             _dbContext.MemberInGroups.Update(userMembership);
-            
+
             await _dbContext.SaveChangesAsync();
         }
-        
+
         return Redirect("/UserGroup/ShowMembers?groupId=" + groupId.ToString());
     }
 
     public async Task<IActionResult> RemoveModerator(int groupId, string userId)
     {
-     
+
         var adminId = _userManager.GetUserId(User);
         var isAdmin = _dbContext.MemberInGroups.Any(m => m.UserId == adminId && m.UserGroupId == groupId && m.Role == GroupRole.Admin);
 
@@ -504,11 +504,11 @@ public class UserGroupController : BaseController
         {
             userMembership.Role = GroupRole.Member;
             _dbContext.MemberInGroups.Update(userMembership);
-            
+
             await _dbContext.SaveChangesAsync();
         }
-        
+
         return Redirect("/UserGroup/ShowMembers?groupId=" + groupId.ToString());
     }
-    
+
 }
