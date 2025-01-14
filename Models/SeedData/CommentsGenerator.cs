@@ -18,15 +18,50 @@ public class CommentsGenerator
         var userIds = dbContext.Users.Where(u => !u.IsAdmin && u.IsProfileCompleted)
             .Select(u => u.Id).ToList();
 
+        var genericComments = new List<string>
+        {
+            "Great post! I totally agree with this.",
+            "This is so interesting! Thanks for sharing.",
+            "I had no idea about this, but it's really cool.",
+            "Can’t wait to try this out!",
+            "Wow, this is amazing! Keep it up.",
+            "This really made me think. Good stuff!",
+            "I love this! Definitely going to share it.",
+            "Such a good read, thanks for posting!",
+            "I think you nailed it with this one. Well done!",
+            "This is really helpful, appreciate the info.",
+            "Really well said, couldn't agree more!",
+            "This is so true! I love this perspective.",
+            "I think you made some great points here.",
+            "Interesting! I hadn’t thought about it this way before.",
+            "Such a thought-provoking post, thanks for sharing.",
+            "I’ve been thinking about this a lot lately too.",
+            "This is exactly what I needed to read today.",
+            "You’ve given me a lot to think about with this post.",
+            "I completely agree with what you’re saying here.",
+            "This is such an important topic, glad you're talking about it.",
+            "I love how you’ve broken this down. Very insightful!",
+            "Great take! I think you’re spot on with this.",
+            "This really resonated with me, thank you for posting it.",
+            "I’ve learned something new today, thanks for sharing.",
+            "Such an inspiring message! Keep it up.",
+            "I had no idea about this before, but I’m so glad I read it.",
+            "Can’t stop thinking about this post. Very impactful.",
+            "Such a refreshing point of view!",
+            "I definitely needed this reminder today. Thank you!",
+            "This is so relatable, I’m sure a lot of people feel the same."
+        };
+
         _commentFaker = new Faker<Comment>()
             .RuleFor(c => c.Content,
-                f => f.PickRandom(f.Lorem.Sentence(10), GenerateRandomComment()))
-            .RuleFor(c => c.CommentedAt, f => f.Date.Recent(30))
-            .RuleFor(c => c.PostId, f => f.PickRandom(postIds.Select(p => p.Id)))
+                f => f.PickRandom(genericComments)) // Random sentence or generic comment
+            .RuleFor(c => c.CommentedAt, f => f.Date.Recent(30)) // Random date in the last 30 days
+            .RuleFor(c => c.PostId,
+                f => f.PickRandom(postIds.Select(p => p.Id))) // Random PostId from existing posts
             .RuleFor(c => c.UserId, (f, c) => f.PickRandom(
-                userIds.Where(u => u != postIds.Where
-                    (p => p.Id == c.PostId).Select(p => p.UserId).First()))
-            )
+                userIds.Where(u =>
+                    u != postIds.Where(p => p.Id == c.PostId).Select(p => p.UserId)
+                        .First()))) // Exclude user from same post
             .UseSeed(12345);
 
 

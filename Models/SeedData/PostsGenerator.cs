@@ -38,35 +38,43 @@ public class PostsGenerator
                 "https://www.youtube.com/embed/mlzh94DdINg"
             };
         var random = new Random();
+
+// Predefined list of social media posts
+        var socialMediaPosts = new List<string>
+        {
+            "Had an amazing time at the beach today! 🏖️ #beachday #sunshine",
+            "Feeling so grateful for the support from my friends. 💖 #blessed #grateful",
+            "Just finished reading a fantastic book. Highly recommend it! 📚 #bookrecommendation",
+            "Check out my latest travel vlog! ✈️ #travel #vlog",
+            "My new gadget just arrived and I can't wait to try it! ⚙️ #techlover #newarrival",
+            "Can't believe it's already the weekend! What are your plans? 🙌 #weekendvibes",
+            "Coffee and a good book, the perfect start to the day! ☕📖 #morningroutine #cozy",
+            "Feeling inspired after today's workout. Time to crush some goals! 💪 #fitnessmotivation #goals",
+            "Just posted a new photo on Instagram. Go check it out! 📸 #photooftheday #instagram",
+            "Enjoying a peaceful evening at home. 🏡 #homelife #relaxation",
+            "Had a blast at the concert last night! 🎶 #livemusic #concertvibes"
+        };
+
         _postsFaker = new Faker<Post>()
             .RuleFor(p => p.Title, f => f.Lorem.Sentence(5)) // Random 5 words sentence
             .RuleFor(p => p.ContentType,
                 f => f.PickRandom("text", "image", "video")) // Random content type
-                                                             // .RuleFor(p => p.ContentType,
-                                                             //     f => f.PickRandom("video")) // Random content type
             .RuleFor(p => p.Content, (f, p) =>
             {
                 return p.ContentType switch
                 {
-                    "text" => f.Lorem.Paragraph() // Random text content (3 paragraphs)
-                    ,
-                    "image" =>
-                        f.Image
-                            .PicsumUrl() // Random image URL from Picsum (or any other image URL generator)
-                    ,
-                    "video" =>
-                        randomVideoUrls[random.Next(randomVideoUrls.Count)],
+                    "text" => f.PickRandom(socialMediaPosts), // Random social media post
+                    "image" => f.Image.PicsumUrl(), // Random image URL from Picsum
+                    "video" => randomVideoUrls[
+                        random.Next(randomVideoUrls.Count)], // Random video URL
                     _ => string.Empty
                 };
-            }) // Random 3 paragraphs
+            })
             .RuleFor(p => p.UserId, f => f.PickRandom(userIds)) // Random username for UserId
             .RuleFor(p => p.GroupId,
-                f => f.PickRandom(
-                    groupIds.Cast<int?>()
-                        .Concat(Enumerable.Repeat<int?>(null, groupIds.Count).ToList()
-                        )))
-            .RuleFor(p => p.CreatedAt,
-                f => f.Date.Recent(30)) // Random date in the last 30 days
+                f => f.PickRandom(groupIds.Cast<int?>()
+                    .Concat(Enumerable.Repeat<int?>(null, groupIds.Count).ToList())))
+            .RuleFor(p => p.CreatedAt, f => f.Date.Recent(30)) // Random date in the last 30 days
             .UseSeed(12345);
     }
 

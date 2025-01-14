@@ -196,8 +196,8 @@ public class SeedData
             serviceProvider.GetRequiredService<DbContextOptions<ApplicationDbContext>>());
         context.Database.EnsureCreated();
         var commentsGenerator = new CommentsGenerator(context);
-        var comments = commentsGenerator.GenerateComments(150);
-        var commentsInGroup = commentsGenerator.GenerateCommentsForGroupPosts(150).Result;
+        var comments = commentsGenerator.GenerateComments(350);
+        var commentsInGroup = commentsGenerator.GenerateCommentsForGroupPosts(350).Result;
         context.Comments.AddRange(comments);
         context.Comments.AddRange(commentsInGroup);
         context.SaveChanges();
@@ -209,8 +209,8 @@ public class SeedData
             serviceProvider.GetRequiredService<DbContextOptions<ApplicationDbContext>>());
         context.Database.EnsureCreated();
         var likesGenerator = new LikesGenerator(context);
-        var likes = likesGenerator.GenerateLikes(200);
-        var likesForGroupPosts = likesGenerator.GenerateLikesForGroupPosts(200).Result;
+        var likes = likesGenerator.GenerateLikes(300);
+        var likesForGroupPosts = likesGenerator.GenerateLikesForGroupPosts(300).Result;
         context.Likes.AddRange(likes);
         context.Likes.AddRange(likesForGroupPosts);
         context.SaveChanges();

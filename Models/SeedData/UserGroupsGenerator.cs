@@ -15,13 +15,52 @@ public class UserGroupsGenerator
         var userIds = dbContext.Users.Where(u => !u.IsAdmin && u.IsProfileCompleted)
             .Select(u => u.Id).ToList();
 
+        var genericGroupNames = new List<string>
+        {
+            "The Innovators Collective",
+            "The Knowledge Exchange",
+            "Creative Minds Hub",
+            "The Learning Network",
+            "Future Leaders Forum",
+            "Tech Enthusiasts United",
+            "The Visionaries Circle",
+            "Global Collaboration Group",
+            "The Idea Factory",
+            "Inspiration Nation",
+            "The Growth Academy",
+            "Explorers of Innovation",
+            "The Thought Leaders Group",
+            "Community of Creators",
+            "The Project Pioneers",
+            "Dreamers and Doers",
+            "The Connection Zone",
+            "Growth Seekers",
+            "The Collaboration Crew",
+            "The Insight Network"
+        };
+
+        var genericGroupDescriptions = new List<string>
+        {
+            "A group dedicated to sharing knowledge and ideas.",
+            "A community of like-minded individuals with a passion for growth.",
+            "A place to collaborate and discuss various topics of interest.",
+            "Join us for engaging discussions and new perspectives.",
+            "This is a space for learning and personal development.",
+            "A group where you can connect with others and share experiences.",
+            "A creative community focused on innovation and exploration.",
+            "A hub for passionate individuals to share their ideas and projects.",
+            "A place to inspire and be inspired by others.",
+            "This group is about connecting people with similar interests."
+        };
+
         _userGroupFaker = new Faker<UserGroup>()
-            .RuleFor(g => g.Name, f => f.Company.CompanyName()) // Random group name
-            .RuleFor(g => g.Description, f => f.Lorem.Sentence(10)) // Random description
+            .RuleFor(g => g.Name,
+                f => f.PickRandom(genericGroupNames)) // Random group name from generic list
+            .RuleFor(g => g.Description,
+                f => f.PickRandom(genericGroupDescriptions)) // Random description from generic list
             .RuleFor(g => g.Category, f => f.PickRandom<CategoryType>()) // Random category
             .RuleFor(g => g.GroupImageUrl, f => f.Image.PicsumUrl()) // Random group image URL
-                                                                     // .RuleFor(g => g.Active, f => f.Random.Bool()) // Random active status
-            .RuleFor(g => g.Active, f => true) // Random active status
+            .RuleFor(g => g.Active, f => true) // Group is always active
             .RuleFor(g => g.CreatedAt,
                 f => f.Date.Recent(90)) // Random created date (within the last 90 days)
             .RuleFor(g => g.Members,
