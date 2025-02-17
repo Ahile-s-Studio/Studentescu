@@ -153,7 +153,8 @@ public class FollowController : BaseController
         // Daca e un profil public
         if (targetUser.Public)
         {
-            follow = new Follow { FollowerId = user.Id, FolloweeId = targetUser.Id };
+            follow = new Follow
+            { FollowerId = user.Id, FolloweeId = targetUser.Id, FollowedAt = DateTime.Now };
             _dbContext.Follows.Add(follow);
             await _dbContext.SaveChangesAsync();
             return Ok(new { message = "User followed successfully" });
@@ -171,7 +172,9 @@ public class FollowController : BaseController
         {
             RequesterId = user.Id,
             TargetId = targetUser.Id,
-            Status = FollowRequestStatus.Pending
+            Status = FollowRequestStatus.Pending,
+            CreatedAt = DateTime.Now,
+            UpdatedAt = DateTime.Now
         };
         _dbContext.FollowRequests.Add(followRequest);
         await _dbContext.SaveChangesAsync();

@@ -6,6 +6,10 @@ The platform also features groups where students with common interests can join,
 
 StudentConnect fosters collaboration and creativity, offering students a space to engage with peers, explore interests, and grow together.
 
+![Screenshot 1](screenshots/s1.png)
+![Screenshot 2](screenshots/s2.png)
+![Screenshot 3](screenshots/s3.png)
+
 ## Getting started
 
 To get started with the development environment for **Studentescu**, follow these steps to set up the application using Docker Compose:
@@ -43,9 +47,9 @@ Make sure you have the following installed on your system:
 1.  **Run the Script**
     Start the TMUX session and Docker environment with:
 
-        ```bash
-        ./start_studentescu.sh
-        ```
+    ```bash
+    ./start_studentescu.sh
+    ```
 
 2.  **Session Details**
 

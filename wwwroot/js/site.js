@@ -78,7 +78,7 @@ function attachLikeButtonListeners() {
             })
                 .then((response) => {
                     if (response.status === 200) {
-                        alert("Request successful!");
+                        // alert("Request successful!");
                         this.setAttribute(
                             "data-is-liked",
                             !isLiked ? "True" : "False"
@@ -217,7 +217,7 @@ function submitComment(postId, content, textarea) {
         .then((response) => {
             if (response.ok) {
                 textarea.value = ""; // Clear the input field
-                alert("Comment added successfully!");
+                // alert("Comment added successfully!");
                 const commentsContainer = document.querySelector(
                     `.comments-container[data-post-id="${postId}"]`
                 );

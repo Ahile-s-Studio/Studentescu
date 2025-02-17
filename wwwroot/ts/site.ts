@@ -86,7 +86,7 @@ function attachLikeButtonListeners(): void {
             })
                 .then((response) => {
                     if (response.status === 200) {
-                        alert("Request successful!");
+                        // alert("Request successful!");
                         this.setAttribute(
                             "data-is-liked",
                             !isLiked ? "True" : "False"
@@ -184,6 +184,7 @@ function attachCommentButtonListeners(): void {
         });
     });
 }
+
 function createCommentForm(postId: string): HTMLFormElement {
     const form = document.createElement("form");
     form.className = "comment-input";
@@ -250,7 +251,7 @@ function submitComment(
         .then((response) => {
             if (response.ok) {
                 textarea.value = ""; // Clear the input field
-                alert("Comment added successfully!");
+                // alert("Comment added successfully!");
                 const commentsContainer =
                     document.querySelector<HTMLDivElement>(
                         `.comments-container[data-post-id="${postId}"]`
@@ -269,6 +270,7 @@ function submitComment(
             );
         });
 }
+
 function loadComments(
     postId: string,
     pageNumber: number,

@@ -39,7 +39,7 @@ public class PostsGenerator
             };
         var random = new Random();
 
-// Predefined list of social media posts
+        // Predefined list of social media posts
         var socialMediaPosts = new List<string>
         {
             "Had an amazing time at the beach today! 🏖️ #beachday #sunshine",
